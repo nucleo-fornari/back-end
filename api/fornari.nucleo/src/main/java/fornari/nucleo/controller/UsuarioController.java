@@ -36,6 +36,7 @@ public class UsuarioController {
     public ResponseEntity<UsuarioDto> createEmployee(
             @RequestBody UsuarioDto user
     ) {
+        user.setId(null);
         Usuario savedUser = this.service.createOrUpdateUsuario(user);
 
         if (savedUser.getId() != null) {
