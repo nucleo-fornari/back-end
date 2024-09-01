@@ -26,10 +26,13 @@ public class Endereco {
     @Column(nullable = false)
     private String uf;
 
+    @Column(nullable = false)
+    private Integer numero;
+
     @OneToMany(mappedBy = "endereco", targetEntity = Usuario.class, cascade = CascadeType.PERSIST)
     private List<Usuario> usuarios;
 
-    public Endereco(Integer id, String cep, String complemento, String bairro, String localidade, String uf) {
+    public Endereco(Integer id, String cep, String complemento, String bairro, String localidade, String uf, Integer numero) {
         this.id = id;
         this.cep = cep;
         this.complemento = complemento;
@@ -37,6 +40,7 @@ public class Endereco {
         this.localidade = localidade;
         this.uf = uf;
         this.usuarios = new ArrayList<>();
+        this.numero = numero;
     }
 
     public Endereco() {
@@ -97,6 +101,14 @@ public class Endereco {
 
     public void setUsuarios(List<Usuario> usuarios) {
         this.usuarios = usuarios;
+    }
+
+    public Integer getNumero() {
+        return numero;
+    }
+
+    public void setNumero(Integer numero) {
+        this.numero = numero;
     }
 
     public void addUser(Usuario usuario) {

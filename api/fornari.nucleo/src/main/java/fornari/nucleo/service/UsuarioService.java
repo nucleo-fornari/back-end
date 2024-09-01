@@ -70,8 +70,9 @@ public class UsuarioService {
         if (userDto.getFuncao() != null) {
             user.setFuncao(userDto.getFuncao());
         }
-
-        user.setSenha(Generator.generatePassword());
+        if (user.getSenha() == null) {
+            user.setSenha(Generator.generatePassword());
+        }
 
         if (userDto.getEndereco() != null) {
             if (user.getEndereco() == null) {
@@ -81,7 +82,8 @@ public class UsuarioService {
                         userDto.getEndereco().getComplemento(),
                         userDto.getEndereco().getBairro(),
                         userDto.getEndereco().getLocalidade(),
-                        userDto.getEndereco().getUf()
+                        userDto.getEndereco().getUf(),
+                        userDto.getEndereco().getNumero()
                 ));
                 user.getEndereco().addUser(user);
             } else {
@@ -90,6 +92,7 @@ public class UsuarioService {
                 user.getEndereco().setBairro(userDto.getEndereco().getBairro());
                 user.getEndereco().setLocalidade(userDto.getEndereco().getLocalidade());
                 user.getEndereco().setUf(userDto.getEndereco().getUf());
+                user.getEndereco().setNumero(userDto.getEndereco().getNumero());
             }
         }
 
