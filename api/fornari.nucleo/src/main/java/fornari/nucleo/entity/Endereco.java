@@ -27,20 +27,24 @@ public class Endereco {
     private String uf;
 
     @Column(nullable = false)
+    private String logradouro;
+
+    @Column(nullable = false)
     private Integer numero;
 
     @OneToMany(mappedBy = "endereco", targetEntity = Usuario.class, cascade = CascadeType.PERSIST)
     private List<Usuario> usuarios;
 
-    public Endereco(Integer id, String cep, String complemento, String bairro, String localidade, String uf, Integer numero) {
+    public Endereco(int id, String cep, String complemento, String bairro, String localidade, String uf, String logradouro, Integer numero) {
         this.id = id;
         this.cep = cep;
         this.complemento = complemento;
         this.bairro = bairro;
         this.localidade = localidade;
         this.uf = uf;
-        this.usuarios = new ArrayList<>();
+        this.logradouro = logradouro;
         this.numero = numero;
+        this.usuarios = new ArrayList<>();
     }
 
     public Endereco() {
@@ -93,6 +97,14 @@ public class Endereco {
 
     public void setUf(String uf) {
         this.uf = uf;
+    }
+
+    public String getLogradouro() {
+        return logradouro;
+    }
+
+    public void setLogradouro(String logradouro) {
+        this.logradouro = logradouro;
     }
 
     public List<Usuario> getUsuarios() {

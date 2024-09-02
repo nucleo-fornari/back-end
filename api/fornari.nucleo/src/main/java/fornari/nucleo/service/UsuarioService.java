@@ -82,6 +82,7 @@ public class UsuarioService {
                         userDto.getEndereco().getComplemento(),
                         userDto.getEndereco().getBairro(),
                         userDto.getEndereco().getLocalidade(),
+                        userDto.getEndereco().getLogradouro(),
                         userDto.getEndereco().getUf(),
                         userDto.getEndereco().getNumero()
                 ));
@@ -92,6 +93,7 @@ public class UsuarioService {
                 user.getEndereco().setBairro(userDto.getEndereco().getBairro());
                 user.getEndereco().setLocalidade(userDto.getEndereco().getLocalidade());
                 user.getEndereco().setUf(userDto.getEndereco().getUf());
+                user.getEndereco().setLogradouro(userDto.getEndereco().getLogradouro());
                 user.getEndereco().setNumero(userDto.getEndereco().getNumero());
             }
         }

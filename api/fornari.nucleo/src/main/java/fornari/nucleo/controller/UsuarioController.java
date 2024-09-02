@@ -13,6 +13,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/usuarios")
+//@Tag(name = "Usuário")
 public class UsuarioController {
 
     @Autowired
