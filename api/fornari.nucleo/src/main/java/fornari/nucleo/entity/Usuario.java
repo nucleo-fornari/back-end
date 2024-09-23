@@ -21,7 +21,7 @@ public class Usuario {
     private String cpf;
 
     @Column(unique = true, nullable = false)
-    @Pattern(regexp = "^[a-zA-Z0-9.]{3,}[@][a-zA-Z]{3,}[.][a-zA-Z.]{3,}$", message = ConstMessages.INVALID_EMAIL)
+    @Pattern(regexp = "^[a-zA-Z0-9._]{3,}[@][a-zA-Z]{3,}[.][a-zA-Z.]{3,}$", message = ConstMessages.INVALID_EMAIL)
     private String email;
 
     @Column(nullable = false)
