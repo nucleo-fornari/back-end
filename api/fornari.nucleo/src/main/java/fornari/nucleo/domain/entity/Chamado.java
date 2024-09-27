@@ -1,8 +1,7 @@
-package fornari.nucleo.entity;
+package fornari.nucleo.domain.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
-import org.springframework.boot.context.properties.bind.DefaultValue;
 
 import java.time.LocalDateTime;
 

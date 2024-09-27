@@ -1,7 +1,8 @@
 package fornari.nucleo.controller;
 
-import fornari.nucleo.dto.UsuarioDto;
-import fornari.nucleo.entity.Usuario;
+import fornari.nucleo.domain.dto.UsuarioDto;
+import fornari.nucleo.domain.entity.Usuario;
+import fornari.nucleo.domain.mapper.UsuarioMapper;
 import fornari.nucleo.repository.UsuarioRepository;
 import fornari.nucleo.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,71 +16,61 @@ import java.util.Optional;
 @RequestMapping("/usuarios")
 //@Tag(name = "Usuário")
 public class UsuarioController {
-
-    @Autowired
-    private UsuarioRepository repository;
-
     @Autowired
     private UsuarioService service;
 
     @GetMapping(name = "LIST_USERS")
     public ResponseEntity<List<UsuarioDto>> getUsers() {
-        List<Usuario> users = this.repository.findAll();
+        List<Usuario> users = service.listar();
 
-        if (!users.isEmpty()) {
-            return ResponseEntity.status(200).body(this.service.mapMultipleUsuarioToUsuarioDto(users));
-        }
+        if (users.isEmpty()) return ResponseEntity.status(204).build();
 
-        return ResponseEntity.status(204).build();
+        return ResponseEntity.status(200).body(
+                users.stream().map(UsuarioMapper::toDTO).toList()
+        );
     }
 
     @PostMapping(value = "/funcionario", name = "CREATE_EMPLOYEE")
     public ResponseEntity<UsuarioDto> createEmployee(
-            @RequestBody UsuarioDto user
+            @RequestBody UsuarioDto userDto
     ) {
-        user.setId(null);
-        Usuario savedUser = this.service.createOrUpdateUsuario(user);
+        userDto.setId(null);
+        Usuario user = service.createUsuario(userDto);
 
-        if (savedUser.getId() != null) {
-            return ResponseEntity.status(201).body(this.service.mapUsuarioToUsuarioDto(savedUser));
-        }
-        return ResponseEntity.status(400).build();
+        return ResponseEntity.status(201).body(UsuarioMapper.toDTO(user));
     }
 
     @GetMapping(value = "/{id}", name = "GET_USER_BY_ID")
     public ResponseEntity<UsuarioDto> getById(
             @PathVariable int id
     ) {
-        Optional<Usuario> user = this.repository.findById(id);
+        Optional<Usuario> user = service.buscarPorID(id);
 
-        return user.map(usuario -> ResponseEntity.status(200).body(this.service.mapUsuarioToUsuarioDto(usuario)))
-                .orElseGet(() -> ResponseEntity.status(204).build());
-
+        return user.isPresent() ?
+                ResponseEntity.status(200).body(UsuarioMapper.toDTO(user.get())) :
+                ResponseEntity.status(204).build();
     }
 
     @DeleteMapping(value = "/{id}", name = "DELETE_USER")
     public ResponseEntity<Void> delete(
             @PathVariable int id
     ) {
-        Optional<Usuario> user = this.repository.findById(id);
+        Optional<Usuario> user = service.buscarPorID(id);
+
         if (user.isEmpty()) {
             return ResponseEntity.status(204).build();
         }
-        this.repository.delete(user.get());
+
+        service.deletar(user.get());
         return ResponseEntity.status(200).build();
     }
 
     @PutMapping(value = "/{id}", name = "UPDATE_USER")
     public ResponseEntity<UsuarioDto> update(
             @PathVariable int id,
-            @RequestBody UsuarioDto user
+            @RequestBody UsuarioDto userDTO
     ) {
-        user.setId(id);
-        Usuario savedUser = this.service.createOrUpdateUsuario(user);
-
-        if (savedUser.getId() != null) {
-            return ResponseEntity.status(200).body(this.service.mapUsuarioToUsuarioDto(savedUser));
-        }
-        return ResponseEntity.status(400).build();
+        Usuario user = service.updateUsuario(userDTO, id);
+        return ResponseEntity.status(200).body(UsuarioMapper.toDTO(user));
     }
 }

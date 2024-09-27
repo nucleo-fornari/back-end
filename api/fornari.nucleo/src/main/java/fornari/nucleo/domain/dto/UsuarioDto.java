@@ -1,6 +1,6 @@
-package fornari.nucleo.dto;
+package fornari.nucleo.domain.dto;
 
-import fornari.nucleo.entity.Endereco;
+import fornari.nucleo.domain.entity.Endereco;
 
 import java.sql.Date;
 

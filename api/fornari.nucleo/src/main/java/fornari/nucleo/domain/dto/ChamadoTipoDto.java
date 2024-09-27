@@ -1,6 +1,4 @@
-package fornari.nucleo.dto;
-
-import fornari.nucleo.entity.Chamado;
+package fornari.nucleo.domain.dto;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,4 +1,4 @@
-package fornari.nucleo.entity;
+package fornari.nucleo.domain.entity;
 
 import jakarta.persistence.*;
 import java.util.*;
