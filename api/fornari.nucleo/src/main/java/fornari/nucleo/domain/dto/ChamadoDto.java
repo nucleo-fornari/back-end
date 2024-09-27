@@ -1,4 +1,4 @@
-package fornari.nucleo.dto;
+package fornari.nucleo.domain.dto;
 
 import java.time.LocalDateTime;
 

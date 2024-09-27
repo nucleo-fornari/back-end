@@ -1,4 +1,4 @@
-package fornari.nucleo.entity;
+package fornari.nucleo.domain.entity;
 
 import fornari.nucleo.helper.messages.ConstMessages;
 import jakarta.persistence.*;

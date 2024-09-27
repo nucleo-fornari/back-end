@@ -1,6 +1,7 @@
 package fornari.nucleo.controller;
 
-import fornari.nucleo.dto.ChamadoTipoDto;
+import fornari.nucleo.domain.dto.ChamadoTipoDto;
+import fornari.nucleo.domain.mapper.ChamadoTipoMapper;
 import fornari.nucleo.service.ChamadoTipoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +19,10 @@ public class ChamadoTipoController {
 
     @PostMapping
     public ResponseEntity<ChamadoTipoDto> create(@RequestBody ChamadoTipoDto chamadoTipo) {
-        return ResponseEntity.ok().body(this.service.create(chamadoTipo));
+        return ResponseEntity.created(null).body(
+                ChamadoTipoMapper.toChamadoTipoDto(
+                        service.create(chamadoTipo)
+                )
+        );
     }
 }

@@ -1,9 +1,8 @@
-package fornari.nucleo.entity;
+package fornari.nucleo.domain.entity;
 
 import fornari.nucleo.helper.messages.ConstMessages;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Pattern;
-
 import java.sql.Date;
 
 @Entity(name = "usuario")
@@ -55,6 +54,29 @@ public class Usuario {
     public Usuario() {
     }
 
+    public void setEndereco(Endereco endereco) {
+        if (this.endereco != endereco) {
+            this.endereco = endereco;
+            endereco.addUser(this);
+        }
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
     public String getCpf() {
         return cpf;
     }
@@ -79,28 +101,12 @@ public class Usuario {
         this.senha = senha;
     }
 
-    public String getFuncao() {
-        return funcao;
+    public String getToken() {
+        return token;
     }
 
-    public void setFuncao(String funcao) {
-        this.funcao = funcao;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getNome() {
-        return nome;
-    }
-
-    public void setNome(String nome) {
-        this.nome = nome;
+    public void setToken(String token) {
+        this.token = token;
     }
 
     public Date getDtNasc() {
@@ -111,15 +117,15 @@ public class Usuario {
         this.dtNasc = dtNasc;
     }
 
+    public String getFuncao() {
+        return funcao;
+    }
+
+    public void setFuncao(String funcao) {
+        this.funcao = funcao;
+    }
+
     public Endereco getEndereco() {
         return endereco;
     }
-
-    public void setEndereco(Endereco endereco) {
-        if (this.endereco != endereco) {
-            this.endereco = endereco;
-            endereco.addUser(this);
-        }
-    }
-
 }

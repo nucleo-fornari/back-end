@@ -1,6 +1,7 @@
 package fornari.nucleo.controller;
 
-import fornari.nucleo.dto.ChamadoDto;
+import fornari.nucleo.domain.dto.ChamadoDto;
+import fornari.nucleo.domain.mapper.ChamadoMapper;
 import fornari.nucleo.service.ChamadoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -17,12 +18,18 @@ public class ChamadoController {
 
     @GetMapping("/abertos")
     public ResponseEntity<List<ChamadoDto>> list() {
-        return ResponseEntity.ok().body(this.service.findByFinalizadoEqualsFalse());
+        return ResponseEntity.ok().body(
+                service.findByFinalizadoEqualsFalse().stream().map(ChamadoMapper::ToChamadoDto).toList()
+        );
     }
 
     @PostMapping
     public ResponseEntity<ChamadoDto> create(@RequestBody ChamadoDto dto) {
-        return ResponseEntity.ok().body(this.service.create(dto));
+        return ResponseEntity.ok().body(
+                ChamadoMapper.ToChamadoDto(
+                        service.create(dto)
+                )
+        );
     }
 
     @PatchMapping("/{id}")

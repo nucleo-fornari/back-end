@@ -1,13 +1,39 @@
-package fornari.nucleo.dto;
+package fornari.nucleo.domain.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+public class EnderecoDto {
 
-public class EnderecoApiExternaDto {
+    private int id;
     private String cep;
     private String uf;
     private String localidade;
     private String bairro;
     private String logradouro;
+    private String complemento;
+    private Integer numero;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getComplemento() {
+        return complemento;
+    }
+
+    public void setComplemento(String complemento) {
+        this.complemento = complemento;
+    }
+
+    public Integer getNumero() {
+        return numero;
+    }
+
+    public void setNumero(Integer numero) {
+        this.numero = numero;
+    }
 
     public String getCep() {
         return cep;
