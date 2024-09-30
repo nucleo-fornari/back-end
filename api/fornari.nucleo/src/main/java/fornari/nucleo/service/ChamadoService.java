@@ -2,9 +2,12 @@ package fornari.nucleo.service;
 
 import fornari.nucleo.domain.dto.ChamadoDto;
 import fornari.nucleo.domain.entity.Chamado;
+import fornari.nucleo.domain.entity.ChamadoTipo;
 import fornari.nucleo.domain.mapper.ChamadoMapper;
+import fornari.nucleo.helper.messages.ConstMessages;
 import fornari.nucleo.repository.ChamadoRepository;
 import fornari.nucleo.repository.ChamadoTipoRepository;
+import jakarta.validation.ValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -22,6 +25,7 @@ public class ChamadoService {
 
     @Autowired
     private ChamadoTipoRepository chamadoTipoRepository;
+
     public List<Chamado> findByFinalizadoEqualsFalse() {
         List<Chamado> list = this.repository.findByFinalizadoEquals(false);
 
@@ -34,7 +38,17 @@ public class ChamadoService {
 
     public Chamado create(ChamadoDto dto) {
         dto.setId(null);
-        return repository.save(ChamadoMapper.toChamado(dto));
+        if (dto.getTipo().getId() == null) {
+            throw new ValidationException(ConstMessages.NOT_ALLOWED_TO_REGISTER_CHAMADO_WITHOUT_TIPO);
+        }
+
+        if (!this.chamadoTipoRepository.existsById(dto.getTipo().getId())) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+        ChamadoTipo chamadoTipo = this.chamadoTipoRepository.findById(dto.getTipo().getId()).get();
+        Chamado chamado = ChamadoMapper.toChamado(dto);
+        chamado.setTipo(chamadoTipo);
+        return this.repository.save(chamado);
     }
 
     public void finish(Integer id) {
