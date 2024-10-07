@@ -2,7 +2,9 @@ package fornari.nucleo.service;
 
 import fornari.nucleo.domain.dto.EnderecoApiExternaDto;
 import fornari.nucleo.domain.dto.EnderecoDto;
+import fornari.nucleo.domain.entity.Endereco;
 import fornari.nucleo.models.interfaces.BuilderRestStrategy;
+import fornari.nucleo.repository.EnderecoRepository;
 import fornari.nucleo.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
@@ -12,11 +14,21 @@ import org.springframework.web.client.RestClient;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+
 @Service
 public class EnderecoService implements BuilderRestStrategy {
+    private final UsuarioRepository usuarioRepository;
 
-    @Autowired
-    private UsuarioRepository repository;
+    private final EnderecoRepository repository;
+
+    public EnderecoService (
+            UsuarioRepository usuarioRepository,
+            EnderecoRepository enderecoRepository
+    ) {
+        this.usuarioRepository = usuarioRepository;
+        this.repository = enderecoRepository;
+    }
 
     @Override
     public RestClient builderRest(String url) {
@@ -42,5 +54,17 @@ public class EnderecoService implements BuilderRestStrategy {
             listaMutavel.set(indMenor, aux);
         }
         return listaMutavel;
+    }
+
+    public boolean alreadyExists(Endereco endereco) {
+        return this.repository.existsByCepAndNumeroAndComplemento(endereco.getCep(), endereco.getNumero(), endereco.getComplemento());
+    }
+
+    public Optional<Endereco> findExistentEndereco(Endereco endereco) {
+        return this.repository.findOneByCepAndNumeroAndComplemento(endereco.getCep(), endereco.getNumero(), endereco.getComplemento());
+    }
+
+    public void delete(Endereco endereco) {
+        this.repository.delete(endereco);
     }
 }

@@ -1,9 +1,8 @@
 package fornari.nucleo.controller;
 
-import fornari.nucleo.domain.dto.UsuarioDto;
+import fornari.nucleo.domain.dto.usuario.UsuarioEmployeeResponseDto;
 import fornari.nucleo.domain.entity.Usuario;
 import fornari.nucleo.domain.mapper.UsuarioMapper;
-import fornari.nucleo.repository.UsuarioRepository;
 import fornari.nucleo.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +19,7 @@ public class UsuarioController {
     private UsuarioService service;
 
     @GetMapping(name = "LIST_USERS")
-    public ResponseEntity<List<UsuarioDto>> getUsers() {
+    public ResponseEntity<List<UsuarioEmployeeResponseDto>> getUsers() {
         List<Usuario> users = service.listar();
 
         if (users.isEmpty()) return ResponseEntity.status(204).build();
@@ -31,17 +30,16 @@ public class UsuarioController {
     }
 
     @PostMapping(value = "/funcionario", name = "CREATE_EMPLOYEE")
-    public ResponseEntity<UsuarioDto> createEmployee(
-            @RequestBody UsuarioDto userDto
+    public ResponseEntity<UsuarioEmployeeResponseDto> createEmployee(
+            @RequestBody UsuarioEmployeeResponseDto userDto
     ) {
-        userDto.setId(null);
         Usuario user = service.createUsuario(userDto);
 
         return ResponseEntity.status(201).body(UsuarioMapper.toDTO(user));
     }
 
     @GetMapping(value = "/{id}", name = "GET_USER_BY_ID")
-    public ResponseEntity<UsuarioDto> getById(
+    public ResponseEntity<UsuarioEmployeeResponseDto> getById(
             @PathVariable int id
     ) {
         Optional<Usuario> user = service.buscarPorID(id);
@@ -61,14 +59,14 @@ public class UsuarioController {
             return ResponseEntity.status(204).build();
         }
 
-        service.deletar(user.get());
+        service.delete(user.get());
         return ResponseEntity.status(200).build();
     }
 
     @PutMapping(value = "/{id}", name = "UPDATE_USER")
-    public ResponseEntity<UsuarioDto> update(
+    public ResponseEntity<UsuarioEmployeeResponseDto> update(
             @PathVariable int id,
-            @RequestBody UsuarioDto userDTO
+            @RequestBody UsuarioEmployeeResponseDto userDTO
     ) {
         Usuario user = service.updateUsuario(userDTO, id);
         return ResponseEntity.status(200).body(UsuarioMapper.toDTO(user));

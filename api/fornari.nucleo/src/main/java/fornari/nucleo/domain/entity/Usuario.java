@@ -2,10 +2,21 @@ package fornari.nucleo.domain.entity;
 
 import fornari.nucleo.helper.messages.ConstMessages;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Pattern;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity(name = "usuario")
+@Getter
+@Setter
+@AllArgsConstructor
 public class Usuario {
 
     @Id
@@ -20,7 +31,7 @@ public class Usuario {
     private String cpf;
 
     @Column(unique = true, nullable = false)
-    @Pattern(regexp = "^[a-zA-Z0-9._]{3,}[@][a-zA-Z]{3,}[.][a-zA-Z.]{3,}$", message = ConstMessages.INVALID_EMAIL)
+    @Email(message = ConstMessages.INVALID_EMAIL)
     private String email;
 
     @Column(nullable = false)
@@ -40,92 +51,16 @@ public class Usuario {
     @JoinColumn(referencedColumnName = "id", name = "id_endereco")
     private Endereco endereco;
 
-    public Usuario(Integer id, String nome, String cpf, String email, String senha, Date dtNasc, String funcao, Endereco endereco) {
-        this.id = id;
-        this.nome = nome;
-        this.cpf = cpf;
-        this.email = email;
-        this.senha = senha;
-        this.dtNasc = dtNasc;
-        this.funcao = funcao;
-        this.endereco = endereco;
-    }
+//    @ManyToMany(targetEntity = Aluno.class, mappedBy = "responsaveis", cascade = CascadeType.PERSIST)
+//    private List<Aluno> afiliados;
 
-    public Usuario() {
+    public Usuario () {
+//        this.afiliados = new ArrayList<>();
     }
-
     public void setEndereco(Endereco endereco) {
         if (this.endereco != endereco) {
             this.endereco = endereco;
             endereco.addUser(this);
         }
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getNome() {
-        return nome;
-    }
-
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
-
-    public String getCpf() {
-        return cpf;
-    }
-
-    public void setCpf(String cpf) {
-        this.cpf = cpf;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getSenha() {
-        return senha;
-    }
-
-    public void setSenha(String senha) {
-        this.senha = senha;
-    }
-
-    public String getToken() {
-        return token;
-    }
-
-    public void setToken(String token) {
-        this.token = token;
-    }
-
-    public Date getDtNasc() {
-        return dtNasc;
-    }
-
-    public void setDtNasc(Date dtNasc) {
-        this.dtNasc = dtNasc;
-    }
-
-    public String getFuncao() {
-        return funcao;
-    }
-
-    public void setFuncao(String funcao) {
-        this.funcao = funcao;
-    }
-
-    public Endereco getEndereco() {
-        return endereco;
     }
 }

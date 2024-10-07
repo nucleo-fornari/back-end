@@ -1,17 +1,13 @@
 package fornari.nucleo.domain.mapper;
 
-import fornari.nucleo.domain.dto.UsuarioDto;
+import fornari.nucleo.domain.dto.EnderecoDto;
+import fornari.nucleo.domain.dto.usuario.UsuarioEmployeeResponseDto;
+import fornari.nucleo.domain.dto.usuario.UsuarioWithoutPasswordDto;
 import fornari.nucleo.domain.entity.Endereco;
 import fornari.nucleo.domain.entity.Usuario;
-import fornari.nucleo.helper.Generator;
-import fornari.nucleo.helper.messages.ConstMessages;
-import fornari.nucleo.helper.validation.GenericValidations;
-import jakarta.validation.ValidationException;
-
-import java.util.ArrayList;
 
 public class UsuarioMapper {
-    public static Usuario toUser(UsuarioDto userDto) {
+    public static Usuario toUser(UsuarioEmployeeResponseDto userDto) {
         if (userDto == null) {
             return null;
         }
@@ -22,33 +18,50 @@ public class UsuarioMapper {
         user.setEmail(userDto.getEmail());
         user.setDtNasc(userDto.getDtNasc());
         user.setFuncao(userDto.getFuncao());
-        user.setSenha(userDto.getSenha());
+        user.setEndereco(new Endereco());
+        user.getEndereco().setId(userDto.getEndereco().getId());
         user.getEndereco().setCep(userDto.getEndereco().getCep());
-                user.getEndereco().setComplemento(userDto.getEndereco().getComplemento());
-                user.getEndereco().setBairro(userDto.getEndereco().getBairro());
-                user.getEndereco().setLocalidade(userDto.getEndereco().getLocalidade());
-                user.getEndereco().setUf(userDto.getEndereco().getUf());
-                user.getEndereco().setLogradouro(userDto.getEndereco().getLogradouro());
-                user.getEndereco().setNumero(userDto.getEndereco().getNumero());
+        user.getEndereco().setComplemento(userDto.getEndereco().getComplemento());
+        user.getEndereco().setBairro(userDto.getEndereco().getBairro());
+        user.getEndereco().setLocalidade(userDto.getEndereco().getLocalidade());
+        user.getEndereco().setUf(userDto.getEndereco().getUf());
+        user.getEndereco().setLogradouro(userDto.getEndereco().getLogradouro());
+        user.getEndereco().setNumero(userDto.getEndereco().getNumero());
 
-                return user;
+        return user;
     }
 
-    public static UsuarioDto toDTO(Usuario user) {
+    public static UsuarioEmployeeResponseDto toDTO(Usuario user) {
         if (user == null) {
             return null;
         }
 
-        UsuarioDto dto = new UsuarioDto();
+        UsuarioEmployeeResponseDto dto = new UsuarioEmployeeResponseDto();
         dto.setId(user.getId());
         dto.setNome(user.getNome());
         dto.setCpf(user.getCpf());
         dto.setEmail(user.getEmail());
-        dto.setEndereco(user.getEndereco());
+        dto.setEndereco(EnderecoMapper.toEnderecoDto(user.getEndereco()));
         dto.setFuncao(user.getFuncao());
         dto.setDtNasc(user.getDtNasc());
-        dto.getEndereco().setUsuarios(new ArrayList<>());
-        dto.setSenha(user.getSenha());
+
+        return dto;
+    }
+
+    public static UsuarioWithoutPasswordDto toDto(Usuario usuario) {
+        if (usuario == null) {
+            return null;
+        }
+
+        UsuarioWithoutPasswordDto dto = new UsuarioWithoutPasswordDto();
+        dto.setId(usuario.getId());
+        dto.setNome(usuario.getNome());
+        dto.setCpf(usuario.getCpf());
+        dto.setEmail(usuario.getEmail());
+        dto.setToken(usuario.getToken());
+        dto.setDtNasc(usuario.getDtNasc());
+        dto.setFuncao(usuario.getFuncao());
+        dto.setEndereco(EnderecoMapper.toEnderecoDto(usuario.getEndereco()));
 
         return dto;
     }
