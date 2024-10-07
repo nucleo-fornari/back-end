@@ -7,4 +7,6 @@ public class ConstMessages {
 
     public static final String INVALID_CHAMADO_TIPO_PRIORITY = "Os níveis de prioridade permitidos são: 1, 2 e 3.";
 
+    public static final String NOT_ALLOWED_TO_REGISTER_CHAMADO_WITHOUT_TIPO = "Não é permitido cadastrar chamados sem um tipo.";
+    public static final String NOT_FOUND_EMAIL_AND_CPF = "Email ou CPF inválido.";
 }
