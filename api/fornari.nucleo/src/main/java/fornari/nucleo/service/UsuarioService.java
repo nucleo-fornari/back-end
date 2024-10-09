@@ -28,9 +28,7 @@ public class UsuarioService {
         this.enderecoService = enderecoService;
     }
 
-    public Usuario createUsuario(UsuarioEmployeeResponseDto userDto) {
-        userDto.setId(null);
-        Usuario user = UsuarioMapper.toUser(userDto);
+    public Usuario createUsuario(Usuario user) {
 
         if (!GenericValidations.isValidCpf(user.getCpf())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ConstMessages.INVALID_CPF);
@@ -65,13 +63,14 @@ public class UsuarioService {
         }
     }
 
-    public Usuario updateUsuario(UsuarioEmployeeResponseDto userDTO, int id) {
+    public Usuario updateUsuario(Usuario usuario, int id) {
         if (!repository.existsById(id)) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
 
-        Usuario usuario = UsuarioMapper.toUser(userDTO);
-        usuario.setId(id);
+        if (!GenericValidations.isValidCpf(usuario.getCpf())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ConstMessages.INVALID_CPF);
+        }
 
         this.mapEndereco(usuario.getEndereco());
 
