@@ -3,6 +3,7 @@ package fornari.nucleo.domain.mapper;
 import fornari.nucleo.domain.dto.EnderecoDto;
 import fornari.nucleo.domain.dto.usuario.UsuarioEmployeeResponseDto;
 import fornari.nucleo.domain.dto.usuario.UsuarioWithoutPasswordDto;
+import fornari.nucleo.domain.dto.usuario.responsavel.ResponsavelAlunoDto;
 import fornari.nucleo.domain.entity.Endereco;
 import fornari.nucleo.domain.entity.Usuario;
 
@@ -64,5 +65,18 @@ public class UsuarioMapper {
         dto.setEndereco(EnderecoMapper.toEnderecoDto(usuario.getEndereco()));
 
         return dto;
+    }
+
+    public static ResponsavelAlunoDto usuarioToResponsavelAlunoDto(Usuario user) {
+
+        return ResponsavelAlunoDto.builder()
+                .id(user.getId())
+                .nome(user.getNome())
+                .cpf(user.getCpf())
+                .email(user.getEmail())
+                .dtNasc(user.getDtNasc())
+                .funcao(user.getFuncao())
+                .endereco(EnderecoMapper.toEnderecoDto(user.getEndereco()))
+                .build();
     }
 }

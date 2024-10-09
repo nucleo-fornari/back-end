@@ -4,18 +4,17 @@ import fornari.nucleo.helper.messages.ConstMessages;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Pattern;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.sql.Date;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity(name = "usuario")
 @Getter
 @Setter
+@Builder
 @AllArgsConstructor
 public class Usuario {
 
@@ -41,7 +40,7 @@ public class Usuario {
     private String token;
 
     @Column(nullable = false)
-    private Date dtNasc;
+    private LocalDate dtNasc;
 
     @Column
     @Pattern(regexp = "RESPONSAVEL|SECRETARIO|PROFESSOR|COORDENADOR", message = ConstMessages.INVALID_USER_ROLE)
@@ -51,16 +50,34 @@ public class Usuario {
     @JoinColumn(referencedColumnName = "id", name = "id_endereco")
     private Endereco endereco;
 
-//    @ManyToMany(targetEntity = Aluno.class, mappedBy = "responsaveis", cascade = CascadeType.PERSIST)
-//    private List<Aluno> afiliados;
+    @OneToMany(targetEntity = Filiacao.class, mappedBy = "responsavel", cascade = CascadeType.PERSIST)
+    private List<Filiacao> filiacoes;
 
     public Usuario () {
-//        this.afiliados = new ArrayList<>();
+        this.filiacoes = new ArrayList<>();
     }
+
     public void setEndereco(Endereco endereco) {
         if (this.endereco != endereco) {
             this.endereco = endereco;
             endereco.addUser(this);
+        }
+    }
+
+    public void addFiliacao(Aluno aluno, String parentesco) {
+       if(this.filiacoes.stream().filter(x -> x.getAfiliado().equals(aluno)).toList().isEmpty()) {
+           Filiacao filiacao = new Filiacao(aluno, this, parentesco);
+
+           this.filiacoes.add(filiacao);
+           filiacao.setResponsavel(this);
+       }
+    }
+
+    public void addFiliacao(Filiacao filiacao) {
+        if (!this.filiacoes.contains(filiacao)) {
+            this.filiacoes.add(filiacao);
+            filiacao.setResponsavel(this);
+            filiacao.getAfiliado().addFiliacao(filiacao);
         }
     }
 }

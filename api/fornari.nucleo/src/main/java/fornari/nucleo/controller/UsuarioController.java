@@ -33,7 +33,7 @@ public class UsuarioController {
     public ResponseEntity<UsuarioEmployeeResponseDto> createEmployee(
             @RequestBody UsuarioEmployeeResponseDto userDto
     ) {
-        Usuario user = service.createUsuario(userDto);
+        Usuario user = service.createUsuario(UsuarioMapper.toUser(userDto));
 
         return ResponseEntity.status(201).body(UsuarioMapper.toDTO(user));
     }
@@ -68,7 +68,7 @@ public class UsuarioController {
             @PathVariable int id,
             @RequestBody UsuarioEmployeeResponseDto userDTO
     ) {
-        Usuario user = service.updateUsuario(userDTO, id);
+        Usuario user = service.updateUsuario(UsuarioMapper.toUser(userDTO), id);
         return ResponseEntity.status(200).body(UsuarioMapper.toDTO(user));
     }
 }

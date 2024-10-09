@@ -4,6 +4,7 @@ import fornari.nucleo.domain.dto.EnderecoDto;
 import lombok.Data;
 
 import java.sql.Date;
+import java.time.LocalDate;
 
 @Data
 public class UsuarioWithoutPasswordDto {
@@ -18,7 +19,7 @@ public class UsuarioWithoutPasswordDto {
 
     private String token;
 
-    private Date dtNasc;
+    private LocalDate dtNasc;
 
     private String funcao;
 

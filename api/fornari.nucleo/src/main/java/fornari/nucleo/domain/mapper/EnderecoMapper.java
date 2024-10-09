@@ -35,11 +35,13 @@ public class EnderecoMapper {
         if (enderecoDto == null) return null;
 
         Endereco endereco = new Endereco();
+        endereco.setId(endereco.getId());
         endereco.setBairro(enderecoDto.getBairro());
         endereco.setCep(enderecoDto.getCep());
         endereco.setLocalidade(enderecoDto.getLocalidade());
         endereco.setUf(enderecoDto.getUf());
         endereco.setLogradouro(enderecoDto.getLogradouro());
+        endereco.setNumero(enderecoDto.getNumero());
         return endereco;
     }
 }
