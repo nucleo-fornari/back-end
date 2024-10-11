@@ -4,6 +4,7 @@ import fornari.nucleo.domain.dto.usuario.UsuarioEmployeeResponseDto;
 import fornari.nucleo.domain.entity.Usuario;
 import fornari.nucleo.domain.mapper.UsuarioMapper;
 import fornari.nucleo.service.UsuarioService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,10 +14,10 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/usuarios")
-//@Tag(name = "Usuário")
+@RequiredArgsConstructor
 public class UsuarioController {
-    @Autowired
-    private UsuarioService service;
+
+    private final UsuarioService service;
 
     @GetMapping(name = "LIST_USERS")
     public ResponseEntity<List<UsuarioEmployeeResponseDto>> getUsers() {
@@ -34,7 +35,6 @@ public class UsuarioController {
             @RequestBody UsuarioEmployeeResponseDto userDto
     ) {
         Usuario user = service.createUsuario(UsuarioMapper.toUser(userDto));
-
         return ResponseEntity.status(201).body(UsuarioMapper.toDTO(user));
     }
 
@@ -42,24 +42,14 @@ public class UsuarioController {
     public ResponseEntity<UsuarioEmployeeResponseDto> getById(
             @PathVariable int id
     ) {
-        Optional<Usuario> user = service.buscarPorID(id);
-
-        return user.isPresent() ?
-                ResponseEntity.status(200).body(UsuarioMapper.toDTO(user.get())) :
-                ResponseEntity.status(204).build();
+        return ResponseEntity.status(200).body(UsuarioMapper.toDTO(service.buscarPorID(id)));
     }
 
     @DeleteMapping(value = "/{id}", name = "DELETE_USER")
     public ResponseEntity<Void> delete(
             @PathVariable int id
     ) {
-        Optional<Usuario> user = service.buscarPorID(id);
-
-        if (user.isEmpty()) {
-            return ResponseEntity.status(204).build();
-        }
-
-        service.delete(user.get());
+        service.delete(service.buscarPorID(id));
         return ResponseEntity.status(200).build();
     }
 

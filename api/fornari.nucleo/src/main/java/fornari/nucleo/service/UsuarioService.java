@@ -8,6 +8,7 @@ import fornari.nucleo.helper.Generator;
 import fornari.nucleo.helper.messages.ConstMessages;
 import fornari.nucleo.helper.validation.GenericValidations;
 import fornari.nucleo.repository.UsuarioRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -16,19 +17,13 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class UsuarioService {
     private final UsuarioRepository repository;
     private final EnderecoService enderecoService;
 
-    public UsuarioService(
-        UsuarioRepository repository,
-        EnderecoService enderecoService
-    ) {
-        this.repository = repository;
-        this.enderecoService = enderecoService;
-    }
-
     public Usuario createUsuario(Usuario user) {
+        user.setId(null);
 
         if (!GenericValidations.isValidCpf(user.getCpf())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ConstMessages.INVALID_CPF);
@@ -41,7 +36,6 @@ public class UsuarioService {
     }
 
     public void mapEndereco (Endereco endereco) {
-
         if (this.enderecoService.alreadyExists(endereco)) {
             endereco = this.enderecoService.findExistentEndereco(endereco).get();
         }
@@ -51,8 +45,8 @@ public class UsuarioService {
         return repository.findAll();
     }
 
-    public Optional<Usuario> buscarPorID(int id) {
-        return repository.findById(id);
+    public Usuario buscarPorID(int id) {
+        return repository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 
     public void delete(Usuario user) {

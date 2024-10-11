@@ -53,6 +53,9 @@ public class Usuario {
     @OneToMany(targetEntity = Filiacao.class, mappedBy = "responsavel", cascade = CascadeType.PERSIST)
     private List<Filiacao> filiacoes;
 
+    @OneToMany(targetEntity = Evento.class, mappedBy = "usuario", cascade = CascadeType.PERSIST)
+    private List<Evento> eventos;
+
     public Usuario () {
         this.filiacoes = new ArrayList<>();
     }
