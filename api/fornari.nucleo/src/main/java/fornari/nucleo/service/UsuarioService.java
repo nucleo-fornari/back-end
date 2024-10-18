@@ -1,9 +1,9 @@
 package fornari.nucleo.service;
 
-import fornari.nucleo.domain.dto.usuario.UsuarioEmployeeResponseDto;
+import fornari.nucleo.domain.dto.usuario.UsuarioUpdateRequestDto;
 import fornari.nucleo.domain.entity.Endereco;
 import fornari.nucleo.domain.entity.Usuario;
-import fornari.nucleo.domain.mapper.UsuarioMapper;
+import fornari.nucleo.domain.mapper.EnderecoMapper;
 import fornari.nucleo.helper.Generator;
 import fornari.nucleo.helper.messages.ConstMessages;
 import fornari.nucleo.helper.validation.GenericValidations;
@@ -11,10 +11,10 @@ import fornari.nucleo.repository.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -22,6 +22,7 @@ public class UsuarioService {
     private final UsuarioRepository repository;
     private final EnderecoService enderecoService;
 
+    @Transactional
     public Usuario createUsuario(Usuario user) {
         user.setId(null);
 
@@ -29,16 +30,14 @@ public class UsuarioService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ConstMessages.INVALID_CPF);
         }
 
-        this.mapEndereco(user.getEndereco());
+        user.setEndereco(this.mapEndereco(user.getEndereco()));
 
         user.setSenha(Generator.generatePassword());
         return this.repository.save(user);
     }
 
-    public void mapEndereco (Endereco endereco) {
-        if (this.enderecoService.alreadyExists(endereco)) {
-            endereco = this.enderecoService.findExistentEndereco(endereco).get();
-        }
+    public Endereco mapEndereco (Endereco endereco) {
+        return this.enderecoService.findExistentEndereco(endereco).orElse(this.enderecoService.create(endereco));
     }
 
     public List<Usuario> listar() {
@@ -57,17 +56,16 @@ public class UsuarioService {
         }
     }
 
-    public Usuario updateUsuario(Usuario usuario, int id) {
-        if (!repository.existsById(id)) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-        }
+    @Transactional
+    public Usuario updateUsuario(UsuarioUpdateRequestDto data, int id) {
 
-        if (!GenericValidations.isValidCpf(usuario.getCpf())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ConstMessages.INVALID_CPF);
-        }
+        Usuario user = this.buscarPorID(id);
 
-        this.mapEndereco(usuario.getEndereco());
+        this.mapEndereco(EnderecoMapper.toEndereco(data.getEndereco())).addUser(user);
+        user.setNome(data.getNome());
+        user.setDtNasc(data.getDtNasc());
+        user.setFuncao(data.getFuncao());
 
-        return repository.save(usuario);
+        return repository.save(user);
     }
 }

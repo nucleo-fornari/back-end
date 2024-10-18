@@ -60,4 +60,8 @@ public class EnderecoService implements BuilderRestStrategy {
     public void delete(Endereco endereco) {
         this.repository.delete(endereco);
     }
+
+    public Endereco create(Endereco endereco) {
+        return this.repository.save(endereco);
+    }
 }

@@ -2,7 +2,7 @@ package fornari.nucleo.domain.mapper;
 
 import fornari.nucleo.domain.dto.FiliacaoAlunoDto;
 import fornari.nucleo.domain.dto.aluno.AlunoCreationRequestDto;
-import fornari.nucleo.domain.dto.aluno.AlunoCreationResponseDto;
+import fornari.nucleo.domain.dto.aluno.AlunoResponseDto;
 import fornari.nucleo.domain.entity.Aluno;
 import fornari.nucleo.domain.entity.Filiacao;
 import fornari.nucleo.domain.entity.Usuario;
@@ -11,13 +11,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AlunoMapper {
-    public static Aluno toAluno(AlunoCreationRequestDto dto) {
+    public static Aluno alunoCreationRequestDtotoAluno(AlunoCreationRequestDto dto) {
+
+        if (dto == null) {
+            return null;
+        }
 
         Aluno aluno = Aluno.builder()
                 .id(dto.getId())
                 .nome(dto.getNome())
+                .laudado(dto.isLaudado())
                 .ra(dto.getRa())
                 .dtNasc(dto.getDtNasc())
+                .restricoes(new ArrayList<>())
                 .observacoes(dto.getObservacoes())
                 .build();
 
@@ -39,15 +45,16 @@ public class AlunoMapper {
         return aluno;
     }
 
-    public static AlunoCreationResponseDto toDto(Aluno aluno) {
+    public static AlunoResponseDto AlunotoDto(Aluno aluno) {
 
-        return AlunoCreationResponseDto.builder()
+        return AlunoResponseDto.builder()
                 .id(aluno.getId())
                 .dtNasc(aluno.getDtNasc())
                 .laudado(aluno.isLaudado())
                 .nome(aluno.getNome())
                 .ra(aluno.getRa())
                 .observacoes(aluno.getObservacoes())
+                .restricoes(RestricaoMapper.multipleRestricaoToRestricaoResponseWithoutAlunosDto(aluno.getRestricoes()))
                 .filiacoes(aluno.getFiliacoes().stream().map((x) -> new FiliacaoAlunoDto(
                         UsuarioMapper.usuarioToResponsavelAlunoDto(x.getResponsavel()) , x.getParentesco())).toList())
                         .build();

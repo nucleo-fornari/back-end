@@ -1,17 +1,16 @@
 package fornari.nucleo.domain.dto.aluno;
 
-import fornari.nucleo.domain.dto.EnderecoDto;
 import fornari.nucleo.domain.dto.FiliacaoAlunoDto;
+import fornari.nucleo.domain.dto.restricao.RestricaoResponseWithoutAlunosDto;
 import lombok.Builder;
 import lombok.Data;
 
-import java.sql.Date;
 import java.time.LocalDate;
 import java.util.List;
 
 @Data
 @Builder
-public class AlunoCreationResponseDto {
+public class AlunoResponseDto {
 
     private Integer id;
 
@@ -26,4 +25,6 @@ public class AlunoCreationResponseDto {
     private List<FiliacaoAlunoDto> filiacoes;
 
     private String observacoes;
+
+    private List<RestricaoResponseWithoutAlunosDto> restricoes;
 }

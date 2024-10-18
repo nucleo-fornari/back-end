@@ -1,7 +1,8 @@
 package fornari.nucleo.domain.dto;
 
 import fornari.nucleo.domain.dto.usuario.responsavel.ResponsavelAlunoDto;
-import lombok.AllArgsConstructor;
+import fornari.nucleo.helper.messages.ConstMessages;
+import jakarta.validation.constraints.Pattern;
 import lombok.Builder;
 import lombok.Data;
 

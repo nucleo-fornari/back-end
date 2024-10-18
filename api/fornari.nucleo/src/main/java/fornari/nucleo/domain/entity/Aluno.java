@@ -35,10 +35,14 @@ public class Aluno {
     @Column(name = "observacoes")
     private String observacoes;
 
-    @OneToMany(targetEntity = Filiacao.class, mappedBy = "afiliado")
+    @OneToMany(targetEntity = Filiacao.class, mappedBy = "afiliado", cascade = CascadeType.PERSIST)
     private List<Filiacao> filiacoes;
 
+    @ManyToMany(mappedBy = "alunos")
+    private List<Restricao> restricoes;
+
     public Aluno() {
+        this.restricoes = new ArrayList<>();
         this.filiacoes = new ArrayList<>();
     }
 
@@ -46,7 +50,13 @@ public class Aluno {
         if (!this.filiacoes.contains(filiacao)) {
             this.filiacoes.add(filiacao);
             filiacao.setAfiliado(this);
-            filiacao.getResponsavel().addFiliacao(filiacao);
+        }
+    }
+
+    public void addRestricao(Restricao ra) {
+        if (!this.restricoes.contains(ra)) {
+            this.restricoes.add(ra);
+            ra.addAluno(this);
         }
     }
 }

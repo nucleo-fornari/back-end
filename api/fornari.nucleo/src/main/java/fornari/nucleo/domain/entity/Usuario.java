@@ -50,7 +50,7 @@ public class Usuario {
     @JoinColumn(referencedColumnName = "id", name = "id_endereco")
     private Endereco endereco;
 
-    @OneToMany(targetEntity = Filiacao.class, mappedBy = "responsavel", cascade = CascadeType.PERSIST)
+    @OneToMany(targetEntity = Filiacao.class, mappedBy = "responsavel")
     private List<Filiacao> filiacoes;
 
     @OneToMany(targetEntity = Evento.class, mappedBy = "usuario", cascade = CascadeType.PERSIST)
@@ -58,13 +58,6 @@ public class Usuario {
 
     public Usuario () {
         this.filiacoes = new ArrayList<>();
-    }
-
-    public void setEndereco(Endereco endereco) {
-        if (this.endereco != endereco) {
-            this.endereco = endereco;
-            endereco.addUser(this);
-        }
     }
 
     public void addFiliacao(Aluno aluno, String parentesco) {
@@ -80,7 +73,6 @@ public class Usuario {
         if (!this.filiacoes.contains(filiacao)) {
             this.filiacoes.add(filiacao);
             filiacao.setResponsavel(this);
-            filiacao.getAfiliado().addFiliacao(filiacao);
         }
     }
 }

@@ -1,14 +1,13 @@
 package fornari.nucleo.domain.mapper;
 
-import fornari.nucleo.domain.dto.EnderecoDto;
-import fornari.nucleo.domain.dto.usuario.UsuarioEmployeeResponseDto;
-import fornari.nucleo.domain.dto.usuario.UsuarioWithoutPasswordDto;
+import fornari.nucleo.domain.dto.usuario.UsuarioDefaultDto;
+import fornari.nucleo.domain.dto.usuario.UsuarioUpdateRequestDto;
 import fornari.nucleo.domain.dto.usuario.responsavel.ResponsavelAlunoDto;
 import fornari.nucleo.domain.entity.Endereco;
 import fornari.nucleo.domain.entity.Usuario;
 
 public class UsuarioMapper {
-    public static Usuario toUser(UsuarioEmployeeResponseDto userDto) {
+    public static Usuario toUser(UsuarioDefaultDto userDto) {
         if (userDto == null) {
             return null;
         }
@@ -32,12 +31,12 @@ public class UsuarioMapper {
         return user;
     }
 
-    public static UsuarioEmployeeResponseDto toDTO(Usuario user) {
+    public static UsuarioDefaultDto toDTO(Usuario user) {
         if (user == null) {
             return null;
         }
 
-        UsuarioEmployeeResponseDto dto = new UsuarioEmployeeResponseDto();
+        UsuarioDefaultDto dto = new UsuarioDefaultDto();
         dto.setId(user.getId());
         dto.setNome(user.getNome());
         dto.setCpf(user.getCpf());
@@ -45,24 +44,6 @@ public class UsuarioMapper {
         dto.setEndereco(EnderecoMapper.toEnderecoDto(user.getEndereco()));
         dto.setFuncao(user.getFuncao());
         dto.setDtNasc(user.getDtNasc());
-
-        return dto;
-    }
-
-    public static UsuarioWithoutPasswordDto toDto(Usuario usuario) {
-        if (usuario == null) {
-            return null;
-        }
-
-        UsuarioWithoutPasswordDto dto = new UsuarioWithoutPasswordDto();
-        dto.setId(usuario.getId());
-        dto.setNome(usuario.getNome());
-        dto.setCpf(usuario.getCpf());
-        dto.setEmail(usuario.getEmail());
-        dto.setToken(usuario.getToken());
-        dto.setDtNasc(usuario.getDtNasc());
-        dto.setFuncao(usuario.getFuncao());
-        dto.setEndereco(EnderecoMapper.toEnderecoDto(usuario.getEndereco()));
 
         return dto;
     }
@@ -77,6 +58,15 @@ public class UsuarioMapper {
                 .dtNasc(user.getDtNasc())
                 .funcao(user.getFuncao())
                 .endereco(EnderecoMapper.toEnderecoDto(user.getEndereco()))
+                .build();
+    }
+
+    public static UsuarioUpdateRequestDto usuarioToUsuarioUpdateRequestDto(Usuario user){
+        return UsuarioUpdateRequestDto.builder()
+                .dtNasc(user.getDtNasc())
+                .endereco(EnderecoMapper.toEnderecoDto(user.getEndereco()))
+                .funcao(user.getFuncao())
+                .nome(user.getNome())
                 .build();
     }
 }

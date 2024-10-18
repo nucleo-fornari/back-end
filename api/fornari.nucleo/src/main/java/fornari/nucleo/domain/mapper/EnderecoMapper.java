@@ -35,7 +35,7 @@ public class EnderecoMapper {
         if (enderecoDto == null) return null;
 
         Endereco endereco = new Endereco();
-        endereco.setId(endereco.getId());
+        endereco.setId(enderecoDto.getId());
         endereco.setBairro(enderecoDto.getBairro());
         endereco.setCep(enderecoDto.getCep());
         endereco.setLocalidade(enderecoDto.getLocalidade());

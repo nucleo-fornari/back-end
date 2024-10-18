@@ -1,16 +1,15 @@
 package fornari.nucleo.controller;
 
-import fornari.nucleo.domain.dto.usuario.UsuarioEmployeeResponseDto;
+import fornari.nucleo.domain.dto.usuario.UsuarioDefaultDto;
+import fornari.nucleo.domain.dto.usuario.UsuarioUpdateRequestDto;
 import fornari.nucleo.domain.entity.Usuario;
 import fornari.nucleo.domain.mapper.UsuarioMapper;
 import fornari.nucleo.service.UsuarioService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/usuarios")
@@ -20,7 +19,7 @@ public class UsuarioController {
     private final UsuarioService service;
 
     @GetMapping(name = "LIST_USERS")
-    public ResponseEntity<List<UsuarioEmployeeResponseDto>> getUsers() {
+    public ResponseEntity<List<UsuarioDefaultDto>> getUsers() {
         List<Usuario> users = service.listar();
 
         if (users.isEmpty()) return ResponseEntity.status(204).build();
@@ -31,15 +30,15 @@ public class UsuarioController {
     }
 
     @PostMapping(value = "/funcionario", name = "CREATE_EMPLOYEE")
-    public ResponseEntity<UsuarioEmployeeResponseDto> createEmployee(
-            @RequestBody UsuarioEmployeeResponseDto userDto
+    public ResponseEntity<UsuarioDefaultDto> createEmployee(
+            @RequestBody UsuarioDefaultDto userDto
     ) {
         Usuario user = service.createUsuario(UsuarioMapper.toUser(userDto));
         return ResponseEntity.status(201).body(UsuarioMapper.toDTO(user));
     }
 
     @GetMapping(value = "/{id}", name = "GET_USER_BY_ID")
-    public ResponseEntity<UsuarioEmployeeResponseDto> getById(
+    public ResponseEntity<UsuarioDefaultDto> getById(
             @PathVariable int id
     ) {
         return ResponseEntity.status(200).body(UsuarioMapper.toDTO(service.buscarPorID(id)));
@@ -54,11 +53,11 @@ public class UsuarioController {
     }
 
     @PutMapping(value = "/{id}", name = "UPDATE_USER")
-    public ResponseEntity<UsuarioEmployeeResponseDto> update(
+    public ResponseEntity<UsuarioDefaultDto> update(
             @PathVariable int id,
-            @RequestBody UsuarioEmployeeResponseDto userDTO
+            @RequestBody UsuarioUpdateRequestDto userDTO
     ) {
-        Usuario user = service.updateUsuario(UsuarioMapper.toUser(userDTO), id);
+        Usuario user = service.updateUsuario(userDTO, id);
         return ResponseEntity.status(200).body(UsuarioMapper.toDTO(user));
     }
 }

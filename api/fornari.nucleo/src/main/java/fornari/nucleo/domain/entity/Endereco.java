@@ -1,8 +1,11 @@
 package fornari.nucleo.domain.entity;
 
+import fornari.nucleo.helper.messages.ConstMessages;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Max;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.validator.constraints.Length;
 
 import java.util.*;
 
@@ -29,6 +32,7 @@ public class Endereco {
     @Column(nullable = false, name = "cidade")
     private String localidade;
 
+    @Length(min = 2, max = 2, message = ConstMessages.INVALID_UF)
     @Column(nullable = false)
     private String uf;
 
@@ -38,7 +42,7 @@ public class Endereco {
     @Column(nullable = false)
     private Integer numero;
 
-    @OneToMany(mappedBy = "endereco", targetEntity = Usuario.class, cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "endereco", targetEntity = Usuario.class)
     private List<Usuario> usuarios;
 
     public Endereco(int id, String cep, String complemento, String bairro, String localidade, String uf, String logradouro, Integer numero) {
