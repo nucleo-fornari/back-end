@@ -30,4 +30,6 @@ public class ConstMessages {
     public static final String NOT_FOUND_ALUNO_BY_ID = "Aluno com ID %d não encontrado.";
 
     public static final String ALREADY_RESGISTERED_RESPONSIBLE_FOR_ALUNO = "O responsável já está registrado.";
+
+    public static final String NOT_REGISTERED_RESPONSIBLE = "Responsável não registrado.";
 }

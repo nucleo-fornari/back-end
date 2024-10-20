@@ -1,7 +1,7 @@
 package fornari.nucleo.domain.mapper;
 
 import fornari.nucleo.domain.dto.FiliacaoAlunoDto;
-import fornari.nucleo.domain.dto.aluno.AlunoCreationRequestDto;
+import fornari.nucleo.domain.dto.aluno.AlunoRequestDto;
 import fornari.nucleo.domain.dto.aluno.AlunoResponseDto;
 import fornari.nucleo.domain.entity.Aluno;
 import fornari.nucleo.domain.entity.Filiacao;
@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AlunoMapper {
-    public static Aluno alunoCreationRequestDtotoAluno(AlunoCreationRequestDto dto) {
+    public static Aluno alunoCreationRequestDtotoAluno(AlunoRequestDto dto) {
 
         if (dto == null) {
             return null;
@@ -27,20 +27,22 @@ public class AlunoMapper {
                 .observacoes(dto.getObservacoes())
                 .build();
 
-        Usuario responsavel = Usuario.builder()
-                .id(dto.getFiliacao().getResponsavel().getId())
-                .cpf(dto.getFiliacao().getResponsavel().getCpf())
-                .dtNasc(dto.getFiliacao().getResponsavel().getDtNasc())
-                .email(dto.getFiliacao().getResponsavel().getEmail())
-                .funcao(dto.getFiliacao().getResponsavel().getFuncao())
-                .nome(dto.getFiliacao().getResponsavel().getNome())
-                .endereco(EnderecoMapper.toEndereco(dto.getFiliacao().getResponsavel().getEndereco()))
-                .build();
+        if (dto.getFiliacao() != null) {
+            Usuario responsavel = Usuario.builder()
+                    .id(dto.getFiliacao().getResponsavel().getId())
+                    .cpf(dto.getFiliacao().getResponsavel().getCpf())
+                    .dtNasc(dto.getFiliacao().getResponsavel().getDtNasc())
+                    .email(dto.getFiliacao().getResponsavel().getEmail())
+                    .funcao(dto.getFiliacao().getResponsavel().getFuncao())
+                    .nome(dto.getFiliacao().getResponsavel().getNome())
+                    .endereco(EnderecoMapper.toEndereco(dto.getFiliacao().getResponsavel().getEndereco()))
+                    .build();
 
-        List<Filiacao> filiacoes = new ArrayList<>(List.of(new Filiacao(aluno, responsavel, dto.getFiliacao().getParentesco())));
+            List<Filiacao> filiacoes = new ArrayList<>(List.of(new Filiacao(null, aluno, responsavel, dto.getFiliacao().getParentesco())));
 
-        aluno.setFiliacoes(filiacoes);
-        responsavel.setFiliacoes(filiacoes);
+            aluno.setFiliacoes(filiacoes);
+            responsavel.setFiliacoes(filiacoes);
+        }
 
         return aluno;
     }

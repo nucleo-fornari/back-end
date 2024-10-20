@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -36,8 +37,9 @@ public class UsuarioService {
         return this.repository.save(user);
     }
 
-    public Endereco mapEndereco (Endereco endereco) {
-        return this.enderecoService.findExistentEndereco(endereco).orElse(this.enderecoService.create(endereco));
+    public Endereco mapEndereco(Endereco endereco) {
+        return this.enderecoService.findExistentEndereco(endereco)
+                .orElseGet(() -> this.enderecoService.create(endereco));
     }
 
     public List<Usuario> listar() {
@@ -57,12 +59,16 @@ public class UsuarioService {
     }
 
     @Transactional
-    public Usuario updateUsuario(UsuarioUpdateRequestDto data, int id) {
+    public Usuario updateUsuario(Usuario data, int id) {
+        if (!GenericValidations.isValidCpf(data.getCpf())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ConstMessages.INVALID_CPF);
+        }
 
         Usuario user = this.buscarPorID(id);
-
-        this.mapEndereco(EnderecoMapper.toEndereco(data.getEndereco())).addUser(user);
+        user.setEndereco(this.mapEndereco(data.getEndereco()));
         user.setNome(data.getNome());
+        user.setCpf(data.getCpf());
+        user.setEmail(data.getEmail());
         user.setDtNasc(data.getDtNasc());
         user.setFuncao(data.getFuncao());
 

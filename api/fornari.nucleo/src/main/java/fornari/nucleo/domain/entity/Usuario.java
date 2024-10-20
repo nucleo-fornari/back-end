@@ -50,7 +50,7 @@ public class Usuario {
     @JoinColumn(referencedColumnName = "id", name = "id_endereco")
     private Endereco endereco;
 
-    @OneToMany(targetEntity = Filiacao.class, mappedBy = "responsavel")
+    @OneToMany(targetEntity = Filiacao.class, mappedBy = "responsavel", cascade = {CascadeType.REMOVE, CascadeType.PERSIST})
     private List<Filiacao> filiacoes;
 
     @OneToMany(targetEntity = Evento.class, mappedBy = "usuario", cascade = CascadeType.PERSIST)
@@ -62,7 +62,7 @@ public class Usuario {
 
     public void addFiliacao(Aluno aluno, String parentesco) {
        if(this.filiacoes.stream().filter(x -> x.getAfiliado().equals(aluno)).toList().isEmpty()) {
-           Filiacao filiacao = new Filiacao(aluno, this, parentesco);
+           Filiacao filiacao = new Filiacao(null,aluno, this, parentesco);
 
            this.filiacoes.add(filiacao);
            filiacao.setResponsavel(this);

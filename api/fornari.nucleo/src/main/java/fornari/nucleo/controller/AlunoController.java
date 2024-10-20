@@ -1,15 +1,14 @@
 package fornari.nucleo.controller;
 
 import fornari.nucleo.domain.dto.FiliacaoAlunoDto;
-import fornari.nucleo.domain.dto.aluno.AlunoCreationRequestDto;
+import fornari.nucleo.domain.dto.aluno.AlunoRequestDto;
 import fornari.nucleo.domain.dto.aluno.AlunoResponseDto;
-import fornari.nucleo.domain.dto.usuario.UsuarioDefaultDto;
 import fornari.nucleo.domain.entity.Aluno;
 import fornari.nucleo.domain.mapper.AlunoMapper;
 import fornari.nucleo.domain.mapper.FiliacaoMapper;
-import fornari.nucleo.domain.mapper.UsuarioMapper;
 import fornari.nucleo.service.AlunoService;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,9 +25,9 @@ public class AlunoController {
     }
 
     @PostMapping
-    public ResponseEntity<AlunoResponseDto> create(@Valid @RequestBody AlunoCreationRequestDto body) {
+    public ResponseEntity<AlunoResponseDto> create(@Valid @RequestBody AlunoRequestDto body) {
         Aluno aluno = this.service.create(AlunoMapper.alunoCreationRequestDtotoAluno(body), body.getRestricoes());
-        return ResponseEntity.ok().body(AlunoMapper.AlunotoDto(aluno));
+        return ResponseEntity.status(HttpStatus.CREATED).body(AlunoMapper.AlunotoDto(aluno));
     }
 
     @GetMapping
@@ -50,5 +49,25 @@ public class AlunoController {
     ) {
         return ResponseEntity.ok().body(AlunoMapper.AlunotoDto(this.service.addResponsavel(
                 FiliacaoMapper.filiacaoAlunoDtoToFiliacao(data), id)));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<AlunoResponseDto> updateAluno(
+            @PathVariable int id,
+            @RequestBody AlunoRequestDto body
+    ) {
+        return ResponseEntity.ok().body(AlunoMapper.AlunotoDto(this.service.update(
+                AlunoMapper.alunoCreationRequestDtotoAluno(body), body.getRestricoes(), id)));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable int id) {
+        this.service.delete(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/{id}/responsavel/{idResponsavel}")
+    public ResponseEntity<AlunoResponseDto> delete(@PathVariable int id, @PathVariable int idResponsavel) {
+        return ResponseEntity.ok().body(AlunoMapper.AlunotoDto(this.service.delete(id, idResponsavel)));
     }
 }

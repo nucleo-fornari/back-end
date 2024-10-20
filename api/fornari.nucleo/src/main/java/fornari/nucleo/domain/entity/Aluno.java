@@ -35,7 +35,7 @@ public class Aluno {
     @Column(name = "observacoes")
     private String observacoes;
 
-    @OneToMany(targetEntity = Filiacao.class, mappedBy = "afiliado", cascade = CascadeType.PERSIST)
+    @OneToMany(targetEntity = Filiacao.class, mappedBy = "afiliado", cascade = CascadeType.PERSIST, orphanRemoval = true)
     private List<Filiacao> filiacoes;
 
     @ManyToMany(mappedBy = "alunos")
@@ -44,6 +44,14 @@ public class Aluno {
     public Aluno() {
         this.restricoes = new ArrayList<>();
         this.filiacoes = new ArrayList<>();
+    }
+
+    @PreRemove
+    public void removeRelations() {
+        for (Restricao restricao : this.restricoes) {
+            restricao.removeAluno(this);
+        }
+        this.restricoes.clear();
     }
 
     public void addFiliacao(Filiacao filiacao) {
@@ -58,5 +66,13 @@ public class Aluno {
             this.restricoes.add(ra);
             ra.addAluno(this);
         }
+    }
+
+    public void removeRestricao(Restricao restricao) {
+        this.restricoes.remove(restricao);
+    }
+
+    public void removeFiliacao(Filiacao filiacao) {
+        this.filiacoes.remove(filiacao);
     }
 }

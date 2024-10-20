@@ -18,5 +18,4 @@ public class FiliacaoAlunoDto {
         this.responsavel = responsavelAlunoDto;
         this.parentesco = parentesco;
     }
-
 }

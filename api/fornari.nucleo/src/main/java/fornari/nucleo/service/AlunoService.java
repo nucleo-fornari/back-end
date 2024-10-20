@@ -54,9 +54,8 @@ public class AlunoService {
 
         if (responsavel.isPresent()) {
             aluno.getFiliacoes().get(0)
-                    .setResponsavel(this.usuarioService.updateUsuario(UsuarioMapper
-                            .usuarioToUsuarioUpdateRequestDto(
-                                    aluno.getFiliacoes().get(0).getResponsavel()), responsavel.get().getId()));
+                    .setResponsavel(this.usuarioService.updateUsuario(
+                                    aluno.getFiliacoes().get(0).getResponsavel(), responsavel.get().getId()));
         } else {
             aluno.getFiliacoes().get(0)
                     .setResponsavel(this.usuarioService.createUsuario(aluno.getFiliacoes().get(0).getResponsavel()));
@@ -68,11 +67,15 @@ public class AlunoService {
 
         aluno = this.repository.save(aluno);
 
+        this.assignConstraint(aluno, restricoes);
+
+        return this.repository.save(aluno);
+    }
+
+    private void assignConstraint(Aluno aluno, List<Integer> restricoes) {
         for (Integer id : restricoes) {
             aluno.addRestricao(this.restricaoService.findById(id));
         }
-
-        return this.repository.save(aluno);
     }
 
     public List<Aluno> findAll() {
@@ -85,22 +88,68 @@ public class AlunoService {
 
     @Transactional
     public Aluno addResponsavel(Filiacao filiacao, Integer alunoId) {
+        if (filiacao.getResponsavel().getId() != null) {
+            filiacao.setResponsavel(this.usuarioService.updateUsuario(
+                    this.usuarioService.buscarPorID(
+                            filiacao.getResponsavel().getId()), filiacao.getResponsavel().getId()
+            ));
+        }
         Optional<Usuario> optResponsavel = this.usuarioRepository
                 .findByCpf(filiacao.getResponsavel().getCpf());
         if (optResponsavel.isPresent()) {
-            filiacao.setResponsavel(this.usuarioService.updateUsuario(UsuarioMapper
-                    .usuarioToUsuarioUpdateRequestDto(filiacao.getResponsavel()), optResponsavel.get().getId()));
+            filiacao.setResponsavel(this.usuarioService.updateUsuario(
+                    filiacao.getResponsavel(), optResponsavel.get().getId()));
         } else {
             filiacao.setResponsavel(this.usuarioService.createUsuario(filiacao.getResponsavel()));
         }
 
         Aluno aluno = this.findById(alunoId);
-        aluno.addFiliacao(filiacao);
+        filiacao.setAfiliado(aluno);
 
-        if (aluno.getFiliacoes().stream().filter(x -> x.getResponsavel().getId().equals(filiacao.getResponsavel().getId())).toList().size() > 1) {
-            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, ConstMessages.ALREADY_RESGISTERED_RESPONSIBLE_FOR_ALUNO);
+        if (aluno.getFiliacoes().stream()
+                .noneMatch(f -> f.getResponsavel().getId().equals(filiacao.getResponsavel().getId()))) {
+            aluno.addFiliacao(filiacao);
+        }
+
+        if (aluno.getFiliacoes().stream().filter(x -> Objects.equals(x.getParentesco(), "GENITOR")).toList().size() > 2) {
+            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, ConstMessages.PARENT_COUNT_EXCEEDED);
         }
 
         return this.repository.save(aluno);
+    }
+
+    public Aluno update(Aluno body, List<Integer> restricoes, Integer id) {
+        Aluno aluno = this.findById(id);
+        if (!body.getRa().equals(aluno.getRa()) && this.repository.existsByRa(body.getRa())) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, ConstMessages.ALREADY_EXISTS_ALUNO_BY_RA);
+        }
+
+        if (body.getDtNasc().isBefore(LocalDate.now().minusYears(6))
+                || body.getDtNasc().isAfter(LocalDate.now())) {
+            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, ConstMessages.INVALID_BIRTHDATE_FOR_ALUNO);
+        }
+
+        aluno.setNome(body.getNome());
+        aluno.setDtNasc(body.getDtNasc());
+        aluno.setRa(body.getRa());
+        aluno.setObservacoes(body.getObservacoes());
+        aluno.setLaudado(body.isLaudado());
+        this.assignConstraint(aluno, restricoes);
+        return this.repository.save(aluno);
+    }
+
+    public void delete(Integer id) {
+        this.repository.delete(this.findById(id));
+    }
+
+    public Aluno delete(Integer id, Integer userId) {
+        Aluno aluno = this.findById(id);
+        for (Filiacao filiacao : aluno.getFiliacoes()) {
+            if(filiacao.getResponsavel().getId().equals(userId)) {
+                aluno.removeFiliacao(filiacao);
+                return this.repository.save(aluno);
+            }
+        }
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND, ConstMessages.NOT_REGISTERED_RESPONSIBLE);
     }
 }

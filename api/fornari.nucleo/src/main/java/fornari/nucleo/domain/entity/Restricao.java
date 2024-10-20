@@ -42,4 +42,16 @@ public class Restricao {
             ra.addRestricao(this);
         }
     }
+
+    @PreRemove
+    private void removeRelations() {
+        for (Aluno aluno : this.alunos) {
+            aluno.removeRestricao(this);
+        }
+        this.alunos.clear();
+    }
+
+    public void removeAluno(Aluno aluno) {
+        this.alunos.remove(aluno);
+    }
 }
