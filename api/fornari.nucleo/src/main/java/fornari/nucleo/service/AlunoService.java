@@ -88,19 +88,21 @@ public class AlunoService {
 
     @Transactional
     public Aluno addResponsavel(Filiacao filiacao, Integer alunoId) {
+
         if (filiacao.getResponsavel().getId() != null) {
             filiacao.setResponsavel(this.usuarioService.updateUsuario(
                     this.usuarioService.buscarPorID(
                             filiacao.getResponsavel().getId()), filiacao.getResponsavel().getId()
             ));
-        }
-        Optional<Usuario> optResponsavel = this.usuarioRepository
-                .findByCpf(filiacao.getResponsavel().getCpf());
-        if (optResponsavel.isPresent()) {
-            filiacao.setResponsavel(this.usuarioService.updateUsuario(
-                    filiacao.getResponsavel(), optResponsavel.get().getId()));
         } else {
-            filiacao.setResponsavel(this.usuarioService.createUsuario(filiacao.getResponsavel()));
+            Optional<Usuario> optResponsavel = this.usuarioRepository
+                    .findByCpf(filiacao.getResponsavel().getCpf());
+            if (optResponsavel.isPresent()) {
+                filiacao.setResponsavel(this.usuarioService.updateUsuario(
+                        filiacao.getResponsavel(), optResponsavel.get().getId()));
+            } else {
+                filiacao.setResponsavel(this.usuarioService.createUsuario(filiacao.getResponsavel()));
+            }
         }
 
         Aluno aluno = this.findById(alunoId);
