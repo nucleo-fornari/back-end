@@ -26,6 +26,9 @@ public class ChamadoService {
     @Autowired
     private ChamadoTipoRepository chamadoTipoRepository;
 
+    @Autowired
+    private UsuarioService usuarioService;
+
     public List<Chamado> findByFinalizadoEqualsFalse() {
         List<Chamado> list = this.repository.findByFinalizadoEquals(false);
 
@@ -36,7 +39,7 @@ public class ChamadoService {
         return list;
     }
 
-    public Chamado create(ChamadoDto dto) {
+    public Chamado create(ChamadoDto dto, Integer idUsuario) {
         dto.setId(null);
         if (dto.getTipo().getId() == null) {
             throw new ValidationException(ConstMessages.NOT_ALLOWED_TO_REGISTER_CHAMADO_WITHOUT_TIPO);
@@ -48,6 +51,7 @@ public class ChamadoService {
         ChamadoTipo chamadoTipo = this.chamadoTipoRepository.findById(dto.getTipo().getId()).get();
         Chamado chamado = ChamadoMapper.toChamado(dto);
         chamado.setTipo(chamadoTipo);
+        chamado.setResponsavel(this.usuarioService.buscarPorID(idUsuario));
         return this.repository.save(chamado);
     }
 

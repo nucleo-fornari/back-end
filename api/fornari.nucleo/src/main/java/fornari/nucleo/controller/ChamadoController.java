@@ -24,11 +24,9 @@ public class ChamadoController {
     }
 
     @PostMapping
-    public ResponseEntity<ChamadoDto> create(@RequestBody ChamadoDto dto) {
-        return ResponseEntity.ok().body(
-                ChamadoMapper.ToChamadoDto(
-                        service.create(dto)
-                )
+    public ResponseEntity<ChamadoDto> create(@RequestBody ChamadoDto dto, @RequestParam Integer idUsuario) {
+        return ResponseEntity.status(201).body(
+                ChamadoMapper.ToChamadoDto(service.create(dto, idUsuario))
         );
     }
 

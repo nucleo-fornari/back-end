@@ -1,7 +1,11 @@
 package fornari.nucleo.domain.dto;
 
+import fornari.nucleo.domain.dto.usuario.UsuarioDefaultDto;
+import lombok.Data;
+
 import java.time.LocalDateTime;
 
+@Data
 public class ChamadoDto {
     private Integer id;
     private String descricao;
@@ -12,6 +16,7 @@ public class ChamadoDto {
 
     private boolean criancaAtipica;
     private ChamadoTipoDto tipo;
+    private UsuarioDefaultDto responsavel;
 
     public ChamadoDto() {
     }

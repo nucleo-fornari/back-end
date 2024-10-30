@@ -83,7 +83,8 @@ public class AlunoService {
     }
 
     public Aluno findById(int id) {
-        return this.repository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, ConstMessages.NOT_FOUND_ALUNO_BY_ID.formatted(id)));
+        return this.repository.findById(id).orElseThrow(()
+                -> new ResponseStatusException(HttpStatus.NOT_FOUND, ConstMessages.NOT_FOUND_ALUNO_BY_ID.formatted(id)));
     }
 
     @Transactional
@@ -113,7 +114,8 @@ public class AlunoService {
             aluno.addFiliacao(filiacao);
         }
 
-        if (aluno.getFiliacoes().stream().filter(x -> Objects.equals(x.getParentesco(), "GENITOR")).toList().size() > 2) {
+        if (aluno.getFiliacoes().stream()
+                .filter(x -> Objects.equals(x.getParentesco(), "GENITOR")).toList().size() > 2) {
             throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, ConstMessages.PARENT_COUNT_EXCEEDED);
         }
 

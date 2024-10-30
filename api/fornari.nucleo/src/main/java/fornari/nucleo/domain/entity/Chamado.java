@@ -2,10 +2,14 @@ package fornari.nucleo.domain.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 
 @Entity
+@Getter
+@Setter
 public class Chamado {
 
     @Id
@@ -32,6 +36,10 @@ public class Chamado {
     @ManyToOne(targetEntity = ChamadoTipo.class, cascade = CascadeType.PERSIST)
     private ChamadoTipo tipo;
 
+    @JoinColumn(name = "id_responsavel", referencedColumnName = "id", nullable = false)
+    @ManyToOne(targetEntity = Usuario.class)
+    private Usuario responsavel;
+
     public Chamado() {
     }
 
@@ -52,43 +60,17 @@ public class Chamado {
         tipo.addChamado(this);
     }
 
-    public String getDescricao() {
-        return descricao;
-    }
-
-    public void setDescricao(String descricao) {
-        this.descricao = descricao;
-    }
-
-    public boolean isFinalizado() {
-        return finalizado;
-    }
-
     public void setFinalizado(boolean finalizado) {
         this.finalizado = finalizado;
+        if (finalizado) {
+            this.dtFechamento = LocalDateTime.now();
+        } else {
+            this.dtFechamento = null;
+        }
     }
 
-    public LocalDateTime getDtAbertura() {
-        return dtAbertura;
-    }
-
-    public void setDtAbertura(LocalDateTime dtAbertura) {
-        this.dtAbertura = dtAbertura;
-    }
-
-    public LocalDateTime getDtFechamento() {
-        return dtFechamento;
-    }
-
-    public void setDtFechamento(LocalDateTime dtFechamento) {
-        this.dtFechamento = dtFechamento;
-    }
-
-    public boolean isCriancaAtipica() {
-        return criancaAtipica;
-    }
-
-    public void setCriancaAtipica(boolean criancaAtipica) {
-        this.criancaAtipica = criancaAtipica;
+    public void setResponsavel(Usuario responsavel) {
+        this.responsavel = responsavel;
+        responsavel.addChamado(this);
     }
 }

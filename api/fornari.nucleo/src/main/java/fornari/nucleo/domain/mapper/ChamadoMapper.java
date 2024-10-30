@@ -20,6 +20,7 @@ public class ChamadoMapper {
         dto.setDtFechamento(chamado.getDtFechamento());
         dto.setCriancaAtipica(chamado.isCriancaAtipica());
         dto.setTipo(ChamadoTipoMapper.toChamadoTipoDto(chamado.getTipo()));
+        dto.setResponsavel(UsuarioMapper.toDTO(chamado.getResponsavel()));
 
         return dto;
     }

@@ -20,12 +20,12 @@ public class UsuarioController {
 
     @GetMapping(name = "LIST_USERS")
     public ResponseEntity<List<UsuarioDefaultDto>> getUsers() {
-        List<Usuario> users = service.listar();
+        List<Usuario> list = service.listar();
 
-        if (users.isEmpty()) return ResponseEntity.status(204).build();
+        if (list.isEmpty()) return ResponseEntity.status(204).build();
 
         return ResponseEntity.status(200).body(
-                users.stream().map(UsuarioMapper::toDTO).toList()
+                list.stream().map(UsuarioMapper::toDTO).toList()
         );
     }
 

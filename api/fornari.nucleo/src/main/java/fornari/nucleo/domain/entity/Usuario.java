@@ -56,7 +56,11 @@ public class Usuario {
     @OneToMany(targetEntity = Evento.class, mappedBy = "usuario", cascade = CascadeType.PERSIST)
     private List<Evento> eventos;
 
+    @OneToMany(targetEntity = Chamado.class, mappedBy = "responsavel", cascade = CascadeType.PERSIST)
+    private List<Chamado> chamados;
+
     public Usuario () {
+        this.chamados = new ArrayList<>();
         this.filiacoes = new ArrayList<>();
     }
 
@@ -73,6 +77,12 @@ public class Usuario {
         if (!this.filiacoes.contains(filiacao)) {
             this.filiacoes.add(filiacao);
             filiacao.setResponsavel(this);
+        }
+    }
+
+    public void addChamado(Chamado chamado) {
+        if (!this.chamados.contains(chamado)) {
+            this.chamados.add(chamado);
         }
     }
 }
