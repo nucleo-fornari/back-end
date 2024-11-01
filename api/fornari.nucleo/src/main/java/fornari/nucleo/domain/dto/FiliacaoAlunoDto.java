@@ -11,7 +11,6 @@ import lombok.Data;
 public class FiliacaoAlunoDto {
 
     private ResponsavelAlunoDto responsavel;
-
     private String parentesco;
 
     public FiliacaoAlunoDto (ResponsavelAlunoDto responsavelAlunoDto, String parentesco) {

@@ -9,11 +9,9 @@ import java.time.LocalDateTime;
 public class ChamadoDto {
     private Integer id;
     private String descricao;
-
     private boolean finalizado;
     private LocalDateTime dtAbertura;
     private LocalDateTime dtFechamento;
-
     private boolean criancaAtipica;
     private ChamadoTipoDto tipo;
     private UsuarioResponseDto responsavel;
@@ -34,9 +32,5 @@ public class ChamadoDto {
         }
 
         return prioridade;
-    }
-
-    public void setTipo(ChamadoTipoDto tipo) {
-        this.tipo = tipo;
     }
 }

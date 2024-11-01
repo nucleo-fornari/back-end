@@ -39,7 +39,8 @@ public class UsuarioService {
 
     @Transactional
     public Usuario createUsuario(Usuario user) {
-        user.setSenha(passwordEncoder.encode(user.getSenha()));
+        //user.setSenha(passwordEncoder.encode(Generator.generatePassword()));
+        user.setSenha(passwordEncoder.encode("12345678"));
         user.setEndereco(this.mapEndereco(user.getEndereco()));
         return this.repository.save(user);
     }

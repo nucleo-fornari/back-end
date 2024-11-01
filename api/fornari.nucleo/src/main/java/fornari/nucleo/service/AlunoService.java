@@ -89,7 +89,6 @@ public class AlunoService {
 
     @Transactional
     public Aluno addResponsavel(Filiacao filiacao, Integer alunoId) {
-
         if (filiacao.getResponsavel().getId() != null) {
             filiacao.setResponsavel(this.usuarioService.updateUsuario(
                     this.usuarioService.buscarPorID(

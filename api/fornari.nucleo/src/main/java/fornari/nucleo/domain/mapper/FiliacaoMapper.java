@@ -7,7 +7,6 @@ import fornari.nucleo.domain.entity.Usuario;
 public class FiliacaoMapper {
 
     public static Filiacao filiacaoAlunoDtoToFiliacao(FiliacaoAlunoDto dto) {
-
         return dto == null ? null : Filiacao.builder()
                 .parentesco(dto.getParentesco())
                 .responsavel(Usuario.builder()
