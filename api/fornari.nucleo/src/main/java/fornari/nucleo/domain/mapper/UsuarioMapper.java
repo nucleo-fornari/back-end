@@ -1,13 +1,15 @@
 package fornari.nucleo.domain.mapper;
 
-import fornari.nucleo.domain.dto.usuario.UsuarioDefaultDto;
+import fornari.nucleo.domain.dto.usuario.UsuarioCreateDto;
+import fornari.nucleo.domain.dto.usuario.UsuarioResponseDto;
+import fornari.nucleo.domain.dto.usuario.UsuarioTokenDto;
 import fornari.nucleo.domain.dto.usuario.UsuarioUpdateRequestDto;
 import fornari.nucleo.domain.dto.usuario.responsavel.ResponsavelAlunoDto;
 import fornari.nucleo.domain.entity.Endereco;
 import fornari.nucleo.domain.entity.Usuario;
 
 public class UsuarioMapper {
-    public static Usuario toUser(UsuarioDefaultDto userDto) {
+    public static Usuario toUser(UsuarioCreateDto userDto) {
         if (userDto == null) {
             return null;
         }
@@ -16,6 +18,7 @@ public class UsuarioMapper {
         user.setNome(userDto.getNome());
         user.setCpf(userDto.getCpf());
         user.setEmail(userDto.getEmail());
+        user.setSenha(userDto.getSenha());
         user.setDtNasc(userDto.getDtNasc());
         user.setFuncao(userDto.getFuncao());
         user.setEndereco(new Endereco());
@@ -31,19 +34,41 @@ public class UsuarioMapper {
         return user;
     }
 
-    public static UsuarioDefaultDto toDTO(Usuario user) {
+
+    public static Usuario toUser(UsuarioUpdateRequestDto userDto) {
+        if (userDto == null) {
+            return null;
+        }
+
+        Usuario user = new Usuario();
+        user.setNome(userDto.getNome());
+        user.setDtNasc(userDto.getDtNasc());
+        user.setFuncao(userDto.getFuncao());
+        user.setEndereco(new Endereco());
+        user.getEndereco().setId(userDto.getEndereco().getId());
+        user.getEndereco().setCep(userDto.getEndereco().getCep());
+        user.getEndereco().setComplemento(userDto.getEndereco().getComplemento());
+        user.getEndereco().setBairro(userDto.getEndereco().getBairro());
+        user.getEndereco().setLocalidade(userDto.getEndereco().getLocalidade());
+        user.getEndereco().setUf(userDto.getEndereco().getUf());
+        user.getEndereco().setLogradouro(userDto.getEndereco().getLogradouro());
+        user.getEndereco().setNumero(userDto.getEndereco().getNumero());
+
+        return user;
+    }
+
+    public static UsuarioResponseDto toDTO(Usuario user) {
         if (user == null) {
             return null;
         }
 
-        UsuarioDefaultDto dto = new UsuarioDefaultDto();
-        dto.setId(user.getId());
+        UsuarioResponseDto dto = new UsuarioResponseDto();
         dto.setNome(user.getNome());
         dto.setCpf(user.getCpf());
         dto.setEmail(user.getEmail());
-        dto.setEndereco(EnderecoMapper.toEnderecoDto(user.getEndereco()));
         dto.setFuncao(user.getFuncao());
         dto.setDtNasc(user.getDtNasc());
+        dto.setEndereco(EnderecoMapper.toEnderecoDto(user.getEndereco()));
 
         return dto;
     }
@@ -67,6 +92,15 @@ public class UsuarioMapper {
                 .endereco(EnderecoMapper.toEnderecoDto(user.getEndereco()))
                 .funcao(user.getFuncao())
                 .nome(user.getNome())
+                .build();
+    }
+
+    public static UsuarioTokenDto toTokenDto(Usuario usuario, String token) {
+        return UsuarioTokenDto.builder()
+                .userId(usuario.getId())
+                .email(usuario.getEmail())
+                .nome(usuario.getNome())
+                .token(token)
                 .build();
     }
 }

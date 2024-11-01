@@ -32,7 +32,6 @@ public class Endereco {
     @Column(nullable = false, name = "cidade")
     private String localidade;
 
-    @Length(min = 2, max = 2, message = ConstMessages.INVALID_UF)
     @Column(nullable = false)
     private String uf;
 
@@ -40,12 +39,12 @@ public class Endereco {
     private String logradouro;
 
     @Column(nullable = false)
-    private Integer numero;
+    private String numero;
 
     @OneToMany(mappedBy = "endereco", targetEntity = Usuario.class)
     private List<Usuario> usuarios;
 
-    public Endereco(int id, String cep, String complemento, String bairro, String localidade, String uf, String logradouro, Integer numero) {
+    public Endereco(int id, String cep, String complemento, String bairro, String localidade, String uf, String logradouro, String numero) {
         this.id = id;
         this.cep = cep;
         this.complemento = complemento;
