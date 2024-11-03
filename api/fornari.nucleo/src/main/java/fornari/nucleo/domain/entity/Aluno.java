@@ -38,7 +38,7 @@ public class Aluno {
     @OneToMany(targetEntity = Filiacao.class, mappedBy = "afiliado", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true)
     private List<Filiacao> filiacoes;
 
-    @ManyToMany(mappedBy = "alunos")
+    @ManyToMany(mappedBy = "alunos", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private List<Restricao> restricoes;
 
     public Aluno() {

@@ -68,15 +68,35 @@ public class AlunoService {
 
         new Filiacao(null, aluno, responsavel, parentesco);
 
-        this.assignConstraint(aluno, restricoes);
+        this.updateConstraint(aluno, restricoes);
 
         return this.repository.save(aluno);
     }
 
-    private void assignConstraint(Aluno aluno, List<Integer> restricoes) {
-        for (Integer id : restricoes) {
-            aluno.addRestricao(this.restricaoService.findById(id));
+    private void updateConstraint(Aluno aluno, List<Integer> restricoes) {
+        this.repository.save(aluno);
+
+        for (Restricao restricao : aluno.getRestricoes()) {
+            restricao.removeAluno(aluno);
         }
+
+        aluno.getRestricoes().clear();
+
+        this.assignConstraint(aluno, restricoes);
+    }
+
+    // IMPLEMENTAÇÃO RECURSÃO
+    private void assignConstraint(Aluno aluno, List<Integer> restricoes) {
+        if (restricoes == null || restricoes.isEmpty()) {
+            return;  // Caso base: lista vazia ou nula, termina a recursão
+        }
+
+        // Pega o primeiro elemento da lista e associa a restrição ao aluno
+        Integer id = restricoes.get(0);
+        aluno.addRestricao(this.restricaoService.findById(id));
+
+        // Chama o mét0do recursivamente com o restante da lista
+        assignConstraint(aluno, restricoes.subList(1, restricoes.size()));
     }
 
     public List<Aluno> findAll() {
@@ -127,6 +147,7 @@ public class AlunoService {
         return this.repository.save(aluno);
     }
 
+    @Transactional
     public Aluno update(Aluno body, List<Integer> restricoes, Integer id) {
         Aluno aluno = this.findById(id);
         if (!body.getRa().equals(aluno.getRa()) && this.repository.existsByRa(body.getRa())) {
@@ -143,7 +164,7 @@ public class AlunoService {
         aluno.setRa(body.getRa());
         aluno.setObservacoes(body.getObservacoes());
         aluno.setLaudado(body.isLaudado());
-        this.assignConstraint(aluno, restricoes);
+        this.updateConstraint(aluno, restricoes);
         return this.repository.save(aluno);
     }
 
