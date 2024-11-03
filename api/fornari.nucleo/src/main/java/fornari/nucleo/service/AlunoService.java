@@ -119,11 +119,9 @@ public class AlunoService {
                             responsavel.getId()), responsavel.getId()
             ));
         } else {
-            Optional<Usuario> optResponsavel = this.usuarioRepository
-                    .findByCpf(responsavel.getCpf());
+            Optional<Usuario> optResponsavel = this.usuarioRepository.findByCpf(responsavel.getCpf());
             if (optResponsavel.isPresent()) {
-                responsavel = (this.usuarioService.updateUsuario(
-                        responsavel, optResponsavel.get().getId()));
+                responsavel = (this.usuarioService.updateUsuario(responsavel, optResponsavel.get().getId()));
             } else {
                 responsavel = (this.usuarioService.createUsuario(responsavel));
                 responsavel.setFiliacoes(new ArrayList<>());
@@ -173,7 +171,12 @@ public class AlunoService {
     }
 
     public Aluno delete(Integer id, Integer userId) {
+
         Aluno aluno = this.findById(id);
+        if (aluno.getFiliacoes().size() < 2) {
+            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY,
+                    ConstMessages.ALUNO_NEEDS_AT_LEAST_ONE_RESPONSIBLE);
+        }
         for (Filiacao filiacao : aluno.getFiliacoes()) {
             if(filiacao.getResponsavel().getId().equals(userId)) {
                 aluno.removeFiliacao(filiacao);

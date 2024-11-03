@@ -32,4 +32,8 @@ public class ConstMessages {
     public static final String ALREADY_RESGISTERED_RESPONSIBLE_FOR_ALUNO = "O responsável já está registrado.";
 
     public static final String NOT_REGISTERED_RESPONSIBLE = "Responsável não registrado.";
+
+    public static final String ALUNO_NEEDS_AT_LEAST_ONE_RESPONSIBLE = "Aluno deve ter pelo menos um responsável.";
+
+    public static final String NOT_FOUND_CHAMADO_TIPO_BY_ID = "Tipo de chamado de id: %d não encontrado.";
 }
