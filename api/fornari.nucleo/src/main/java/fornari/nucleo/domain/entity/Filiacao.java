@@ -9,7 +9,6 @@ import lombok.*;
 @Getter
 @Setter
 @Builder
-@AllArgsConstructor
 public class Filiacao {
 
     @Id
@@ -20,18 +19,31 @@ public class Filiacao {
     @JoinColumn(name = "aluno_id", referencedColumnName = "id")
     private Aluno afiliado;
 
-    @ManyToOne(targetEntity = Usuario.class)
+    @ManyToOne(targetEntity = Usuario.class, fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(name = "responsavel_id", referencedColumnName = "id")
     private Usuario responsavel;
 
-    @Column(nullable = false)
     @Pattern(regexp = "GENITOR|IRMÃO|AVÔ|TIO|PRIMO", message = ConstMessages.INVALID_KINSHIP)
     private String parentesco;
 
     public Filiacao () {}
 
+    public Filiacao(Integer id, Aluno afiliado, Usuario responsavel, String parentesco) {
+        this.id = id;
+        this.afiliado = afiliado;
+        this.responsavel = responsavel;
+        this.parentesco = parentesco;
+
+        if (afiliado != null) {
+            afiliado.addFiliacao(this);
+        }
+        if (responsavel != null) {
+            responsavel.addFiliacao(this);
+        }
+    }
+
     public void setResponsavel(Usuario responsavel) {
-        if (this. responsavel != null && !this.responsavel.equals(responsavel)) {
+        if (this.responsavel != null && !this.responsavel.equals(responsavel)) {
             this.responsavel = responsavel;
             responsavel.addFiliacao(this);
         }

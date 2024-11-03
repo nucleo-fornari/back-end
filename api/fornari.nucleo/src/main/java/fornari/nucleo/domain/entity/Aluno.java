@@ -35,7 +35,7 @@ public class Aluno {
     @Column(name = "observacoes")
     private String observacoes;
 
-    @OneToMany(targetEntity = Filiacao.class, mappedBy = "afiliado", cascade = CascadeType.PERSIST, orphanRemoval = true)
+    @OneToMany(targetEntity = Filiacao.class, mappedBy = "afiliado", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true)
     private List<Filiacao> filiacoes;
 
     @ManyToMany(mappedBy = "alunos")
@@ -55,10 +55,11 @@ public class Aluno {
     }
 
     public void addFiliacao(Filiacao filiacao) {
-        if (!this.filiacoes.contains(filiacao)) {
-            this.filiacoes.add(filiacao);
-            filiacao.setAfiliado(this);
+        if (filiacao == null || this.filiacoes.contains(filiacao)) {
+            return;
         }
+        this.filiacoes.add(filiacao);
+        filiacao.setAfiliado(this);
     }
 
     public void addRestricao(Restricao ra) {

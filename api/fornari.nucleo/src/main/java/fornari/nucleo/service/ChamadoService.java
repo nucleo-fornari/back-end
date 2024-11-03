@@ -52,6 +52,7 @@ public class ChamadoService {
         Chamado chamado = ChamadoMapper.toChamado(dto);
         chamado.setTipo(chamadoTipo);
         chamado.setResponsavel(this.usuarioService.buscarPorID(idUsuario));
+        chamado.setDtAbertura(LocalDateTime.now());
         return this.repository.save(chamado);
     }
 

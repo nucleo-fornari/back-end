@@ -18,7 +18,6 @@ public class UsuarioMapper {
         user.setNome(userDto.getNome());
         user.setCpf(userDto.getCpf());
         user.setEmail(userDto.getEmail());
-        user.setSenha(userDto.getSenha());
         user.setDtNasc(userDto.getDtNasc());
         user.setFuncao(userDto.getFuncao());
         user.setEndereco(new Endereco());
@@ -63,6 +62,7 @@ public class UsuarioMapper {
         }
 
         UsuarioResponseDto dto = new UsuarioResponseDto();
+        dto.setId(user.getId());
         dto.setNome(user.getNome());
         dto.setCpf(user.getCpf());
         dto.setEmail(user.getEmail());
@@ -74,6 +74,9 @@ public class UsuarioMapper {
     }
 
     public static ResponsavelAlunoDto usuarioToResponsavelAlunoDto(Usuario user) {
+        if (user == null) {
+            return null;
+        }
 
         return ResponsavelAlunoDto.builder()
                 .id(user.getId())

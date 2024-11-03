@@ -64,20 +64,15 @@ public class Usuario {
         this.filiacoes = new ArrayList<>();
     }
 
-    public void addFiliacao(Aluno aluno, String parentesco) {
-       if(this.filiacoes.stream().filter(x -> x.getAfiliado().equals(aluno)).toList().isEmpty()) {
-           Filiacao filiacao = new Filiacao(null,aluno, this, parentesco);
-
-           this.filiacoes.add(filiacao);
-           filiacao.setResponsavel(this);
-       }
-    }
-
     public void addFiliacao(Filiacao filiacao) {
-        if (!this.filiacoes.contains(filiacao)) {
-            this.filiacoes.add(filiacao);
-            filiacao.setResponsavel(this);
+        if (this.filiacoes == null) {
+            this.filiacoes = new ArrayList<>();
         }
+        if (filiacao == null || this.filiacoes.contains(filiacao)) {
+            return;
+        }
+        this.filiacoes.add(filiacao);
+        filiacao.setResponsavel(this);
     }
 
     public void addChamado(Chamado chamado) {

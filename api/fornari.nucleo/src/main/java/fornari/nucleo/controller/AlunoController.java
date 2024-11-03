@@ -26,7 +26,12 @@ public class AlunoController {
 
     @PostMapping
     public ResponseEntity<AlunoResponseDto> create(@Valid @RequestBody AlunoRequestDto body) {
-        Aluno aluno = this.service.create(AlunoMapper.alunoCreationRequestDtotoAluno(body), body.getRestricoes());
+        Aluno aluno = this.service.create(
+                AlunoMapper.alunoCreationRequestDtotoAluno(body),
+                AlunoMapper.responsavelAlunoDtotoUsuario(body.getFiliacao().getResponsavel()),
+                body.getFiliacao().getParentesco(), body.getRestricoes()
+        );
+
         return ResponseEntity.status(HttpStatus.CREATED).body(AlunoMapper.AlunotoDto(aluno));
     }
 
@@ -45,10 +50,10 @@ public class AlunoController {
     @PutMapping("/{id}/responsavel")
     public ResponseEntity<AlunoResponseDto> addResponsavel(
             @PathVariable int id,
-            @RequestBody FiliacaoAlunoDto data
+            @RequestBody @Valid FiliacaoAlunoDto data
     ) {
         return ResponseEntity.ok().body(AlunoMapper.AlunotoDto(this.service.addResponsavel(
-                FiliacaoMapper.filiacaoAlunoDtoToFiliacao(data), id)));
+                AlunoMapper.responsavelAlunoDtotoUsuario(data.getResponsavel()), id, data.getParentesco())));
     }
 
     @PutMapping("/{id}")

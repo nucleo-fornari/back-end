@@ -4,6 +4,7 @@ import fornari.nucleo.domain.entity.*;
 import fornari.nucleo.domain.mapper.UsuarioMapper;
 import fornari.nucleo.helper.messages.ConstMessages;
 import fornari.nucleo.repository.AlunoRepository;
+import fornari.nucleo.repository.FiliacaoRepository;
 import fornari.nucleo.repository.UsuarioRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -11,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -19,6 +21,8 @@ import java.util.Optional;
 public class AlunoService {
 
     private final AlunoRepository repository;
+
+    private final FiliacaoRepository filiacaoRepository;
 
     private final UsuarioService usuarioService;
 
@@ -30,16 +34,19 @@ public class AlunoService {
             AlunoRepository repository,
             UsuarioService usuarioService,
             UsuarioRepository usuarioRepository,
-            RestricaoService restricaoService
+            RestricaoService restricaoService,
+            FiliacaoRepository filiacaoRepository
     ) {
         this.repository = repository;
         this.usuarioService = usuarioService;
         this.usuarioRepository = usuarioRepository;
         this.restricaoService = restricaoService;
+        this.filiacaoRepository = filiacaoRepository;
     }
 
     @Transactional
-    public Aluno create(Aluno aluno, List<Integer> restricoes) {
+    public Aluno create(Aluno aluno, Usuario responsavel, String parentesco, List<Integer> restricoes) {
+
         if (this.repository.existsByRa(aluno.getRa())) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, ConstMessages.ALREADY_EXISTS_ALUNO_BY_RA);
         }
@@ -49,23 +56,17 @@ public class AlunoService {
             throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, ConstMessages.INVALID_BIRTHDATE_FOR_ALUNO);
         }
 
-        Optional<Usuario> responsavel = this.usuarioRepository
-                .findByCpf(aluno.getFiliacoes().get(0).getResponsavel().getCpf());
+        Optional<Usuario> optResponsavel = this.usuarioRepository
+                .findByCpf(responsavel.getCpf());
 
-        if (responsavel.isPresent()) {
-            aluno.getFiliacoes().get(0)
-                    .setResponsavel(this.usuarioService.updateUsuario(
-                                    aluno.getFiliacoes().get(0).getResponsavel(), responsavel.get().getId()));
+        if (optResponsavel.isPresent()) {
+            responsavel = (this.usuarioService.updateUsuario(
+                                    responsavel, responsavel.getId()));
         } else {
-            aluno.getFiliacoes().get(0)
-                    .setResponsavel(this.usuarioService.createUsuario(aluno.getFiliacoes().get(0).getResponsavel()));
+            responsavel = (this.usuarioService.createUsuario(responsavel));
         }
 
-        if (aluno.getFiliacoes().stream().filter(x -> Objects.equals(x.getParentesco(), "GENITOR")).toList().size() > 2) {
-            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, ConstMessages.PARENT_COUNT_EXCEEDED);
-        }
-
-        aluno = this.repository.save(aluno);
+        new Filiacao(null, aluno, responsavel, parentesco);
 
         this.assignConstraint(aluno, restricoes);
 
@@ -82,35 +83,40 @@ public class AlunoService {
         return this.repository.findAll();
     }
 
-    public Aluno findById(int id) {
+    public Aluno findById(Integer id) {
         return this.repository.findById(id).orElseThrow(()
                 -> new ResponseStatusException(HttpStatus.NOT_FOUND, ConstMessages.NOT_FOUND_ALUNO_BY_ID.formatted(id)));
     }
 
     @Transactional
-    public Aluno addResponsavel(Filiacao filiacao, Integer alunoId) {
-        if (filiacao.getResponsavel().getId() != null) {
-            filiacao.setResponsavel(this.usuarioService.updateUsuario(
+    public Aluno addResponsavel(Usuario responsavel, Integer alunoId, String parentesco) {
+
+        Aluno aluno = this.findById(alunoId);
+
+        if (responsavel.getId() != null) {
+             responsavel = (this.usuarioService.updateUsuario(
                     this.usuarioService.buscarPorID(
-                            filiacao.getResponsavel().getId()), filiacao.getResponsavel().getId()
+                            responsavel.getId()), responsavel.getId()
             ));
         } else {
             Optional<Usuario> optResponsavel = this.usuarioRepository
-                    .findByCpf(filiacao.getResponsavel().getCpf());
+                    .findByCpf(responsavel.getCpf());
             if (optResponsavel.isPresent()) {
-                filiacao.setResponsavel(this.usuarioService.updateUsuario(
-                        filiacao.getResponsavel(), optResponsavel.get().getId()));
+                responsavel = (this.usuarioService.updateUsuario(
+                        responsavel, optResponsavel.get().getId()));
             } else {
-                filiacao.setResponsavel(this.usuarioService.createUsuario(filiacao.getResponsavel()));
+                responsavel = (this.usuarioService.createUsuario(responsavel));
+                responsavel.setFiliacoes(new ArrayList<>());
             }
         }
 
-        Aluno aluno = this.findById(alunoId);
-        filiacao.setAfiliado(aluno);
+        Usuario finalResponsavel = responsavel;
 
         if (aluno.getFiliacoes().stream()
-                .noneMatch(f -> f.getResponsavel().getId().equals(filiacao.getResponsavel().getId()))) {
+                .noneMatch(f -> f.getResponsavel().getId().equals(finalResponsavel.getId()))) {
+            Filiacao filiacao = filiacaoRepository.save(new Filiacao(null, aluno, responsavel, parentesco));
             aluno.addFiliacao(filiacao);
+            responsavel.addFiliacao(filiacao);
         }
 
         if (aluno.getFiliacoes().stream()

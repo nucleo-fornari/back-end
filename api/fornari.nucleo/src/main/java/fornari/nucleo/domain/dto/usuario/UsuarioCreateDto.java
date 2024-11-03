@@ -18,10 +18,6 @@ public class UsuarioCreateDto {
     @Email
     private String email;
 
-    @NotBlank
-    @Size(min = 8, max = 30)
-    private String senha;
-
     @Past
     private LocalDate dtNasc;
 

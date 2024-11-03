@@ -24,6 +24,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -40,8 +41,13 @@ public class UsuarioService {
     @Transactional
     public Usuario createUsuario(Usuario user) {
         //user.setSenha(passwordEncoder.encode(Generator.generatePassword()));
+        System.out.println("\n \n \n \n \n ENTROU NO CREATE \n \n \n \n \n \n \n \n");
+        if (!GenericValidations.isValidCpf(user.getCpf())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ConstMessages.INVALID_CPF);
+        }
         user.setSenha(passwordEncoder.encode("12345678"));
         user.setEndereco(this.mapEndereco(user.getEndereco()));
+        user.setFiliacoes(new ArrayList<>());
         return this.repository.save(user);
     }
 
@@ -67,7 +73,12 @@ public class UsuarioService {
     }
 
     @Transactional
-    public Usuario updateUsuario(Usuario data, int id) {
+    public Usuario updateUsuario(Usuario data, Integer id) {
+
+        if (!GenericValidations.isValidCpf(data.getCpf())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ConstMessages.INVALID_CPF);
+        }
+
         Usuario user = this.buscarPorID(id);
         user.setEndereco(this.mapEndereco(data.getEndereco()));
         user.setNome(data.getNome());
