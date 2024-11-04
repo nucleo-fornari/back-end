@@ -103,6 +103,7 @@ public class UsuarioMapper {
                 .userId(usuario.getId())
                 .email(usuario.getEmail())
                 .nome(usuario.getNome())
+                .funcao(usuario.getFuncao())
                 .token(token)
                 .build();
     }

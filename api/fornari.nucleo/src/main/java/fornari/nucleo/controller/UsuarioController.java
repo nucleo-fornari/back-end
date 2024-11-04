@@ -61,7 +61,7 @@ public class UsuarioController {
         return ResponseEntity.status(200).body(UsuarioMapper.toDTO(user));
     }
 
-    @GetMapping("/login")
+    @PostMapping("/login")
     public ResponseEntity<UsuarioTokenDto> login(@RequestBody @Valid UsuarioLoginDto usuarioLoginDto) {
         return ResponseEntity.ok(
                 service.autenticar(usuarioLoginDto.getEmail(), usuarioLoginDto.getSenha())

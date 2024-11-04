@@ -102,9 +102,7 @@ public class UsuarioService {
         );
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
-
         final String token = gerenciadorTokenJwt.generateToken(authentication);
-
         return UsuarioMapper.toTokenDto(usuarioAutenticado, token);
     }
 }
