@@ -24,9 +24,6 @@ public class ChamadoService {
     private ChamadoRepository repository;
 
     @Autowired
-    private ChamadoTipoRepository chamadoTipoRepository;
-
-    @Autowired
     private UsuarioService usuarioService;
 
     @Autowired
