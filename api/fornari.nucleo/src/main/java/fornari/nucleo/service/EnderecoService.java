@@ -1,22 +1,27 @@
 package fornari.nucleo.service;
 
-import fornari.nucleo.dto.EnderecoApiExternaDto;
-import fornari.nucleo.dto.EnderecoDto;
+import fornari.nucleo.domain.dto.EnderecoApiExternaDto;
+import fornari.nucleo.domain.dto.EnderecoDto;
+import fornari.nucleo.domain.entity.Endereco;
 import fornari.nucleo.models.interfaces.BuilderRestStrategy;
+import fornari.nucleo.repository.EnderecoRepository;
 import fornari.nucleo.repository.UsuarioRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 
 import java.util.ArrayList;
 import java.util.List;
-@Component
+import java.util.Optional;
+
+@Service
+@RequiredArgsConstructor
 public class EnderecoService implements BuilderRestStrategy {
 
-    @Autowired
-    private UsuarioRepository repository;
+    private final EnderecoRepository repository;
 
     @Override
     public RestClient builderRest(String url) {
@@ -24,32 +29,6 @@ public class EnderecoService implements BuilderRestStrategy {
                 .baseUrl(url)
                 .messageConverters(httpMessageConverters -> httpMessageConverters.add(new MappingJackson2HttpMessageConverter()))
                         .build();
-    }
-
-    public EnderecoDto mapEnderecoApiToEndereco(EnderecoApiExternaDto enderecoApiExternaDto) {
-        EnderecoDto enderecoDto = new EnderecoDto();
-        enderecoDto.setBairro(enderecoApiExternaDto.getBairro());
-        enderecoDto.setCep(enderecoApiExternaDto.getCep());
-        enderecoDto.setLocalidade(enderecoApiExternaDto.getLocalidade());
-        enderecoDto.setUf(enderecoApiExternaDto.getUf());
-        enderecoDto.setLogradouro(enderecoApiExternaDto.getLogradouro());
-
-        return enderecoDto;
-    }
-
-    public List<EnderecoDto> mapListEnderecoApiToEndereco(List<EnderecoApiExternaDto> list) {
-
-        List<EnderecoDto> resposta = list.stream().map(item -> {
-            EnderecoDto enderecoDto = new EnderecoDto();
-            enderecoDto.setBairro(item.getBairro());
-            enderecoDto.setCep(item.getCep());
-            enderecoDto.setLocalidade(item.getLocalidade());
-            enderecoDto.setUf(item.getUf());
-            enderecoDto.setLogradouro(item.getLogradouro());
-            return enderecoDto;
-        }).toList();
-
-        return organizeByLogradouro(resposta);
     }
 
     public List<EnderecoDto> organizeByLogradouro(List<EnderecoDto> lista) {
@@ -68,5 +47,21 @@ public class EnderecoService implements BuilderRestStrategy {
             listaMutavel.set(indMenor, aux);
         }
         return listaMutavel;
+    }
+
+    public boolean alreadyExists(Endereco endereco) {
+        return this.repository.existsByCepAndNumeroAndComplemento(endereco.getCep(), endereco.getNumero(), endereco.getComplemento());
+    }
+
+    public Optional<Endereco> findExistentEndereco(Endereco endereco) {
+        return this.repository.findOneByCepAndNumeroAndComplemento(endereco.getCep(), endereco.getNumero(), endereco.getComplemento());
+    }
+
+    public void delete(Endereco endereco) {
+        this.repository.delete(endereco);
+    }
+
+    public Endereco create(Endereco endereco) {
+        return this.repository.save(endereco);
     }
 }

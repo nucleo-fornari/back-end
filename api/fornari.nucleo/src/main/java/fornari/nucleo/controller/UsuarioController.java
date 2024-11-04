@@ -1,85 +1,70 @@
 package fornari.nucleo.controller;
 
-import fornari.nucleo.dto.UsuarioDto;
-import fornari.nucleo.entity.Usuario;
-import fornari.nucleo.repository.UsuarioRepository;
+import fornari.nucleo.domain.dto.usuario.*;
+import fornari.nucleo.domain.entity.Usuario;
+import fornari.nucleo.domain.mapper.UsuarioMapper;
 import fornari.nucleo.service.UsuarioService;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/usuarios")
-//@Tag(name = "Usuário")
+@RequiredArgsConstructor
 public class UsuarioController {
 
-    @Autowired
-    private UsuarioRepository repository;
-
-    @Autowired
-    private UsuarioService service;
+    private final UsuarioService service;
 
     @GetMapping(name = "LIST_USERS")
-    public ResponseEntity<List<UsuarioDto>> getUsers() {
-        List<Usuario> users = this.repository.findAll();
+    public ResponseEntity<List<UsuarioResponseDto>> getUsers() {
+        List<Usuario> list = service.listar();
 
-        if (!users.isEmpty()) {
-            return ResponseEntity.status(200).body(this.service.mapMultipleUsuarioToUsuarioDto(users));
-        }
+        if (list.isEmpty()) return ResponseEntity.status(204).build();
 
-        return ResponseEntity.status(204).build();
+        return ResponseEntity.status(200).body(
+                list.stream().map(UsuarioMapper::toDTO).toList()
+        );
     }
 
     @PostMapping(value = "/funcionario", name = "CREATE_EMPLOYEE")
-    public ResponseEntity<UsuarioDto> createEmployee(
-            @RequestBody UsuarioDto user
+    public ResponseEntity<UsuarioResponseDto> createEmployee(
+            @RequestBody @Valid UsuarioCreateDto userDto
     ) {
-        user.setId(null);
-        Usuario savedUser = this.service.createOrUpdateUsuario(user);
-
-        if (savedUser.getId() != null) {
-            return ResponseEntity.status(201).body(this.service.mapUsuarioToUsuarioDto(savedUser));
-        }
-        return ResponseEntity.status(400).build();
+        Usuario user = service.createUsuario(UsuarioMapper.toUser(userDto));
+        return ResponseEntity.status(201).body(UsuarioMapper.toDTO(user));
     }
 
     @GetMapping(value = "/{id}", name = "GET_USER_BY_ID")
-    public ResponseEntity<UsuarioDto> getById(
+    public ResponseEntity<UsuarioResponseDto> getById(
             @PathVariable int id
     ) {
-        Optional<Usuario> user = this.repository.findById(id);
-
-        return user.map(usuario -> ResponseEntity.status(200).body(this.service.mapUsuarioToUsuarioDto(usuario)))
-                .orElseGet(() -> ResponseEntity.status(204).build());
-
+        return ResponseEntity.status(200).body(UsuarioMapper.toDTO(service.buscarPorID(id)));
     }
 
     @DeleteMapping(value = "/{id}", name = "DELETE_USER")
     public ResponseEntity<Void> delete(
             @PathVariable int id
     ) {
-        Optional<Usuario> user = this.repository.findById(id);
-        if (user.isEmpty()) {
-            return ResponseEntity.status(204).build();
-        }
-        this.repository.delete(user.get());
+        service.delete(service.buscarPorID(id));
         return ResponseEntity.status(200).build();
     }
 
     @PutMapping(value = "/{id}", name = "UPDATE_USER")
-    public ResponseEntity<UsuarioDto> update(
-            @PathVariable int id,
-            @RequestBody UsuarioDto user
+    public ResponseEntity<UsuarioResponseDto> update(
+            @PathVariable Integer id,
+            @RequestBody @Valid UsuarioCreateDto userDTO
     ) {
-        user.setId(id);
-        Usuario savedUser = this.service.createOrUpdateUsuario(user);
+        Usuario user = service.updateUsuario(UsuarioMapper.toUser(userDTO), id);
+        return ResponseEntity.status(200).body(UsuarioMapper.toDTO(user));
+    }
 
-        if (savedUser.getId() != null) {
-            return ResponseEntity.status(200).body(this.service.mapUsuarioToUsuarioDto(savedUser));
-        }
-        return ResponseEntity.status(400).build();
+    @GetMapping("/login")
+    public ResponseEntity<UsuarioTokenDto> login(@RequestBody @Valid UsuarioLoginDto usuarioLoginDto) {
+        return ResponseEntity.ok(
+                service.autenticar(usuarioLoginDto.getEmail(), usuarioLoginDto.getSenha())
+        );
     }
 }
