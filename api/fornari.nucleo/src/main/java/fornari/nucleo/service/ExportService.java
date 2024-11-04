@@ -1,6 +1,6 @@
 package fornari.nucleo.service;
 
-import fornari.nucleo.entity.Usuario;
+import fornari.nucleo.domain.entity.Usuario;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -39,11 +39,11 @@ public class ExportService {
 
     public static void main(String[] args) {
         List<Usuario> usuarios = new ArrayList<>();
-        usuarios.add(new Usuario(1, "Felipe", "12322465543", "felipe.teste@gmail.com", null, null, "Professor", null));
-        usuarios.add(new Usuario(2, "Ana", "98765432100", "ana.exemplo@gmail.com", null, null, "Professor", null));
-        usuarios.add(new Usuario(3, "Carlos", "45678912301", "carlos.exemplo@gmail.com", null, null, "Responsavel", null));
-        usuarios.add(new Usuario(4, "Julia", "32145698710", "julia.exemplo@gmail.com", null, null, "Secretario", null));
-        usuarios.add(new Usuario(5, "Marcos", "65412398710", "marcos.exemplo@gmail.com", null, null, "Responsavel", null));
+        usuarios.add(new Usuario(1, "Felipe", "12322465543", "felipe.teste@gmail.com", "Professor"));
+        usuarios.add(new Usuario(2, "Ana", "98765432100", "ana.exemplo@gmail.com", "Professor"));
+        usuarios.add(new Usuario(3, "Carlos", "45678912301", "carlos.exemplo@gmail.com","Responsavel"));
+        usuarios.add(new Usuario(4, "Julia", "32145698710", "julia.exemplo@gmail.com", "Secretario"));
+        usuarios.add(new Usuario(5, "Marcos", "65412398710", "marcos.exemplo@gmail.com","Responsavel"));
         exportar(usuarios);
     }
 }

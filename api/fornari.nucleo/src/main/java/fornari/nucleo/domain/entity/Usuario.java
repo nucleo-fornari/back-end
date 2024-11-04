@@ -64,6 +64,14 @@ public class Usuario {
         this.filiacoes = new ArrayList<>();
     }
 
+    public Usuario(Integer id, String nome, String cpf, String email, String funcao) {
+        this.id = id;
+        this.nome = nome;
+        this.cpf = cpf;
+        this.email = email;
+        this.funcao = funcao;
+    }
+
     public void addFiliacao(Filiacao filiacao) {
         if (this.filiacoes == null) {
             this.filiacoes = new ArrayList<>();
