@@ -1,13 +1,21 @@
 package fornari.nucleo.controller;
 
+import fornari.nucleo.domain.dto.aluno.AlunoResponseDto;
 import fornari.nucleo.domain.dto.usuario.*;
 import fornari.nucleo.domain.entity.Usuario;
 import fornari.nucleo.domain.mapper.UsuarioMapper;
 import fornari.nucleo.service.UsuarioService;
+import io.swagger.v3.oas.annotations.Parameter;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
 import java.util.List;
 
@@ -17,6 +25,26 @@ import java.util.List;
 public class UsuarioController {
 
     private final UsuarioService service;
+
+    @Operation(summary = "Obtém um usuário pelo Email e Senha", description = "Retorna um usuário autenticado")
+    @ApiResponse(responseCode = "200", description = "Usuário encontrado",
+            content = @Content(mediaType = "application/json",
+                    schema = @Schema(implementation = UsuarioTokenDto.class)))
+    @ApiResponse(responseCode = "404", description = "Email ou senha do usuario nao cadastrado")
+    @ApiResponse(responseCode = "401", description = "Falta de autenticação")
+    @ApiResponse(responseCode = "403", description = "Acesso foi negado")
+
+    @PostMapping("/login")
+    public ResponseEntity<UsuarioTokenDto> login(@RequestBody @Valid UsuarioLoginDto usuarioLoginDto) {
+        return ResponseEntity.ok(
+                service.autenticar(usuarioLoginDto.getEmail(), usuarioLoginDto.getSenha())
+        );
+    }
+
+    @Operation(summary = "Lista todos os Usuários", description = "Retorna uma lista de Usuários")
+    @ApiResponse(responseCode = "200", description = "Lista de Usuários",
+            content = @Content(mediaType = "application/json",
+                    schema = @Schema(implementation = UsuarioResponseDto.class)))
 
     @GetMapping(name = "LIST_USERS")
     public ResponseEntity<List<UsuarioResponseDto>> getUsers() {
@@ -29,6 +57,26 @@ public class UsuarioController {
         );
     }
 
+    @Operation(summary = "Obtém um usuário pelo ID", description = "Retorna um usuário com o ID especificado")
+    @ApiResponse(responseCode = "200", description = "Usuário encontrado",
+            content = @Content(mediaType = "application/json",
+                    schema = @Schema(implementation = UsuarioResponseDto.class)))
+    @ApiResponse(responseCode = "404", description = "Usuário não encontrado")
+
+    @GetMapping(value = "/{id}", name = "GET_USER_BY_ID")
+    public ResponseEntity<UsuarioResponseDto> getById(
+            @Parameter(description = "ID a ser obtido", required = true) @PathVariable int id
+    ) {
+        return ResponseEntity.status(200).body(UsuarioMapper.toDTO(service.buscarPorID(id)));
+    }
+
+    @Operation(summary = "Cria um novo Usuário", description = "Cria um novo Usuário com dados específicos")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Usuário criado com sucesso",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = UsuarioResponseDto.class))),
+            @ApiResponse(responseCode = "400", description = "Dados inválidos")})
+
     @PostMapping(value = "/funcionario", name = "CREATE_EMPLOYEE")
     public ResponseEntity<UsuarioResponseDto> createEmployee(
             @RequestBody @Valid UsuarioCreateDto userDto
@@ -37,34 +85,28 @@ public class UsuarioController {
         return ResponseEntity.status(201).body(UsuarioMapper.toDTO(user));
     }
 
-    @GetMapping(value = "/{id}", name = "GET_USER_BY_ID")
-    public ResponseEntity<UsuarioResponseDto> getById(
-            @PathVariable int id
-    ) {
-        return ResponseEntity.status(200).body(UsuarioMapper.toDTO(service.buscarPorID(id)));
-    }
-
-    @DeleteMapping(value = "/{id}", name = "DELETE_USER")
-    public ResponseEntity<Void> delete(
-            @PathVariable int id
-    ) {
-        service.delete(service.buscarPorID(id));
-        return ResponseEntity.status(200).build();
-    }
+    @Operation(summary = "Atualiza um usuário pelo ID", description = "Atualiza as informações de um usuário existente")
+    @ApiResponse(responseCode = "200", description = "Usuário atualizado com sucesso",
+            content = @Content(mediaType = "application/json",
+                    schema = @Schema(implementation = UsuarioResponseDto.class)))
 
     @PutMapping(value = "/{id}", name = "UPDATE_USER")
     public ResponseEntity<UsuarioResponseDto> update(
-            @PathVariable Integer id,
-            @RequestBody @Valid UsuarioCreateDto userDTO
+            @Parameter(description = "ID do usuário a ser atualizado", required = true) @PathVariable Integer id,
+            @Parameter(description = "Dados do usuário a ser atualizado", required = true) @RequestBody @Valid UsuarioCreateDto userDTO
     ) {
         Usuario user = service.updateUsuario(UsuarioMapper.toUser(userDTO), id);
-        return ResponseEntity.status(200).body(UsuarioMapper.toDTO(user));
+        return ResponseEntity.ok(UsuarioMapper.toDTO(user));
     }
 
-    @PostMapping("/login")
-    public ResponseEntity<UsuarioTokenDto> login(@RequestBody @Valid UsuarioLoginDto usuarioLoginDto) {
-        return ResponseEntity.ok(
-                service.autenticar(usuarioLoginDto.getEmail(), usuarioLoginDto.getSenha())
-        );
+    @Operation(summary = "Exclui um usuário específico", description = "Remove um usuário pelo ID")
+    @ApiResponse(responseCode = "204", description = "Usuario excluido com sucesso")
+
+    @DeleteMapping(value = "/{id}", name = "DELETE_USER")
+    public ResponseEntity<Void> delete(
+            @Parameter(description = "ID do usuário a ser deletado", required = true) @PathVariable int id
+    ) {
+        service.delete(service.buscarPorID(id));
+        return ResponseEntity.noContent().build();
     }
 }

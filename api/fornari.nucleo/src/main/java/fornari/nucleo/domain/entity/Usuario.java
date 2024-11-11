@@ -43,7 +43,7 @@ public class Usuario {
     private LocalDate dtNasc;
 
     @Column
-    @Pattern(regexp = "RESPONSAVEL|SECRETARIO|PROFESSOR|COORDENADOR", message = ConstMessages.INVALID_USER_ROLE)
+        @Pattern(regexp = "RESPONSAVEL|SECRETARIO|PROFESSOR|COORDENADOR", message = ConstMessages.INVALID_USER_ROLE)
     private String funcao;
 
     @ManyToOne(targetEntity = Endereco.class, cascade = CascadeType.PERSIST)

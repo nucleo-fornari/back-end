@@ -170,19 +170,22 @@ public class AlunoService {
         this.repository.delete(this.findById(id));
     }
 
-    public Aluno delete(Integer id, Integer userId) {
+    public void delete(Integer id, Integer userId) {
 
         Aluno aluno = this.findById(id);
+
         if (aluno.getFiliacoes().size() < 2) {
             throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY,
                     ConstMessages.ALUNO_NEEDS_AT_LEAST_ONE_RESPONSIBLE);
         }
+
         for (Filiacao filiacao : aluno.getFiliacoes()) {
             if(filiacao.getResponsavel().getId().equals(userId)) {
                 aluno.removeFiliacao(filiacao);
-                return this.repository.save(aluno);
+                this.repository.save(aluno);
             }
         }
+
         throw new ResponseStatusException(HttpStatus.NOT_FOUND, ConstMessages.NOT_REGISTERED_RESPONSIBLE);
     }
 }

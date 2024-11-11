@@ -41,7 +41,6 @@ public class UsuarioService {
     @Transactional
     public Usuario createUsuario(Usuario user) {
         //user.setSenha(passwordEncoder.encode(Generator.generatePassword()));
-        System.out.println("\n \n \n \n \n ENTROU NO CREATE \n \n \n \n \n \n \n \n");
         if (!GenericValidations.isValidCpf(user.getCpf())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ConstMessages.INVALID_CPF);
         }
