@@ -4,13 +4,11 @@ import fornari.nucleo.domain.dto.sala.SalaRequestDto;
 import fornari.nucleo.domain.dto.sala.SalaResponseDto;
 import fornari.nucleo.domain.entity.Sala;
 import fornari.nucleo.domain.mapper.SalaMapper;
+import fornari.nucleo.domain.mapper.UsuarioMapper;
 import fornari.nucleo.service.SalaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -32,5 +30,10 @@ public class SalaController {
         if (list.isEmpty()) return ResponseEntity.noContent().build();
 
         return ResponseEntity.ok(list.stream().map(SalaMapper::toSalaResponseDto).toList());
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<SalaResponseDto> getById(@PathVariable Integer id) {
+        return ResponseEntity.status(200).body(SalaMapper.toSalaResponseDto(salaService.findById(id)));
     }
 }

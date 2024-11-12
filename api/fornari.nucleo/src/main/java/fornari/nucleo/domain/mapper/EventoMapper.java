@@ -13,8 +13,8 @@ public class EventoMapper {
 
         return Evento.builder()
                 .titulo(eventoCriacaoReqDto.getTitulo())
-                .tipo(eventoCriacaoReqDto.getTitulo())
-                .local(eventoCriacaoReqDto.getTitulo())
+                .tipo(eventoCriacaoReqDto.getTipo())
+                .local(eventoCriacaoReqDto.getLocal())
                 .data(eventoCriacaoReqDto.getData())
                 .descricao(eventoCriacaoReqDto.getDescricao())
                 .encerrado(eventoCriacaoReqDto.getEncerrado())

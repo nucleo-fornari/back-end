@@ -34,6 +34,11 @@ public class EventoService {
         return eventoRepository.findAll();
     }
 
+    public List<Evento> listarPublicacoes() {
+        return eventoRepository.findAllByTipo("Publicacao");
+    }
+
+
     public Evento enrollPublicationWithClassroom(Integer id, List<Integer> salas) {
         Evento evento = findById(id);
 

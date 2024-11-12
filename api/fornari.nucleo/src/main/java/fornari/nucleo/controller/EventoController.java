@@ -60,6 +60,18 @@ public class EventoController {
         );
     }
 
+    @Operation(summary = "Lista todos os eventos do tipo Publicação", description = "Retorna uma lista de eventos do tipo Publicação")
+    @ApiResponse(responseCode = "200", description = "Lista de publicações",
+            content = @Content(mediaType = "application/json",
+                    schema = @Schema(implementation = EventoRespostaDto.class)))
+
+    @GetMapping("/publicacoes")
+    public ResponseEntity<List<EventoRespostaDto>> listarPublicacoes() {
+        return ResponseEntity.ok(
+                eventoService.listarPublicacoes().stream().map(EventoMapper::toEventoRespostaDto).toList()
+        );
+    }
+
     @PutMapping(value = "/{id}/sala", name = "ENROLL_PUBLICATION_FROM_CLASSROOM")
     public ResponseEntity<EventoRespostaDto> enrollPublicationWithClassroom(@PathVariable Integer id, @RequestBody List<Integer> salas) {
         return ResponseEntity.ok(EventoMapper.toEventoRespostaDto(eventoService.enrollPublicationWithClassroom(id, salas)));
