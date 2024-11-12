@@ -18,6 +18,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -57,5 +58,10 @@ public class EventoController {
         return ResponseEntity.ok(
                 eventoService.listar().stream().map(EventoMapper::toEventoRespostaDto).toList()
         );
+    }
+
+    @PutMapping(value = "/{id}/sala", name = "ENROLL_PUBLICATION_FROM_CLASSROOM")
+    public ResponseEntity<EventoRespostaDto> enrollPublicationWithClassroom(@PathVariable Integer id, @RequestBody List<Integer> salas) {
+        return ResponseEntity.ok(EventoMapper.toEventoRespostaDto(eventoService.enrollPublicationWithClassroom(id, salas)));
     }
 }

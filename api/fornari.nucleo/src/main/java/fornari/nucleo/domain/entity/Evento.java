@@ -7,6 +7,8 @@ import jakarta.validation.constraints.Null;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -33,5 +35,20 @@ public class Evento {
     @JoinColumn(referencedColumnName = "id", name = "id_usuario")
     private Usuario usuario;
 
+    @ManyToMany(targetEntity = Sala.class, mappedBy = "eventos", cascade = {CascadeType.PERSIST})
+    private List<Sala> salas = new ArrayList<>();
+
     private Boolean encerrado;
+
+    public void addSala(Sala sala) {
+        if (!this.salas.contains(sala)) {
+            this.salas.add(sala);
+            sala.addEvento(this);
+        }
+    }
+
+    public void removeSala(Sala sala) {
+        this.salas.remove(sala);
+        sala.removeEvento(this);
+    }
 }

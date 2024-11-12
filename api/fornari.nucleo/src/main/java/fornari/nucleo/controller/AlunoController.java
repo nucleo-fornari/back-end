@@ -123,4 +123,17 @@ public class AlunoController {
         this.service.delete(id, idResponsavel);
         return ResponseEntity.noContent().build();
     }
+
+    @PatchMapping(value = "/{id}/sala/{salaId}", name = "ENROLL_STUDENT_WITH_CLASSROOM")
+    public ResponseEntity<AlunoResponseDto> enrollStudentWithClassroom(
+        @PathVariable Integer id,
+        @PathVariable Integer salaId
+    ) {
+        return ResponseEntity.ok().body(AlunoMapper.AlunotoDto(this.service.enrollStudentWithClassroom(id, salaId)));
+    }
+
+    @PatchMapping(value = "/{id}/sala/remover")
+    public ResponseEntity<AlunoResponseDto> removeStudentFromClassroom(@PathVariable Integer id) {
+        return ResponseEntity.ok().body(AlunoMapper.AlunotoDto(this.service.removeStudentFromClassroom(id)));
+    }
 }

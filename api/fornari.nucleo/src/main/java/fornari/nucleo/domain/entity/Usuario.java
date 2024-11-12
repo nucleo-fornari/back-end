@@ -59,6 +59,10 @@ public class Usuario {
     @OneToMany(targetEntity = Chamado.class, mappedBy = "responsavel", cascade = CascadeType.PERSIST)
     private List<Chamado> chamados;
 
+    @ManyToOne(targetEntity = Sala.class, cascade = CascadeType.PERSIST)
+    @JoinColumn(referencedColumnName = "id", name = "id_sala")
+    private Sala sala;
+
     public Usuario () {
         this.chamados = new ArrayList<>();
         this.filiacoes = new ArrayList<>();

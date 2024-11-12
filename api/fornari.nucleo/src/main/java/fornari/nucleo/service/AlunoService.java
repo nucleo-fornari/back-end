@@ -30,18 +30,22 @@ public class AlunoService {
 
     private final RestricaoService restricaoService;
 
+    private final SalaService salaService;
+
     public AlunoService(
             AlunoRepository repository,
             UsuarioService usuarioService,
             UsuarioRepository usuarioRepository,
             RestricaoService restricaoService,
-            FiliacaoRepository filiacaoRepository
+            FiliacaoRepository filiacaoRepository,
+            SalaService salaService
     ) {
         this.repository = repository;
         this.usuarioService = usuarioService;
         this.usuarioRepository = usuarioRepository;
         this.restricaoService = restricaoService;
         this.filiacaoRepository = filiacaoRepository;
+        this.salaService = salaService;
     }
 
     @Transactional
@@ -187,5 +191,18 @@ public class AlunoService {
         }
 
         throw new ResponseStatusException(HttpStatus.NOT_FOUND, ConstMessages.NOT_REGISTERED_RESPONSIBLE);
+    }
+
+    public Aluno enrollStudentWithClassroom(Integer id, Integer classroomId) {
+        Sala sala = salaService.findById(classroomId);
+        Aluno aluno = this.findById(id);
+        sala.addAluno(aluno);
+        return this.repository.save(aluno);
+    }
+
+    public Aluno removeStudentFromClassroom(Integer id) {
+        Aluno aluno = this.findById(id);
+        aluno.getSala().removeAluno(aluno);
+        return this.repository.save(aluno);
     }
 }

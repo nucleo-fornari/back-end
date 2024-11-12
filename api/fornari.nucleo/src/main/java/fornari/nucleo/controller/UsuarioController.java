@@ -2,7 +2,9 @@ package fornari.nucleo.controller;
 
 import fornari.nucleo.domain.dto.aluno.AlunoResponseDto;
 import fornari.nucleo.domain.dto.usuario.*;
+import fornari.nucleo.domain.dto.usuario.professor.ProfessorResponseDto;
 import fornari.nucleo.domain.entity.Usuario;
+import fornari.nucleo.domain.mapper.ProfessorMapper;
 import fornari.nucleo.domain.mapper.UsuarioMapper;
 import fornari.nucleo.service.UsuarioService;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -108,5 +110,20 @@ public class UsuarioController {
     ) {
         service.delete(service.buscarPorID(id));
         return ResponseEntity.noContent().build();
+    }
+
+    @PatchMapping(value = "/professor/{id}/sala/{salaId}", name = "ENROLL_TEACHER_WITH_CLASSROOM")
+    public ResponseEntity<ProfessorResponseDto> enrollTeacherWithClassroom(
+        @PathVariable Integer id,
+        @PathVariable Integer salaId
+    ) {
+        return ResponseEntity.ok(ProfessorMapper.UsuarioToProfessorResponseDto(
+                service.enrollTeacherWithClassroom(id, salaId)));
+    }
+
+    @PatchMapping(value = "/professor/{id}/sala/remover", name = "REMOVE_TEACHER_FROM_CLASSROOM")
+    public ResponseEntity<ProfessorResponseDto> removeTeacherFromClassroom(@PathVariable Integer id) {
+        return ResponseEntity.ok(ProfessorMapper.UsuarioToProfessorResponseDto(
+                service.removeTeacherFromClassroom(id)));
     }
 }

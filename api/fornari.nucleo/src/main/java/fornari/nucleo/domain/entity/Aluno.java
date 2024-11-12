@@ -41,6 +41,9 @@ public class Aluno {
     @ManyToMany(mappedBy = "alunos", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private List<Restricao> restricoes;
 
+    @ManyToOne(targetEntity = Sala.class, cascade = CascadeType.PERSIST)
+    private Sala sala;
+
     public Aluno() {
         this.restricoes = new ArrayList<>();
         this.filiacoes = new ArrayList<>();

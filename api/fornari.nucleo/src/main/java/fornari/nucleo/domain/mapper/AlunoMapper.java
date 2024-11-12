@@ -5,7 +5,6 @@ import fornari.nucleo.domain.dto.aluno.AlunoRequestDto;
 import fornari.nucleo.domain.dto.aluno.AlunoResponseDto;
 import fornari.nucleo.domain.dto.usuario.responsavel.ResponsavelAlunoDto;
 import fornari.nucleo.domain.entity.Aluno;
-import fornari.nucleo.domain.entity.Filiacao;
 import fornari.nucleo.domain.entity.Usuario;
 
 import java.util.ArrayList;
@@ -44,6 +43,7 @@ public class AlunoMapper {
                 .restricoes(RestricaoMapper.multipleRestricaoToRestricaoResponseWithoutAlunosDto(aluno.getRestricoes()))
                 .filiacoes(aluno.getFiliacoes().stream().map((x) -> new FiliacaoAlunoDto(
                         UsuarioMapper.usuarioToResponsavelAlunoDto(x.getResponsavel()) , x.getParentesco())).toList())
+                .sala(SalaMapper.toSalaResponseDto(aluno.getSala()))
                         .build();
     }
 

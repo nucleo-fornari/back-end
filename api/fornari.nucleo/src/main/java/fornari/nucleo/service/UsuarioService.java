@@ -5,6 +5,7 @@ import fornari.nucleo.configuration.GerenciadorTokenJwt;
 import fornari.nucleo.domain.dto.usuario.UsuarioTokenDto;
 import fornari.nucleo.domain.dto.usuario.UsuarioUpdateRequestDto;
 import fornari.nucleo.domain.entity.Endereco;
+import fornari.nucleo.domain.entity.Sala;
 import fornari.nucleo.domain.entity.Usuario;
 import fornari.nucleo.domain.mapper.EnderecoMapper;
 import fornari.nucleo.domain.mapper.UsuarioMapper;
@@ -26,6 +27,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -37,6 +39,7 @@ public class UsuarioService {
     private final AuthenticationManager autenticationManager;
     private final UsuarioRepository repository;
     private final EnderecoService enderecoService;
+    private final SalaService salaService;
 
     @Transactional
     public Usuario createUsuario(Usuario user) {
@@ -103,5 +106,23 @@ public class UsuarioService {
         SecurityContextHolder.getContext().setAuthentication(authentication);
         final String token = gerenciadorTokenJwt.generateToken(authentication);
         return UsuarioMapper.toTokenDto(usuarioAutenticado, token);
+    }
+
+    public Usuario enrollTeacherWithClassroom(Integer id, Integer idSala) {
+        Sala sala = salaService.findById(idSala);
+        Usuario user = this.buscarPorID(id);
+
+        if (!Objects.equals(user.getFuncao(), "PROFESSOR")) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ConstMessages.USER_NOT_PROFESSOR);
+        }
+
+        sala.addProfessor(user);
+        return this.repository.save(user);
+    }
+
+    public Usuario removeTeacherFromClassroom(Integer id) {
+        Usuario user = this.buscarPorID(id);
+        user.getSala().removeProfessor(user);
+        return this.repository.save(user);
     }
 }

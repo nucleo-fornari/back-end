@@ -2,6 +2,7 @@ package fornari.nucleo.domain.dto.aluno;
 
 import fornari.nucleo.domain.dto.FiliacaoAlunoDto;
 import fornari.nucleo.domain.dto.restricao.RestricaoResponseWithoutAlunosDto;
+import fornari.nucleo.domain.dto.sala.SalaResponseDto;
 import lombok.Builder;
 import lombok.Data;
 
@@ -27,4 +28,6 @@ public class AlunoResponseDto {
     private String observacoes;
 
     private List<RestricaoResponseWithoutAlunosDto> restricoes;
+
+    private SalaResponseDto sala;
 }

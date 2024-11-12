@@ -4,6 +4,8 @@ import fornari.nucleo.domain.dto.EventoCriacaoReqDto;
 import fornari.nucleo.domain.dto.EventoRespostaDto;
 import fornari.nucleo.domain.entity.Evento;
 
+import java.util.ArrayList;
+
 public class EventoMapper {
 
     public static Evento toEvento(EventoCriacaoReqDto eventoCriacaoReqDto) {
@@ -23,12 +25,15 @@ public class EventoMapper {
         if (entidade == null) return null;
 
         return EventoRespostaDto.builder()
+                .id(entidade.getId())
                 .titulo(entidade.getTitulo())
                 .tipo(entidade.getTipo())
                 .local(entidade.getLocal())
                 .descricao(entidade.getDescricao())
                 .data(entidade.getData())
                 .encerrado(entidade.getEncerrado())
+                .salas(entidade.getSalas() == null ? new ArrayList<>() :
+                        entidade.getSalas().stream().map(SalaMapper::toSalaResponseDto).toList())
                 .build();
     }
 }
