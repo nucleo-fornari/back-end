@@ -1,9 +1,11 @@
 package fornari.nucleo.domain.entity;
 
+import fornari.nucleo.helper.messages.ConstMessages;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Null;
+import jakarta.validation.constraints.Pattern;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -27,8 +29,9 @@ public class Evento {
 
     private LocalDateTime data;
 
-    private String local;
+    private LocalDateTime dtPublicacao;
 
+    @Pattern(regexp = "PUBLICACAO|AVISO_GERAL", message = ConstMessages.INVALID_PUBLICATION_TYPE)
     private String tipo;
 
     @ManyToOne(targetEntity = Usuario.class)

@@ -1,6 +1,7 @@
 package fornari.nucleo.domain.dto.aluno;
 
 import fornari.nucleo.domain.dto.FiliacaoAlunoDto;
+import fornari.nucleo.domain.dto.recado.RecadoResponseDto;
 import fornari.nucleo.domain.dto.restricao.RestricaoResponseWithoutAlunosDto;
 import fornari.nucleo.domain.dto.sala.SalaResponseDto;
 import lombok.Builder;
@@ -30,4 +31,6 @@ public class AlunoResponseDto {
     private List<RestricaoResponseWithoutAlunosDto> restricoes;
 
     private SalaResponseDto sala;
+
+    private List<RecadoResponseDto> recados;
 }

@@ -42,7 +42,8 @@ public class EventoController {
             ) {
         return ResponseEntity.created(null).body(
                 EventoMapper.toEventoRespostaDto(
-                        eventoService.criar(EventoMapper.toEvento(eventoCriacaoReqDto), eventoCriacaoReqDto.getUsuarioId())
+                        eventoService.criar(EventoMapper.toEvento(eventoCriacaoReqDto),
+                                eventoCriacaoReqDto.getUsuarioId(), eventoCriacaoReqDto.getSalas())
                 )
         );
     }
@@ -74,6 +75,6 @@ public class EventoController {
 
     @PutMapping(value = "/{id}/sala", name = "ENROLL_PUBLICATION_FROM_CLASSROOM")
     public ResponseEntity<EventoRespostaDto> enrollPublicationWithClassroom(@PathVariable Integer id, @RequestBody List<Integer> salas) {
-        return ResponseEntity.ok(EventoMapper.toEventoRespostaDto(eventoService.enrollPublicationWithClassroom(id, salas)));
+        return ResponseEntity.ok(EventoMapper.toEventoRespostaDto(eventoService.enrollPublicationWithClassroom(null, id, salas)));
     }
 }

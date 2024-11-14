@@ -5,6 +5,7 @@ import fornari.nucleo.domain.dto.EventoRespostaDto;
 import fornari.nucleo.domain.entity.Evento;
 import fornari.nucleo.domain.entity.Sala;
 import fornari.nucleo.domain.entity.Usuario;
+import fornari.nucleo.helper.messages.ConstMessages;
 import fornari.nucleo.repository.EventoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -12,7 +13,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -21,8 +25,20 @@ public class EventoService {
     private final EventoRepository eventoRepository;
     private final SalaService salaService;
 
-    public Evento criar(Evento entidade, Integer usuarioId) {
-        entidade.setUsuario(usuarioService.buscarPorID(usuarioId));
+    public Evento criar(Evento entidade, Integer usuarioId, List<Integer> salas) {
+        Usuario user = usuarioService.buscarPorID(usuarioId);
+
+        if ((Objects.equals(user.getFuncao(), "PROFESSOR") && user.getSala() == null) ||
+                (Objects.equals(user.getFuncao(), "SECRETARIO") && salas.isEmpty()))
+            throw new ResponseStatusException(HttpStatus.CONFLICT, ConstMessages.NOT_ALLOWED_TO_CREATE_EVENT_WITHOUT_CLASS);
+
+        entidade.setUsuario(user);
+        if (entidade.getTipo().equals("PUBLICACAO")) {
+            entidade.setSalas(new ArrayList<>());
+            return enrollPublicationWithClassroom(entidade, null, salas);
+        }
+
+        entidade.setSalas(new ArrayList<>(List.of(new Sala[]{user.getSala()})));
         return eventoRepository.save(entidade);
     }
 
@@ -39,8 +55,10 @@ public class EventoService {
     }
 
 
-    public Evento enrollPublicationWithClassroom(Integer id, List<Integer> salas) {
-        Evento evento = findById(id);
+    public Evento enrollPublicationWithClassroom(Evento evento, Integer id, List<Integer> salas) {
+        if (evento == null) {
+            evento = findById(id);
+        }
 
         for (Sala sala : evento.getSalas()) {
             evento.getSalas().remove(sala);

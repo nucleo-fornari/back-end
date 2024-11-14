@@ -44,9 +44,13 @@ public class Aluno {
     @ManyToOne(targetEntity = Sala.class, cascade = CascadeType.PERSIST)
     private Sala sala;
 
+    @OneToMany(targetEntity = Recado.class, mappedBy = "aluno", cascade = CascadeType.PERSIST, orphanRemoval = true)
+    private List<Recado> recados;
+
     public Aluno() {
         this.restricoes = new ArrayList<>();
-        this.filiacoes = new ArrayList<>();
+        this.filiacoes  = new ArrayList<>();
+        this.recados    = new ArrayList<>();
     }
 
     @PreRemove

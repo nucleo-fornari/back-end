@@ -8,7 +8,6 @@ import fornari.nucleo.domain.entity.Aluno;
 import fornari.nucleo.domain.entity.Usuario;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class AlunoMapper {
     public static Aluno alunoCreationRequestDtotoAluno(AlunoRequestDto dto) {
@@ -44,6 +43,8 @@ public class AlunoMapper {
                 .filiacoes(aluno.getFiliacoes().stream().map((x) -> new FiliacaoAlunoDto(
                         UsuarioMapper.usuarioToResponsavelAlunoDto(x.getResponsavel()) , x.getParentesco())).toList())
                 .sala(SalaMapper.toSalaResponseDto(aluno.getSala()))
+                .recados(aluno.getRecados() == null ? new ArrayList<>() :
+                        aluno.getRecados().stream().map(RecadoMapper::recadoToRecadoResponseDto).toList())
                         .build();
     }
 
