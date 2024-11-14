@@ -12,6 +12,7 @@ public class FiliacaoMapper {
                 .responsavel(Usuario.builder()
                         .id(dto.getResponsavel().getId())
                         .cpf(dto.getResponsavel().getCpf())
+                        .telefone(dto.getResponsavel().getTelefone())
                         .dtNasc(dto.getResponsavel().getDtNasc())
                         .email(dto.getResponsavel().getEmail())
                         .funcao(dto.getResponsavel().getFuncao())

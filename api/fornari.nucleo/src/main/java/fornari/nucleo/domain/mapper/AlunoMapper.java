@@ -57,6 +57,7 @@ public class AlunoMapper {
         return Usuario.builder()
                     .id(dto.getId())
                     .cpf(dto.getCpf())
+                    .telefone(dto.getTelefone())
                     .dtNasc(dto.getDtNasc())
                     .email(dto.getEmail())
                     .funcao(dto.getFuncao())

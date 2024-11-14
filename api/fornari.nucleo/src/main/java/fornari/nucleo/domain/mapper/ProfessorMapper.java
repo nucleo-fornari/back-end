@@ -19,6 +19,7 @@ public class ProfessorMapper {
                 .id(usuario.getId())
                 .nome(usuario.getNome())
                 .cpf(usuario.getCpf())
+                .telefone(usuario.getTelefone())
                 .email(usuario.getEmail())
                 .dtNasc(usuario.getDtNasc())
                 .funcao(usuario.getFuncao())

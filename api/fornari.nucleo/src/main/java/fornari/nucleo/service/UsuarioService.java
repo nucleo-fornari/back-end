@@ -85,6 +85,7 @@ public class UsuarioService {
         user.setEndereco(this.mapEndereco(data.getEndereco()));
         user.setNome(data.getNome());
         user.setCpf(data.getCpf());
+        user.setTelefone(data.getTelefone());
         user.setEmail(data.getEmail());
         user.setDtNasc(data.getDtNasc());
         user.setFuncao(data.getFuncao());

@@ -29,6 +29,9 @@ public class Usuario {
     @Column(unique = true, nullable = false)
     private String cpf;
 
+    @Column(nullable = false)
+    private String telefone;
+
     @Column(unique = true, nullable = false)
     @Email(message = ConstMessages.INVALID_EMAIL)
     private String email;
@@ -68,10 +71,11 @@ public class Usuario {
         this.filiacoes = new ArrayList<>();
     }
 
-    public Usuario(Integer id, String nome, String cpf, String email, String funcao) {
+    public Usuario(Integer id, String nome, String cpf, String telefone, String email, String funcao) {
         this.id = id;
         this.nome = nome;
         this.cpf = cpf;
+        this.telefone = telefone;
         this.email = email;
         this.funcao = funcao;
     }

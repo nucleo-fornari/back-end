@@ -15,6 +15,9 @@ public class UsuarioCreateDto {
     @NotBlank
     private String cpf;
 
+    @NotBlank
+    private String telefone;
+
     @Email
     private String email;
 

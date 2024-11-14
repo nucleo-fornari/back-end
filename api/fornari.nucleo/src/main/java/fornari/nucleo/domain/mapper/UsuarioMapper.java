@@ -17,30 +17,8 @@ public class UsuarioMapper {
         Usuario user = new Usuario();
         user.setNome(userDto.getNome());
         user.setCpf(userDto.getCpf());
+        user.setTelefone(userDto.getTelefone());
         user.setEmail(userDto.getEmail());
-        user.setDtNasc(userDto.getDtNasc());
-        user.setFuncao(userDto.getFuncao());
-        user.setEndereco(new Endereco());
-        user.getEndereco().setId(userDto.getEndereco().getId());
-        user.getEndereco().setCep(userDto.getEndereco().getCep());
-        user.getEndereco().setComplemento(userDto.getEndereco().getComplemento());
-        user.getEndereco().setBairro(userDto.getEndereco().getBairro());
-        user.getEndereco().setLocalidade(userDto.getEndereco().getLocalidade());
-        user.getEndereco().setUf(userDto.getEndereco().getUf());
-        user.getEndereco().setLogradouro(userDto.getEndereco().getLogradouro());
-        user.getEndereco().setNumero(userDto.getEndereco().getNumero());
-
-        return user;
-    }
-
-
-    public static Usuario toUser(UsuarioUpdateRequestDto userDto) {
-        if (userDto == null) {
-            return null;
-        }
-
-        Usuario user = new Usuario();
-        user.setNome(userDto.getNome());
         user.setDtNasc(userDto.getDtNasc());
         user.setFuncao(userDto.getFuncao());
         user.setEndereco(new Endereco());
@@ -65,6 +43,7 @@ public class UsuarioMapper {
         dto.setId(user.getId());
         dto.setNome(user.getNome());
         dto.setCpf(user.getCpf());
+        dto.setTelefone(user.getTelefone());
         dto.setEmail(user.getEmail());
         dto.setFuncao(user.getFuncao());
         dto.setDtNasc(user.getDtNasc());
@@ -82,6 +61,7 @@ public class UsuarioMapper {
                 .id(user.getId())
                 .nome(user.getNome())
                 .cpf(user.getCpf())
+                .telefone(user.getTelefone())
                 .email(user.getEmail())
                 .dtNasc(user.getDtNasc())
                 .funcao(user.getFuncao())

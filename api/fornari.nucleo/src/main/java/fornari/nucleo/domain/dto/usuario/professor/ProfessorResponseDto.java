@@ -13,6 +13,7 @@ public class ProfessorResponseDto {
     private int id;
     private String nome;
     private String cpf;
+    private String telefone;
     private String email;
     private LocalDate dtNasc;
     private String funcao;
