@@ -15,6 +15,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
+import java.util.Iterator;
 import java.util.List;
 
 @RestController
@@ -30,10 +31,28 @@ public class ChamadoController {
                     schema = @Schema(implementation = ChamadoDto.class)))
 
     @GetMapping("/abertos")
-    public ResponseEntity<List<ChamadoDto>> list() {
-        return ResponseEntity.ok().body(
-                service.findByFinalizadoEqualsFalse().stream().map(ChamadoMapper::ToChamadoDto).toList()
-        );
+    public ResponseEntity<List<ChamadoDto>> listFinalizadoFalse() {
+        List<ChamadoDto> chamadoDtos = service.findByFinalizadoEqualsFalse().stream().map(ChamadoMapper::ToChamadoDto).toList();
+
+        if (chamadoDtos.isEmpty()) return ResponseEntity.noContent().build();
+
+        return ResponseEntity.ok().body(chamadoDtos);
+    }
+
+    @Operation(summary = "Lista todos os Chamados", description = "Retorna uma lista de todos os Chamados")
+    @ApiResponse(responseCode = "200", description = "Lista de Chamados",
+            content = @Content(mediaType = "application/json",
+                    schema = @Schema(implementation = ChamadoDto.class)))
+
+    @GetMapping
+    public ResponseEntity<List<ChamadoDto>> listByUser(
+            @Parameter(description = "Sala a ser obtida os chamados", required = true) @RequestParam Integer idUser
+    ) {
+        List<ChamadoDto> chamadoDtos = service.getByIdUser(idUser).stream().map(ChamadoMapper::ToChamadoDto).toList();
+
+        if (chamadoDtos.isEmpty()) return ResponseEntity.noContent().build();
+
+        return ResponseEntity.ok().body(chamadoDtos);
     }
 
     @Operation(summary = "Cria um novo chamado", description = "Cria um novo chamado com dados específicos")
@@ -47,6 +66,7 @@ public class ChamadoController {
     public ResponseEntity<ChamadoDto> create(
             @Parameter(description = "Dados do Chamado a serem atualizados", required = true) @RequestBody ChamadoDto dto,
             @Parameter(description = "ID do aluno a ser atualizado", required = true) @RequestParam Integer idUsuario) {
+
         return ResponseEntity.status(201).body(
                 ChamadoMapper.ToChamadoDto(service.create(dto, idUsuario))
         );

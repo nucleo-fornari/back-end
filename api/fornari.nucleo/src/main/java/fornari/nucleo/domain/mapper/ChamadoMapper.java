@@ -1,10 +1,7 @@
 package fornari.nucleo.domain.mapper;
 
 import fornari.nucleo.domain.dto.ChamadoDto;
-import fornari.nucleo.domain.dto.ChamadoTipoDto;
 import fornari.nucleo.domain.entity.Chamado;
-
-import java.time.LocalDateTime;
 
 public class ChamadoMapper {
 
@@ -20,11 +17,10 @@ public class ChamadoMapper {
         dto.setDtFechamento(chamado.getDtFechamento());
         dto.setCriancaAtipica(chamado.isCriancaAtipica());
         dto.setTipo(ChamadoTipoMapper.toChamadoTipoDto(chamado.getTipo()));
-        dto.setResponsavel(UsuarioMapper.toDTO(chamado.getResponsavel()));
+        dto.setResponsavel(UsuarioMapper.toDTO(chamado.getUsuario()));
 
         return dto;
     }
-
 
     public static Chamado toChamado(ChamadoDto dto) {
         if (dto == null) return null;

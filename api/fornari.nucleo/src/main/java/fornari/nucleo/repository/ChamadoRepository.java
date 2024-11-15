@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface ChamadoRepository extends JpaRepository<Chamado, Integer> {
     List<Chamado> findByFinalizadoEquals(boolean bool);
+    List<Chamado> findByUsuarioId(Integer id);
 }

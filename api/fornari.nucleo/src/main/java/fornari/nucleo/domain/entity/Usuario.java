@@ -59,7 +59,7 @@ public class Usuario {
     @OneToMany(targetEntity = Evento.class, mappedBy = "usuario", cascade = CascadeType.PERSIST)
     private List<Evento> eventos;
 
-    @OneToMany(targetEntity = Chamado.class, mappedBy = "responsavel", cascade = CascadeType.PERSIST)
+    @OneToMany(targetEntity = Chamado.class, mappedBy = "usuario", cascade = CascadeType.PERSIST)
     private List<Chamado> chamados;
 
     @ManyToOne(targetEntity = Sala.class, cascade = CascadeType.PERSIST)

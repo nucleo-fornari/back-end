@@ -36,23 +36,11 @@ public class Chamado {
     @ManyToOne(targetEntity = ChamadoTipo.class, cascade = CascadeType.PERSIST)
     private ChamadoTipo tipo;
 
-    @JoinColumn(name = "id_responsavel", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "id_usuario", referencedColumnName = "id", nullable = false)
     @ManyToOne(targetEntity = Usuario.class)
-    private Usuario responsavel;
+    private Usuario usuario;
 
     public Chamado() {
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public ChamadoTipo getTipo() {
-        return tipo;
     }
 
     public void setTipo(ChamadoTipo tipo) {
@@ -70,7 +58,7 @@ public class Chamado {
     }
 
     public void setResponsavel(Usuario responsavel) {
-        this.responsavel = responsavel;
+        this.usuario = responsavel;
         responsavel.addChamado(this);
     }
 }

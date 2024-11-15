@@ -29,14 +29,12 @@ public class ChamadoService {
     @Autowired
     private ChamadoTipoService chamadoTipoService;
 
+    public List<Chamado> getByIdUser(Integer idUser) {
+        return this.repository.findByUsuarioId(idUser);
+    }
+
     public List<Chamado> findByFinalizadoEqualsFalse() {
-        List<Chamado> list = this.repository.findByFinalizadoEquals(false);
-
-        if (list.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NO_CONTENT);
-        }
-
-        return list;
+        return this.repository.findByFinalizadoEquals(false);
     }
 
     public Chamado create(ChamadoDto dto, Integer idUsuario) {

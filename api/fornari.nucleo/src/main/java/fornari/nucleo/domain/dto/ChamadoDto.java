@@ -11,9 +11,9 @@ public class ChamadoDto {
     private String descricao;
     private boolean finalizado;
     private LocalDateTime dtAbertura;
+    private ChamadoTipoDto tipo;
     private LocalDateTime dtFechamento;
     private boolean criancaAtipica;
-    private ChamadoTipoDto tipo;
     private UsuarioResponseDto responsavel;
 
     public ChamadoDto() {
