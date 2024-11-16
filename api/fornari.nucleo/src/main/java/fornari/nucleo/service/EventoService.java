@@ -51,7 +51,7 @@ public class EventoService {
     }
 
     public List<Evento> listarPublicacoes() {
-        return eventoRepository.findAllByTipo("Publicacao");
+        return eventoRepository.findAllByTipo("PUBLICACAO");
     }
 
 

@@ -1,5 +1,6 @@
 package fornari.nucleo.domain.dto.usuario;
 
+import fornari.nucleo.domain.entity.Sala;
 import lombok.Builder;
 import lombok.Data;
 
@@ -10,6 +11,6 @@ public class UsuarioTokenDto {
     private String nome;
     private String email;
     private String funcao;
-    private String sala;
+    private Integer salaId;
     private String token;
 }
