@@ -65,7 +65,7 @@ public class AlunoService {
 
         if (optResponsavel.isPresent()) {
             responsavel = (this.usuarioService.updateUsuario(
-                                    responsavel, responsavel.getId()));
+                                    responsavel, optResponsavel.get().getId()));
         } else {
             responsavel = (this.usuarioService.createUsuario(responsavel));
         }

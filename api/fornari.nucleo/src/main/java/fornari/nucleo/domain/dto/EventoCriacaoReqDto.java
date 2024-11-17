@@ -24,6 +24,5 @@ public class EventoCriacaoReqDto {
     private String tipo;
     @NotNull
     private Integer usuarioId;
-    private Boolean encerrado;
     private List<Integer> salas;
 }

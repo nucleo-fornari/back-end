@@ -16,7 +16,7 @@ public class EventoMapper {
                 .tipo(eventoCriacaoReqDto.getTipo())
                 .data(eventoCriacaoReqDto.getData())
                 .descricao(eventoCriacaoReqDto.getDescricao())
-                .encerrado(eventoCriacaoReqDto.getEncerrado())
+                .encerrado(false)
                 .build();
     }
 
