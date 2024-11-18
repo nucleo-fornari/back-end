@@ -8,6 +8,8 @@ import fornari.nucleo.domain.dto.usuario.responsavel.ResponsavelAlunoDto;
 import fornari.nucleo.domain.entity.Endereco;
 import fornari.nucleo.domain.entity.Usuario;
 
+import java.util.stream.Collectors;
+
 public class UsuarioMapper {
     public static Usuario toUser(UsuarioCreateDto userDto) {
         if (userDto == null) {
@@ -46,6 +48,14 @@ public class UsuarioMapper {
         dto.setTelefone(user.getTelefone());
         dto.setEmail(user.getEmail());
         dto.setFuncao(user.getFuncao());
+        dto.setAfiliados(
+                user.getFiliacoes().isEmpty()
+                        ? null
+                        : user.getFiliacoes()
+                        .stream()
+                        .map(x -> AlunoMapper.AlunotoDto(x.getAfiliado()))
+                        .collect(Collectors.toList())
+        );
         dto.setDtNasc(user.getDtNasc());
         dto.setEndereco(EnderecoMapper.toEnderecoDto(user.getEndereco()));
 
@@ -84,7 +94,6 @@ public class UsuarioMapper {
                 .email(usuario.getEmail())
                 .nome(usuario.getNome())
                 .funcao(usuario.getFuncao())
-                .salaId(usuario.getSala() == null ? null : usuario.getSala().getId())
                 .token(token)
                 .build();
     }
