@@ -75,4 +75,8 @@ public class EventoService {
 
         return eventoRepository.save(evento);
     }
+
+    public List<Evento> findByUserId(Integer id) {
+        return eventoRepository.findAllByUsuarioId(id);
+    }
 }

@@ -41,4 +41,5 @@ public class ConstMessages {
     public static final String USER_NOT_PROFESSOR = "Este usuário não é um professor.";
     public static final String INVALID_PUBLICATION_TYPE = "Os tipos de evento não permitido.";
     public static final String NOT_ALLOWED_TO_CREATE_EVENT_WITHOUT_CLASS = "Não é permitido criar um recado sem uma sala.";
+    public static final String INVALID_GROUP_NAME = "Os nomes permitidos são: G1, G2, G3, G4 e G5.";
 }

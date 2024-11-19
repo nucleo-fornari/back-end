@@ -30,6 +30,9 @@ public class Sala {
     @OneToMany(targetEntity = Aluno.class, mappedBy = "sala")
     private List<Aluno> alunos = new ArrayList<>();
 
+    @ManyToOne(targetEntity = SalaGrupo.class, cascade = CascadeType.PERSIST)
+    private SalaGrupo grupo;
+
     @ManyToMany
     @JoinTable(
             name = "evento_sala",

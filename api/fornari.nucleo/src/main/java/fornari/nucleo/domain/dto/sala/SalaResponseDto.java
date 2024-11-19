@@ -1,6 +1,7 @@
 package fornari.nucleo.domain.dto.sala;
 
 import fornari.nucleo.domain.dto.aluno.AlunoResponseDto;
+import fornari.nucleo.domain.dto.sala.grupo.SalaGrupoResponseDto;
 import fornari.nucleo.domain.dto.usuario.professor.ProfessorResponseDto;
 import lombok.Builder;
 import lombok.Data;
@@ -15,4 +16,5 @@ public class SalaResponseDto {
     private String nome;
     private List<ProfessorResponseDto> professores;
     private List<AlunoResponseDto> alunos;
+    private SalaGrupoResponseDto grupo;
 }

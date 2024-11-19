@@ -13,4 +13,5 @@ import org.springframework.stereotype.Service;
 public class SalaRequestDto {
     private String localizacao;
     private String nome;
+    private Integer grupoId;
 }

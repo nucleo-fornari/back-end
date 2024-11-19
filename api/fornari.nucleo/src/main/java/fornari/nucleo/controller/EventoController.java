@@ -4,6 +4,7 @@ import fornari.nucleo.domain.dto.ChamadoTipoDto;
 import fornari.nucleo.domain.dto.EventoCriacaoReqDto;
 import fornari.nucleo.domain.dto.EventoRespostaDto;
 import fornari.nucleo.domain.dto.restricao.RestricaoResponseWithoutAlunosDto;
+import fornari.nucleo.domain.entity.Evento;
 import fornari.nucleo.domain.mapper.EventoMapper;
 import fornari.nucleo.service.EventoService;
 import jakarta.validation.Valid;
@@ -70,6 +71,17 @@ public class EventoController {
     public ResponseEntity<List<EventoRespostaDto>> listarPublicacoes() {
         return ResponseEntity.ok(
                 eventoService.listarPublicacoes().stream().map(EventoMapper::toEventoRespostaDto).toList()
+        );
+    }
+
+    @GetMapping("/publicacoes/usuario/{id}")
+    public ResponseEntity<List<EventoRespostaDto>> listPublicationsByUser(@PathVariable Integer id) {
+        List<Evento> list = eventoService.findByUserId(id);
+
+        if (list.isEmpty()) return ResponseEntity.noContent().build();
+
+        return ResponseEntity.ok(
+                list.stream().map(EventoMapper::toEventoRespostaDto).toList()
         );
     }
 

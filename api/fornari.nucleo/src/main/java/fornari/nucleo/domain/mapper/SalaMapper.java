@@ -26,6 +26,7 @@ public class SalaMapper {
                 .id(sala.getId())
                 .nome(sala.getNome())
                 .localizacao(sala.getLocalizacao())
+                .grupo(SalaGrupoMapper.toSalaGrupoResponseDto(sala.getGrupo()))
                 .professores(sala.getProfessores().stream().map(ProfessorMapper::UsuarioToProfessorResponseDto).toList())
                 .alunos(sala.getAlunos().stream().map(AlunoMapper::AlunotoDto).toList())
                 .build();

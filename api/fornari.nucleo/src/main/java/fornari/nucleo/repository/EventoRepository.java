@@ -9,4 +9,5 @@ import java.util.List;
 public interface EventoRepository extends JpaRepository<Evento, Integer> {
     List<Evento> findAllByTipo(String tipo);
     List<Evento> findAllBySalasContains(Sala sala);
+    List<Evento> findAllByUsuarioId(Integer id);
 }
