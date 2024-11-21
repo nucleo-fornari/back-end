@@ -14,15 +14,21 @@ import java.util.List;
 @Data
 @Builder
 public class EventoCriacaoReqDto {
+
     @NotBlank
     private String titulo;
+
     @NotBlank
     private String descricao;
+
     @FutureOrPresent
     private LocalDateTime data;
+
     @NotBlank
     private String tipo;
+
     @NotNull
     private Integer usuarioId;
+
     private List<Integer> salas;
 }

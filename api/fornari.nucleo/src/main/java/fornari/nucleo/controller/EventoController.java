@@ -49,6 +49,20 @@ public class EventoController {
         );
     }
 
+    @Operation(summary = "Lista todos os eventos", description = "Retorna uma lista de eventos")
+    @ApiResponse(responseCode = "200", description = "Lista de eventos",
+            content = @Content(mediaType = "application/json",
+                    schema = @Schema(implementation = EventoRespostaDto.class)))
+
+    @GetMapping("sala/{id}")
+    public ResponseEntity<List<EventoRespostaDto>> listarPorSala(
+            @Parameter(description = "ID da sala a ser obtido", required = true)
+            @PathVariable int id
+    ) {
+        return ResponseEntity.ok(
+                eventoService.listarPorSala(id).stream().map(EventoMapper::toEventoRespostaDto).toList()
+        );
+    }
 
     @Operation(summary = "Lista todos os eventos", description = "Retorna uma lista de eventos")
     @ApiResponse(responseCode = "200", description = "Lista de eventos",

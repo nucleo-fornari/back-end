@@ -8,6 +8,6 @@ import java.util.List;
 
 public interface EventoRepository extends JpaRepository<Evento, Integer> {
     List<Evento> findAllByTipo(String tipo);
-    List<Evento> findAllBySalasContains(Sala sala);
+    List<Evento> findBySalas_Id(int id);
     List<Evento> findAllByUsuarioIdOrderByDtPublicacaoDesc(Integer id);
 }

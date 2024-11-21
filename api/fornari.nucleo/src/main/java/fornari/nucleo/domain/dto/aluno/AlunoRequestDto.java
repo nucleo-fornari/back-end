@@ -1,6 +1,7 @@
 package fornari.nucleo.domain.dto.aluno;
 
 import fornari.nucleo.domain.dto.FiliacaoAlunoDto;
+import fornari.nucleo.domain.dto.sala.SalaRequestDto;
 import lombok.Builder;
 import lombok.Data;
 
@@ -26,4 +27,6 @@ public class AlunoRequestDto {
     private FiliacaoAlunoDto filiacao;
 
     private List<Integer> restricoes;
+
+    private SalaRequestDto sala;
 }

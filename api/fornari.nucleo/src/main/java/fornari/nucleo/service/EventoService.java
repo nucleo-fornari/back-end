@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -34,7 +35,8 @@ public class EventoService {
             return enrollPublicationWithClassroom(entidade, null, salas);
         }
 
-        entidade.setSalas(new ArrayList<>(List.of(new Sala[]{user.getSala()})));
+        entidade.setSalas(new ArrayList<>(List.of(user.getSala())));
+        user.getSala().addEvento(entidade);
         return eventoRepository.save(entidade);
     }
 
@@ -74,5 +76,9 @@ public class EventoService {
 
     public List<Evento> findByUserId(Integer id) {
         return eventoRepository.findAllByUsuarioIdOrderByDtPublicacaoDesc(id);
+    }
+
+    public List<Evento> listarPorSala(int id) {
+        return eventoRepository.findBySalas_Id(id);
     }
 }
