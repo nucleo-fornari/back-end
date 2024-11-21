@@ -1,7 +1,5 @@
 package fornari.nucleo.service;
 
-import fornari.nucleo.domain.dto.EventoCriacaoReqDto;
-import fornari.nucleo.domain.dto.EventoRespostaDto;
 import fornari.nucleo.domain.entity.Evento;
 import fornari.nucleo.domain.entity.Sala;
 import fornari.nucleo.domain.entity.Usuario;
@@ -9,12 +7,10 @@ import fornari.nucleo.helper.messages.ConstMessages;
 import fornari.nucleo.repository.EventoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -77,6 +73,6 @@ public class EventoService {
     }
 
     public List<Evento> findByUserId(Integer id) {
-        return eventoRepository.findAllByUsuarioId(id);
+        return eventoRepository.findAllByUsuarioIdOrderByDtPublicacaoDesc(id);
     }
 }

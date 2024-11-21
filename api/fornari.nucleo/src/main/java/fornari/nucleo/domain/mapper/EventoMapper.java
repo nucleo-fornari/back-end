@@ -29,6 +29,7 @@ public class EventoMapper {
                 .tipo(entidade.getTipo())
                 .descricao(entidade.getDescricao())
                 .data(entidade.getData())
+                .responsavel(UsuarioMapper.toDTO(entidade.getUsuario()))
                 .encerrado(entidade.getEncerrado())
                 .salas(entidade.getSalas() == null ? new ArrayList<>() :
                         entidade.getSalas().stream().map(SalaMapper::toSalaResponseDto).toList())
