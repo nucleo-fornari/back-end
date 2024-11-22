@@ -24,5 +24,8 @@ public class Recado {
     @JoinColumn(referencedColumnName = "id", name = "id_usuario")
     private Aluno aluno;
 
+    @ManyToOne(targetEntity = Usuario.class)
+    private Usuario responsavel;
+
 
 }

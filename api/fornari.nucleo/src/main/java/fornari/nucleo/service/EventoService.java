@@ -81,4 +81,16 @@ public class EventoService {
     public List<Evento> listarPorSala(int id) {
         return eventoRepository.findBySalas_Id(id);
     }
+
+    public void delete(Integer id) {
+        Evento evento = findById(id);
+        for (Sala sala : evento.getSalas()) {
+            sala.removeEvento(evento);
+        }
+
+        evento.getUsuario().removeEvento(evento);
+        evento.setUsuario(null);
+        evento.setSalas(new ArrayList<>());
+        eventoRepository.delete(evento);
+    }
 }

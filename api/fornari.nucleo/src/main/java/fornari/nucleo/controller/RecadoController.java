@@ -21,7 +21,7 @@ public class RecadoController {
     @PutMapping("/create/aluno/{idAluno}")
     public ResponseEntity<RecadoResponseDto> create(@PathVariable Integer idAluno, @RequestBody RecadoRequestDto data) {
         return ResponseEntity.status(201).body(RecadoMapper.recadoToRecadoResponseDto(
-                this.service.create(RecadoMapper.recadoRequestDtoToRecado(data), idAluno)));
+                this.service.create(RecadoMapper.recadoRequestDtoToRecado(data), idAluno, data.getUsuarioId())));
     }
 
 
@@ -42,5 +42,20 @@ public class RecadoController {
 
         return ResponseEntity.ok().body(list.stream()
                 .map(RecadoMapper::recadoToRecadoResponseDto).toList());
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Integer id) {
+        this.service.delete(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/responsavel/{id}")
+    public ResponseEntity<List<RecadoResponseDto>> getByResponsavelId(@PathVariable Integer id) {
+        List<Recado> recados = this.service.findByUserId(id);
+
+        if (recados.isEmpty()) return ResponseEntity.noContent().build();
+
+        return ResponseEntity.ok().body(recados.stream().map(RecadoMapper::recadoToRecadoResponseDto).toList());
     }
 }

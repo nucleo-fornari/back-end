@@ -103,4 +103,10 @@ public class EventoController {
     public ResponseEntity<EventoRespostaDto> enrollPublicationWithClassroom(@PathVariable Integer id, @RequestBody List<Integer> salas) {
         return ResponseEntity.ok(EventoMapper.toEventoRespostaDto(eventoService.enrollPublicationWithClassroom(null, id, salas)));
     }
+
+    @DeleteMapping(value = "/{id}", name = "DELETE_EVENT")
+    public ResponseEntity<Void> delete(@PathVariable Integer id) {
+        eventoService.delete(id);
+        return ResponseEntity.noContent().build();
+    }
 }

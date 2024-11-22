@@ -11,4 +11,6 @@ public interface RecadoRepository extends JpaRepository<Recado, Integer> {
 
     @Query("SELECT r FROM Recado r WHERE r.aluno.id = :idAluno")
     List<Recado> findByAluno(Integer idAluno);
+
+    List<Recado> findByResponsavel_Id(Integer id);
 }

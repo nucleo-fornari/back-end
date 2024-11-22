@@ -94,7 +94,7 @@ public class UsuarioMapper {
                 .email(usuario.getEmail())
                 .nome(usuario.getNome())
                 .funcao(usuario.getFuncao())
-                .salaId(usuario.getSala().getId())
+                .salaId(usuario.getSala() == null ? null : usuario.getSala().getId())
                 .token(token)
                 .build();
     }

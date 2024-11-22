@@ -9,5 +9,5 @@ public class RecadoRequestDto {
 
     String titulo;
     String conteudo;
-
+    Integer usuarioId;
 }

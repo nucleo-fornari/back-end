@@ -62,6 +62,9 @@ public class Usuario {
     @OneToMany(targetEntity = Chamado.class, mappedBy = "usuario", cascade = CascadeType.PERSIST)
     private List<Chamado> chamados;
 
+    @OneToMany(targetEntity = Recado.class, mappedBy = "responsavel", cascade = CascadeType.PERSIST)
+    private List<Recado> recados;
+
     @ManyToOne(targetEntity = Sala.class, cascade = CascadeType.PERSIST)
     @JoinColumn(referencedColumnName = "id", name = "id_sala")
     private Sala sala;
@@ -69,6 +72,7 @@ public class Usuario {
     public Usuario () {
         this.chamados = new ArrayList<>();
         this.filiacoes = new ArrayList<>();
+        this.recados = new ArrayList<>();
     }
 
     public Usuario(Integer id, String nome, String cpf, String telefone, String email, String funcao) {
@@ -95,5 +99,9 @@ public class Usuario {
         if (!this.chamados.contains(chamado)) {
             this.chamados.add(chamado);
         }
+    }
+
+    public void removeEvento(Evento evento) {
+        this.eventos.remove(evento);
     }
 }
