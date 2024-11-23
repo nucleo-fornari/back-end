@@ -109,4 +109,9 @@ public class EventoController {
         eventoService.delete(id);
         return ResponseEntity.noContent().build();
     }
+
+    @PutMapping(value = "/{id}", name = "UPDATE_EVENT")
+    public ResponseEntity<EventoRespostaDto> update(@PathVariable Integer id, @RequestBody EventoCriacaoReqDto eventoUpdateReqDto) {
+        return ResponseEntity.ok(EventoMapper.toEventoRespostaDto(eventoService.update(id, EventoMapper.toEvento(eventoUpdateReqDto), eventoUpdateReqDto.getSalas())));
+    }
 }

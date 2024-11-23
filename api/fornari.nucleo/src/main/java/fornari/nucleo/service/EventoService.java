@@ -10,10 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -58,17 +55,19 @@ public class EventoService {
             evento = findById(id);
         }
 
-        for (Sala sala : evento.getSalas()) {
-            evento.getSalas().remove(sala);
-            sala.getEventos().remove(evento);
+        Iterator<Sala> iterator = evento.getSalas().iterator();
+        while (iterator.hasNext()) {
+            Sala sala = iterator.next();
+            iterator.remove(); // Remove a sala da coleção
+            sala.removeEvento(evento); // Remove o evento da lista de eventos da sala
         }
 
-        evento.getSalas().clear();
+        evento.getSalas().clear(); // Limpa a lista de salas
 
         for (Integer idSala : salas) {
             Sala sala = salaService.findById(idSala);
             evento.addSala(sala);
-            sala.addEvento(evento);
+            sala.addEvento(evento); // Adiciona o evento à lista de eventos da sala
         }
 
         return eventoRepository.save(evento);
@@ -92,5 +91,15 @@ public class EventoService {
         evento.setUsuario(null);
         evento.setSalas(new ArrayList<>());
         eventoRepository.delete(evento);
+    }
+
+    public Evento update(Integer id, Evento body, List<Integer> salas) {
+        Evento evento = findById(id);
+        evento.setTitulo(body.getTitulo());
+        evento.setData(body.getData());
+        evento.setDescricao(body.getDescricao());
+
+
+        return this.enrollPublicationWithClassroom(evento, id, salas);
     }
 }

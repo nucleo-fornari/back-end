@@ -43,4 +43,5 @@ public class ConstMessages {
     public static final String NOT_ALLOWED_TO_CREATE_EVENT_WITHOUT_CLASS = "Não é permitido criar um recado sem uma sala.";
     public static final String INVALID_GROUP_NAME = "Os nomes permitidos são: G1, G2, G3, G4 e G5.";
     public static final String NOT_FOUND_RECADO = "Recado não encontrado.";
+    public static final String SALA_ALREADY_EXISTS = "Sala com o nome %s ja cadastrada.";
 }

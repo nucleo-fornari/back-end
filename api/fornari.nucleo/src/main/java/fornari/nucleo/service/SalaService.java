@@ -33,6 +33,11 @@ public class SalaService {
     }
 
     public Sala create(Sala sala, Integer grupoId) {
+
+        if (salaRepository.findByNome(sala.getNome()).isPresent())
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                ConstMessages.SALA_ALREADY_EXISTS.formatted(sala.getNome()));
+
         sala.setGrupo(salaGrupoService.findById(grupoId));
         return this.salaRepository.save(sala);
     }
