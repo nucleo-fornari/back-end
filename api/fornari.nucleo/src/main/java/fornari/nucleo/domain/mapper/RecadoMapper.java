@@ -23,6 +23,7 @@ public class RecadoMapper {
         recadoResponseDto.setConteudo(recado.getConteudo());
         recadoResponseDto.setResponsavel(UsuarioMapper.toDTO(recado.getResponsavel()));
         recadoResponseDto.setDtCriacao(recado.getDtCriacao());
+        recadoResponseDto.setAlunoNome(recado.getAluno().getNome());
         return recadoResponseDto;
     }
 }
