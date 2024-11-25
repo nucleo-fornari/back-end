@@ -22,6 +22,8 @@ public class AlunoResponseDto {
 
     private boolean laudado;
 
+    private String laudoNome;
+
     private LocalDate dtNasc;
 
     private List<FiliacaoAlunoDto> filiacoes;

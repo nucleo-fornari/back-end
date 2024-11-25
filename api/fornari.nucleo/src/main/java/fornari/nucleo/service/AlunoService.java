@@ -9,7 +9,9 @@ import fornari.nucleo.repository.UsuarioRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -32,13 +34,16 @@ public class AlunoService {
 
     private final SalaService salaService;
 
+    private final FileStorageService fileStorageService;
+
     public AlunoService(
             AlunoRepository repository,
             UsuarioService usuarioService,
             UsuarioRepository usuarioRepository,
             RestricaoService restricaoService,
             FiliacaoRepository filiacaoRepository,
-            SalaService salaService
+            SalaService salaService,
+            FileStorageService fileStorageService
     ) {
         this.repository = repository;
         this.usuarioService = usuarioService;
@@ -46,10 +51,11 @@ public class AlunoService {
         this.restricaoService = restricaoService;
         this.filiacaoRepository = filiacaoRepository;
         this.salaService = salaService;
+        this.fileStorageService = fileStorageService;
     }
 
     @Transactional
-    public Aluno create(Aluno aluno, Usuario responsavel, String parentesco, List<Integer> restricoes) {
+    public Aluno create(Aluno aluno, Usuario responsavel, String parentesco, List<Integer> restricoes, MultipartFile file) {
 
         if (this.repository.existsByRa(aluno.getRa())) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, ConstMessages.ALREADY_EXISTS_ALUNO_BY_RA);
@@ -73,6 +79,11 @@ public class AlunoService {
         new Filiacao(null, aluno, responsavel, parentesco);
 
         this.updateConstraint(aluno, restricoes);
+
+        if (aluno.isLaudado()){
+            String fileName = this.fileStorageService.storeFile(file);
+            aluno.setLaudoNome(fileName);
+        }
 
         return this.repository.save(aluno);
     }

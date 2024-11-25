@@ -35,6 +35,9 @@ public class Aluno {
     @Column(name = "observacoes")
     private String observacoes;
 
+    @Column(name = "laudo_url")
+    private String laudoNome;
+
     @OneToMany(targetEntity = Filiacao.class, mappedBy = "afiliado", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true)
     private List<Filiacao> filiacoes;
 

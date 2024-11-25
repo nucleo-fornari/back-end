@@ -9,7 +9,6 @@ import java.sql.Date;
 import java.time.LocalDate;
 
 @Data
-@AllArgsConstructor
 @Builder
 public class ResponsavelAlunoDto {
 
@@ -29,4 +28,16 @@ public class ResponsavelAlunoDto {
 
     private EnderecoDto endereco;
 
+    public ResponsavelAlunoDto(Integer id, String nome, String cpf, String telefone, String email, LocalDate dtNasc, String funcao, EnderecoDto endereco) {
+        this.id = id;
+        this.nome = nome;
+        this.cpf = cpf;
+        this.telefone = telefone;
+        this.email = email;
+        this.dtNasc = dtNasc;
+        this.funcao = funcao;
+        this.endereco = endereco;
+    }
+
+    public ResponsavelAlunoDto() {}
 }

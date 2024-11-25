@@ -29,4 +29,20 @@ public class AlunoRequestDto {
     private List<Integer> restricoes;
 
     private SalaRequestDto sala;
+
+    public AlunoRequestDto(Integer id, String ra, String nome, boolean laudado, LocalDate dtNasc, String observacoes, FiliacaoAlunoDto filiacao, List<Integer> restricoes, SalaRequestDto sala) {
+        this.id = id;
+        this.ra = ra;
+        this.nome = nome;
+        this.laudado = laudado;
+        this.dtNasc = dtNasc;
+        this.observacoes = observacoes;
+        this.filiacao = filiacao;
+        this.restricoes = restricoes;
+        this.sala = sala;
+    }
+
+    public AlunoRequestDto() {
+    }
 }
+

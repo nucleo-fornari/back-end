@@ -22,6 +22,9 @@ public class EventoService {
     public Evento criar(Evento entidade, Integer usuarioId, List<Integer> salas) {
         Usuario user = usuarioService.buscarPorID(usuarioId);
 
+        if (!List.of("PROFESSOR", "SECRETARIO").contains(user.getFuncao()))
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ConstMessages.ONLY_TEACHERS_AND_SECRETARIES);
+
         if ((Objects.equals(user.getFuncao(), "PROFESSOR") && user.getSala() == null) ||
                 (Objects.equals(user.getFuncao(), "SECRETARIO") && salas.isEmpty()))
             throw new ResponseStatusException(HttpStatus.CONFLICT, ConstMessages.NOT_ALLOWED_TO_CREATE_EVENT_WITHOUT_CLASS);

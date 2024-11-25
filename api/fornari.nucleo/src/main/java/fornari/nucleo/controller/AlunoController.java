@@ -1,5 +1,7 @@
 package fornari.nucleo.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import fornari.nucleo.domain.dto.FiliacaoAlunoDto;
 import fornari.nucleo.domain.dto.aluno.AlunoRequestDto;
 import fornari.nucleo.domain.dto.aluno.AlunoResponseDto;
@@ -19,6 +21,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -38,12 +41,25 @@ public class AlunoController {
 
     @PostMapping
     public ResponseEntity<AlunoResponseDto> create(
-            @Parameter(description = "Dados para criar um novo aluno", required = true) @Valid @RequestBody AlunoRequestDto body
+            @Parameter(description = "Dados para criar um novo aluno", required = true) @Valid @RequestParam String body,
+            @Parameter(description = "Laudo") @RequestParam MultipartFile laudo
     ) {
+
+        AlunoRequestDto dto;
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            objectMapper.registerModule(new JavaTimeModule());
+            dto = objectMapper.readValue(body, AlunoRequestDto.class);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return ResponseEntity.badRequest().build();
+        }
+
         Aluno aluno = this.service.create(
-                AlunoMapper.alunoCreationRequestDtotoAluno(body),
-                AlunoMapper.responsavelAlunoDtotoUsuario(body.getFiliacao().getResponsavel()),
-                body.getFiliacao().getParentesco(), body.getRestricoes()
+                AlunoMapper.alunoCreationRequestDtotoAluno(dto),
+                AlunoMapper.responsavelAlunoDtotoUsuario(dto.getFiliacao().getResponsavel()),
+                dto.getFiliacao().getParentesco(), dto.getRestricoes(),
+                laudo
         );
 
         return ResponseEntity.status(HttpStatus.CREATED).body(AlunoMapper.AlunotoDto(aluno));

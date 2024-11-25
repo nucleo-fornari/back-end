@@ -38,6 +38,7 @@ public class AlunoMapper {
                 .laudado(aluno.isLaudado())
                 .nome(aluno.getNome())
                 .ra(aluno.getRa())
+                .laudoNome(aluno.getLaudoNome())
                 .observacoes(aluno.getObservacoes())
                 .restricoes(RestricaoMapper.multipleRestricaoToRestricaoResponseWithoutAlunosDto(aluno.getRestricoes()))
                 .filiacoes(aluno.getFiliacoes().stream().map((x) -> new FiliacaoAlunoDto(
