@@ -1,49 +1,37 @@
 package fornari.nucleo.service;
 
-import fornari.nucleo.domain.entity.Usuario;
+import fornari.nucleo.domain.dto.sala.SalaResponseDto;
+import org.springframework.stereotype.Service;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
 
+@Service
 public class ExportService {
-    public static void exportar(List<Usuario> usuarios) {
+
+    public void exportar(SalaResponseDto sala) {
         try (
-                OutputStream file = new FileOutputStream("usuarios.csv");
+                OutputStream file = new FileOutputStream("C:\\uploads\\pessoas-autorizadas-" + sala.getNome() + ".csv");
                 BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(file));
         ) {
-            writer.write("ID;Nome;CPF;Email;Funcao\n");
-            String pattern = "%d;%s;%s;%s;%s\n";
+            // Cabeçalho
 
-            usuarios.stream()
-                    .map(usuario -> pattern.formatted(
-                            usuario.getId(),
-                            usuario.getNome(),
-                            usuario.getCpf(),
-                            usuario.getEmail(),
-                            usuario.getFuncao()))
-                    .forEach(linha -> {
-                        try {
-                            writer.write(linha);
-                        } catch (IOException e) {
-                            System.out.println("Erro ao escrever no arquivo: " + e.getMessage());
-                        }
-                    });
 
-        } catch (FileNotFoundException erro) {
-            System.out.println("Erro ao encontrar o arquivo");
+            // Iterando pelos alunos e suas filiações
+            for (var aluno : sala.getAlunos()) {
+                writer.write("ALUNO/A: " + aluno.getNome() + "\n");
+                writer.write("NOME;PARENTESCO;TEL\n");
+                for (var filiacao : aluno.getFiliacoes()) {
+                    var responsavel = filiacao.getResponsavel();
+                    writer.write(String.format(
+                            "%s;%s;%s\n\n",
+                            responsavel.getNome(),
+                            filiacao.getParentesco(),
+                            responsavel.getTelefone()
+                    ));
+                }
+            }
         } catch (IOException e) {
-            System.out.println("Erro ao ler o arquivo");
+            throw new RuntimeException(e.getMessage());
         }
-    }
-
-    public static void main(String[] args) {
-        List<Usuario> usuarios = new ArrayList<>();
-        usuarios.add(new Usuario(1, "Felipe", "12322465543","11999999999", "felipe.teste@gmail.com", "Professor"));
-        usuarios.add(new Usuario(2, "Ana", "98765432100","11999999999", "ana.exemplo@gmail.com", "Professor"));
-        usuarios.add(new Usuario(3, "Carlos", "45678912301","11999999999", "carlos.exemplo@gmail.com","Responsavel"));
-        usuarios.add(new Usuario(4, "Julia", "32145698710","11999999999", "julia.exemplo@gmail.com", "Secretario"));
-        usuarios.add(new Usuario(5, "Marcos", "65412398710","11999999999", "marcos.exemplo@gmail.com","Responsavel"));
-        exportar(usuarios);
     }
 }

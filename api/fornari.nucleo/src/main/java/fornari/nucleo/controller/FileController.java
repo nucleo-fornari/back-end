@@ -1,7 +1,10 @@
 package fornari.nucleo.controller;
 
 import fornari.nucleo.domain.UploadFileResponseVO;
+import fornari.nucleo.domain.dto.sala.SalaResponseDto;
+import fornari.nucleo.service.ExportService;
 import fornari.nucleo.service.FileStorageService;
+import fornari.nucleo.service.SalaService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
@@ -21,6 +24,8 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class FileController {
     private final FileStorageService service;
+    private final ExportService exportService;
+    private final SalaService salaService;
 
     @PostMapping("/upload")
     public UploadFileResponseVO uploadFile(@RequestParam MultipartFile file) {
@@ -57,5 +62,11 @@ public class FileController {
                 .contentType(MediaType.parseMediaType(contentType))
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
                 .body(service.loadFileAsResource(fileName));
+    }
+
+    @PostMapping("/generate")
+    public ResponseEntity<String> generateFile(@RequestBody SalaResponseDto sala) {
+        exportService.exportar(sala);
+        return ResponseEntity.ok("Arquivo gerado com sucesso!");
     }
 }
