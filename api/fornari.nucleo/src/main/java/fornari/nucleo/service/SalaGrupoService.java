@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -16,8 +17,8 @@ public class SalaGrupoService {
 
     private final SalaGrupoRepository salaGrupoRepository;
 
-    public SalaGrupo create(SalaGrupo salaGrupo) {
-        if (!this.salaGrupoRepository.existsByNome(salaGrupo.getNome())) return this.salaGrupoRepository.save(salaGrupo);
+    public SalaGrupo create(String nome) {
+        if (!this.salaGrupoRepository.existsByNome(nome)) return this.salaGrupoRepository.save(new SalaGrupo(nome));
         throw new ResponseStatusException(HttpStatus.CONFLICT);
     }
 

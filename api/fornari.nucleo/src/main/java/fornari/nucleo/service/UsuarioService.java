@@ -126,4 +126,8 @@ public class UsuarioService {
         user.getSala().removeProfessor(user);
         return this.repository.save(user);
     }
+
+    public List<Usuario> listarProfessoresSemSala() {
+        return repository.findAllBySalaIsNullAndFuncao("PROFESSOR");
+    }
 }

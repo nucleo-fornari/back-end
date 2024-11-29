@@ -20,9 +20,14 @@ public class SalaGrupo {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Pattern(regexp = "G1|G2|G3|G4|G5", message = ConstMessages.INVALID_GROUP_NAME)
+
     private String nome;
 
     @OneToMany(mappedBy = "grupo", targetEntity = Sala.class)
     private List<Sala> salas = new ArrayList<>();
+
+    public SalaGrupo(String nome) {
+        this.id = null;
+        this.nome = nome;
+    }
 }

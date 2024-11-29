@@ -11,6 +11,7 @@ import fornari.nucleo.domain.mapper.SalaMapper;
 import fornari.nucleo.domain.mapper.UsuarioMapper;
 import fornari.nucleo.service.SalaGrupoService;
 import fornari.nucleo.service.SalaService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -27,7 +28,7 @@ public class SalaController {
     private final SalaGrupoService salaGrupoService;
 
     @PostMapping
-    public ResponseEntity<SalaResponseDto> create(SalaRequestDto data) {
+    public ResponseEntity<SalaResponseDto> create(@RequestBody @Valid SalaRequestDto data) {
         return ResponseEntity.status(201).body(SalaMapper.toSalaResponseDto(salaService.create(SalaMapper.toSala(data), data.getGrupoId())));
     }
 
@@ -45,10 +46,10 @@ public class SalaController {
         return ResponseEntity.status(200).body(SalaMapper.toSalaResponseDto(salaService.findById(id)));
     }
 
-    @PostMapping("/grupos")
-    public ResponseEntity<SalaGrupoResponseDto> createSalaGrupo(SalaGrupoRequestDto data) {
+    @PostMapping("/grupos/{nome}")
+    public ResponseEntity<SalaGrupoResponseDto> createSalaGrupo(@PathVariable String nome) {
         return ResponseEntity.status(201).body(SalaGrupoMapper.toSalaGrupoResponseDto(
-                salaGrupoService.create(SalaGrupoMapper.toSalaGrupo(data))));
+                salaGrupoService.create(nome)));
     }
 
     @GetMapping("/grupos")

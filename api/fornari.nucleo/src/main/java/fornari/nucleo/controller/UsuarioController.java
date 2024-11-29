@@ -43,6 +43,22 @@ public class UsuarioController {
         );
     }
 
+    @Operation(summary = "Lista todos os Usuários sem Sala atrelada", description = "Retorna uma lista de Usuários sem Sala atrelada")
+    @ApiResponse(responseCode = "200", description = "Lista de Usuários",
+            content = @Content(mediaType = "application/json",
+                    schema = @Schema(implementation = UsuarioResponseDto.class)))
+
+    @GetMapping(value = "/professores",name = "LIST_USERS")
+    public ResponseEntity<List<UsuarioResponseDto>> getProfessoresSemSala() {
+        List<Usuario> list = service.listarProfessoresSemSala();
+
+        if (list.isEmpty()) return ResponseEntity.status(204).build();
+
+        return ResponseEntity.status(200).body(
+                list.stream().map(UsuarioMapper::toDTO).toList()
+        );
+    }
+
     @Operation(summary = "Lista todos os Usuários", description = "Retorna uma lista de Usuários")
     @ApiResponse(responseCode = "200", description = "Lista de Usuários",
             content = @Content(mediaType = "application/json",

@@ -216,4 +216,8 @@ public class AlunoService {
         aluno.getSala().removeAluno(aluno);
         return this.repository.save(aluno);
     }
+
+    public List<Aluno> getSemSala() {
+        return repository.findAllBySalaIsNull();
+    }
 }

@@ -77,6 +77,18 @@ public class AlunoController {
         );
     }
 
+    @Operation(summary = "Lista todos os alunos sem sala", description = "Retorna uma lista de todos os alunos sem sala")
+    @ApiResponse(responseCode = "200", description = "Lista de alunos",
+            content = @Content(mediaType = "application/json",
+                    schema = @Schema(implementation = AlunoResponseDto.class)))
+
+    @GetMapping("/sem-sala")
+    public ResponseEntity<List<AlunoResponseDto>> listAlunosSemSala() {
+        return ResponseEntity.ok().body(
+                this.service.getSemSala().stream().map(AlunoMapper::AlunotoDto).toList()
+        );
+    }
+
     @Operation(summary = "Obtém um aluno pelo ID", description = "Retorna um aluno com o ID especificado")
     @ApiResponse(responseCode = "200", description = "Aluno encontrado",
             content = @Content(mediaType = "application/json",
