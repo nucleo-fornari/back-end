@@ -49,6 +49,23 @@ public class AlunoMapper {
                         .build();
     }
 
+    public static AlunoResponseDto AlunoToDtoWithoutSala(Aluno aluno) {
+        return AlunoResponseDto.builder()
+                .id(aluno.getId())
+                .dtNasc(aluno.getDtNasc())
+                .laudado(aluno.isLaudado())
+                .nome(aluno.getNome())
+                .ra(aluno.getRa())
+                .laudoNome(aluno.getLaudoNome())
+                .observacoes(aluno.getObservacoes())
+                .restricoes(RestricaoMapper.multipleRestricaoToRestricaoResponseWithoutAlunosDto(aluno.getRestricoes()))
+                .filiacoes(aluno.getFiliacoes().stream().map((x) -> new FiliacaoAlunoDto(
+                        UsuarioMapper.usuarioToResponsavelAlunoDto(x.getResponsavel()) , x.getParentesco())).toList())
+                .recados(aluno.getRecados() == null ? new ArrayList<>() :
+                        aluno.getRecados().stream().map(RecadoMapper::recadoToRecadoResponseDto).toList())
+                .build();
+    }
+
     public static Usuario responsavelAlunoDtotoUsuario(ResponsavelAlunoDto dto) {
 
         if (dto == null) {
