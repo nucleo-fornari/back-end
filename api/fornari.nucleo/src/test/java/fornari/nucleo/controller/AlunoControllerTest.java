@@ -1,11 +1,14 @@
 package fornari.nucleo.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import fornari.nucleo.domain.dto.EnderecoDto;
 import fornari.nucleo.domain.dto.FiliacaoAlunoDto;
 import fornari.nucleo.domain.dto.aluno.AlunoRequestDto;
 import fornari.nucleo.domain.dto.aluno.AlunoResponseDto;
 import fornari.nucleo.domain.dto.usuario.responsavel.ResponsavelAlunoDto;
 import fornari.nucleo.domain.entity.Aluno;
+import fornari.nucleo.domain.entity.Usuario;
 import fornari.nucleo.service.AlunoService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -15,8 +18,10 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -36,21 +41,45 @@ class AlunoControllerTest {
 //    @Test
 //    @DisplayName("Deve criar um novo aluno com sucesso")
 //    void createDeveCriarNovoAluno() {
+//        // Arrange
+//        FiliacaoAlunoDto filiacao = new FiliacaoAlunoDto();
+//        ResponsavelAlunoDto responsavel = new ResponsavelAlunoDto();
+//        responsavel.setId(1);
+//        responsavel.setNome("Caique de Andrade Lucio");
+//        responsavel.setCpf("48585921897");
+//        responsavel.setTelefone("11983987068");
+//        responsavel.setEmail("caique@gmail.com");
+//        filiacao.setResponsavel(responsavel);
+//        filiacao.setParentesco("GENITOR");
+//
 //        AlunoRequestDto requestDto = new AlunoRequestDto();
 //        requestDto.setNome("João");
+//        requestDto.setFiliacao(filiacao);
 //
 //        Aluno aluno = new Aluno();
 //        aluno.setId(1);
 //        aluno.setNome("João");
+//        aluno.setFiliacoes(Collections.emptyList());
 //
-//        when(service.create(any(), any(), any(), anyList(), any())).thenReturn(aluno);
+//        when(service.create(any(Aluno.class), any(Usuario.class), anyString(), anyList(), any(MultipartFile.class))).thenReturn(aluno);
 //
-//        ResponseEntity<AlunoResponseDto> resultado = controller.create("{ \"nome\": \"João\" }", null);
+//        // Act
+//        ObjectMapper objectMapper = new ObjectMapper();
+//        try {
+//            String body = objectMapper.writeValueAsString(requestDto);
+//            System.out.println(body);
+//            ResponseEntity<AlunoResponseDto> resultado = controller.create(body, null);
+//            // Assert
+//            assertEquals(HttpStatus.CREATED, resultado.getStatusCode());
+//            assertNotNull(resultado.getBody());
+//            assertEquals("João", resultado.getBody().getNome());
+//        } catch (JsonProcessingException e) {
+//            throw new RuntimeException(e);
+//        }
 //
-//        assertEquals(HttpStatus.CREATED, resultado.getStatusCode());
-//        assertNotNull(resultado.getBody());
-//        assertEquals("João", resultado.getBody().getNome());
 //    }
+
+
 
     @Test
     @DisplayName("Deve listar todos os alunos")
@@ -148,9 +177,9 @@ class AlunoControllerTest {
 //
 //        Aluno aluno = new Aluno();
 //        aluno.setId(1);
-//        aluno.setNome("João Atualizado");
+//        aluno.setNome("João");
 //
-//        when(service.update(any(), anyList(), eq(1))).thenReturn(aluno);
+//        when(service.update(any(Aluno.class), anyList(), eq(1))).thenReturn(aluno);
 //
 //        ResponseEntity<AlunoResponseDto> resultado = controller.updateAluno(1, requestDto);
 //
@@ -158,6 +187,7 @@ class AlunoControllerTest {
 //        assertNotNull(resultado.getBody());
 //        assertEquals("João Atualizado", resultado.getBody().getNome());
 //    }
+
 
     @Test
     @DisplayName("Deve excluir aluno pelo ID")
