@@ -1,11 +1,15 @@
 package fornari.nucleo.domain.dto;
 
 import fornari.nucleo.domain.dto.usuario.UsuarioResponseDto;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class ChamadoDto {
     private Integer id;
     private String descricao;
@@ -15,9 +19,6 @@ public class ChamadoDto {
     private LocalDateTime dtFechamento;
     private boolean criancaAtipica;
     private UsuarioResponseDto responsavel;
-
-    public ChamadoDto() {
-    }
 
     public ChamadoTipoDto getTipo() {
         this.tipo.getChamados().clear();

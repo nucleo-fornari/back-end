@@ -11,6 +11,9 @@ import fornari.nucleo.domain.mapper.SalaMapper;
 import fornari.nucleo.domain.mapper.UsuarioMapper;
 import fornari.nucleo.service.SalaGrupoService;
 import fornari.nucleo.service.SalaService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,4 +63,16 @@ public class SalaController {
 
         return ResponseEntity.ok(list.stream().map(SalaGrupoMapper::toSalaGrupoResponseDto).toList());
     }
+
+    @Operation(summary = "Exclui uma sala", description = "Remove uma sala")
+    @ApiResponse(responseCode = "204", description = "Sala excluida com sucesso")
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteSala(
+            @Parameter(description = "ID da sala a ser deletada", required = true) @PathVariable int id) {
+        salaService.delete(id);
+        return ResponseEntity.noContent().build();
+    }
+
+
 }

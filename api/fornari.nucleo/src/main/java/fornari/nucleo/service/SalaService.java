@@ -41,4 +41,12 @@ public class SalaService {
         sala.setGrupo(salaGrupoService.findById(grupoId));
         return this.salaRepository.save(sala);
     }
+
+    public void delete(int id) {
+        if (!salaRepository.existsById(id)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+
+        salaRepository.deleteById(id);
+    }
 }
