@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -21,7 +22,7 @@ public class ChamadoDto {
     private UsuarioResponseDto responsavel;
 
     public ChamadoTipoDto getTipo() {
-        this.tipo.getChamados().clear();
+        if (this.tipo.getChamados() != null) this.tipo.getChamados().clear();
         return this.tipo;
     }
 
