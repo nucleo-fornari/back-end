@@ -31,6 +31,7 @@ public class Sala {
     private List<Aluno> alunos = new ArrayList<>();
 
     @ManyToOne(targetEntity = SalaGrupo.class, cascade = CascadeType.PERSIST)
+    @JoinColumn(referencedColumnName = "id", name = "id_grupo")
     private SalaGrupo grupo;
 
     @ManyToMany

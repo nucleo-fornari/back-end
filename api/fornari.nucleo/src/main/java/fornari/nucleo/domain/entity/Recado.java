@@ -21,10 +21,11 @@ public class Recado {
     private LocalDateTime dtCriacao;
 
     @ManyToOne(targetEntity = Aluno.class)
-    @JoinColumn(referencedColumnName = "id", name = "id_usuario")
+    @JoinColumn(referencedColumnName = "id", name = "id_aluno")
     private Aluno aluno;
 
     @ManyToOne(targetEntity = Usuario.class)
+    @JoinColumn(referencedColumnName = "id", name = "id_responsavel")
     private Usuario responsavel;
 
 

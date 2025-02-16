@@ -45,6 +45,7 @@ public class Aluno {
     private List<Restricao> restricoes;
 
     @ManyToOne(targetEntity = Sala.class, cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "id_sala", referencedColumnName = "id")
     private Sala sala;
 
     @OneToMany(targetEntity = Recado.class, mappedBy = "aluno", cascade = CascadeType.PERSIST, orphanRemoval = true)

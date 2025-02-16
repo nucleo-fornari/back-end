@@ -27,6 +27,7 @@ public class Evento {
 
     private String descricao;
 
+    @Column(name = "dtEvento")
     private LocalDateTime data;
 
     private LocalDateTime dtPublicacao;

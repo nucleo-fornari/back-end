@@ -1,0 +1,450 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <!-- Create endereco table -->
+    <changeSet id="v1.0-15022025-1" author="caique.lucio">
+        <createTable tableName="endereco">
+            <column name="id" type="int"/>
+            <column name="cep" type="varchar(25)"/>
+            <column name="complemento" type="varchar(255)"/>
+            <column name="bairro" type="varchar(255)"/>
+            <column name="cidade" type="varchar(100)"/>
+            <column name="uf" type="char(2)"/>
+            <column name="logradouro" type="varchar(100)"/>
+            <column name="numero" type="varchar(10)"/>
+        </createTable>
+    </changeSet>
+
+    <!-- Add Primary Key to endereco table -->
+    <changeSet id="v1.0-15022025-2" author="caique.lucio">
+        <addPrimaryKey
+                columnNames="id"
+                constraintName="pk_endereco"
+                tableName="endereco"/>
+    </changeSet>
+
+    <changeSet author="caique.lucio" id="v1.0-15022025-1.1">
+        <addAutoIncrement columnDataType="int"
+                          columnName="id"
+                          defaultOnNull="true"
+                          generationType="ALWAYS"
+                          startWith="1"
+                          tableName="endereco"/>
+    </changeSet>
+
+    <!-- Create sala_grupo table -->
+    <changeSet id="v1.0-15022025-3" author="caique.lucio">
+        <createTable tableName="sala_grupo">
+            <column name="id" type="int"/>
+            <column name="nome" type="varchar(50)"/>
+        </createTable>
+    </changeSet>
+
+    <!-- Add Primary Key to sala_grupo table -->
+    <changeSet id="v1.0-15022025-4" author="caique.lucio">
+        <addPrimaryKey
+                columnNames="id"
+                constraintName="pk_sala_grupo"
+                tableName="sala_grupo"/>
+    </changeSet>
+
+    <changeSet author="caique.lucio" id="v1.0-15022025-3.1">
+        <addAutoIncrement columnDataType="int"
+                          columnName="id"
+                          defaultOnNull="true"
+                          generationType="ALWAYS"
+                          startWith="1"
+                          tableName="sala_grupo"/>
+    </changeSet>
+
+    <changeSet author="caique.lucio" id="v1.0-15022025-4.1">
+        <addAutoIncrement columnDataType="int"
+                          columnName="id"
+                          defaultOnNull="true"
+                          generationType="ALWAYS"
+                          startWith="1"
+                          tableName="sala_grupo"/>
+    </changeSet>
+
+    <!-- Create sala table -->
+    <changeSet id="v1.0-15022025-5" author="caique.lucio">
+        <createTable tableName="sala">
+            <column name="id" type="int"/>
+            <column name="localizacao" type="varchar(100)"/>
+            <column name="nome" type="varchar(50)"/>
+            <column name="id_grupo" type="int"/>
+        </createTable>
+        <addForeignKeyConstraint
+                constraintName="id_grupo_sala"
+                baseTableName="sala"
+                baseColumnNames="id_grupo"
+                referencedTableName="sala_grupo"
+                referencedColumnNames="id"/>
+    </changeSet>
+
+
+    <!-- Add Primary Key to sala table -->
+    <changeSet id="v1.0-15022025-6" author="caique.lucio">
+        <addPrimaryKey
+                columnNames="id"
+                constraintName="pk_sala"
+                tableName="sala"/>
+    </changeSet>
+
+    <changeSet author="caique.lucio" id="v1.0-15022025-5.1">
+        <addAutoIncrement columnDataType="int"
+                          columnName="id"
+                          defaultOnNull="true"
+                          generationType="ALWAYS"
+                          startWith="1"
+                          tableName="sala"/>
+    </changeSet>
+
+    <!-- Create usuario table -->
+    <changeSet id="v1.0-15022025-7" author="caique.lucio">
+        <createTable tableName="usuario">
+            <column name="id" type="int"/>
+            <column name="nome" type="varchar(100)"/>
+            <column name="cpf" type="char(11)">
+                <constraints unique="true"/>
+            </column>
+            <column name="email" type="varchar(100)">
+                <constraints unique="true"/>
+            </column>
+            <column name="senha" type="varchar(255)"/>
+            <column name="token" type="varchar(255)"/>
+            <column name="dt_nasc" type="date"/>
+            <column name="telefone" type="varchar(20)"/>
+            <column name="funcao" type="varchar(20)"/>
+            <column name="id_endereco" type="int"/>
+            <column name="id_sala" type="int"/>
+        </createTable>
+        <addForeignKeyConstraint
+                constraintName="id_endereco_usuario"
+                baseTableName="usuario"
+                baseColumnNames="id_endereco"
+                referencedTableName="endereco"
+                referencedColumnNames="id"/>
+        <addForeignKeyConstraint
+                constraintName="id_sala_usuario"
+                baseTableName="usuario"
+                baseColumnNames="id_sala"
+                referencedTableName="sala"
+                referencedColumnNames="id"/>
+    </changeSet>
+
+    <!-- Add Primary Key to usuario table -->
+    <changeSet id="v1.0-15022025-8" author="caique.lucio">
+        <addPrimaryKey
+                columnNames="id"
+                constraintName="pk_usuario"
+                tableName="usuario"/>
+    </changeSet>
+
+    <changeSet author="caique.lucio" id="v1.0-15022025-8.1">
+        <addAutoIncrement columnDataType="int"
+                          columnName="id"
+                          defaultOnNull="true"
+                          generationType="ALWAYS"
+                          startWith="1"
+                          tableName="usuario"/>
+    </changeSet>
+
+    <!-- Create chamado_tipo table -->
+    <changeSet id="v1.0-15022025-9" author="caique.lucio">
+        <createTable tableName="chamado_tipo">
+            <column name="id" type="int"/>
+            <column name="tipo" type="varchar(100)"/>
+            <column name="prioridade" type="int"/>
+        </createTable>
+    </changeSet>
+
+    <!-- Add Primary Key to chamado_tipo table -->
+    <changeSet id="v1.0-15022025-10" author="caique.lucio">
+        <addPrimaryKey
+                columnNames="id"
+                constraintName="pk_chamado_tipo"
+                tableName="chamado_tipo"/>
+    </changeSet>
+
+    <changeSet author="caique.lucio" id="v1.0-15022025-10.1">
+        <addAutoIncrement columnDataType="int"
+                          columnName="id"
+                          defaultOnNull="true"
+                          generationType="ALWAYS"
+                          startWith="1"
+                          tableName="chamado_tipo"/>
+    </changeSet>
+
+
+    <!-- Create chamado table -->
+    <changeSet id="v1.0-15022025-11" author="caique.lucio">
+        <createTable tableName="chamado">
+            <column name="id" type="int"/>
+            <column name="descricao" type="varchar(500)"/>
+            <column name="finalizado" type="tinyint"/>
+            <column name="dt_abertura" type="datetime"/>
+            <column name="dt_fechamento" type="datetime"/>
+            <column name="crianca_atipica" type="tinyint"/>
+            <column name="id_chamado_tipo" type="int"/>
+            <column name="id_usuario" type="int"/>
+        </createTable>
+        <addForeignKeyConstraint
+                constraintName="id_chamado_tipo_chamado"
+                baseTableName="chamado"
+                baseColumnNames="id_chamado_tipo"
+                referencedTableName="chamado_tipo"
+                referencedColumnNames="id"/>
+        <addForeignKeyConstraint
+                constraintName="id_usuario_chamado"
+                baseTableName="chamado"
+                baseColumnNames="id_usuario"
+                referencedTableName="usuario"
+                referencedColumnNames="id"/>
+    </changeSet>
+
+    <!-- Add Primary Key to chamado table -->
+    <changeSet id="v1.0-15022025-12" author="caique.lucio">
+        <addPrimaryKey
+                columnNames="id"
+                constraintName="pk_chamado"
+                tableName="chamado"/>
+    </changeSet>
+
+    <changeSet author="caique.lucio" id="v1.0-15022025-12.1">
+        <addAutoIncrement columnDataType="int"
+                          columnName="id"
+                          defaultOnNull="true"
+                          generationType="ALWAYS"
+                          startWith="1"
+                          tableName="chamado"/>
+    </changeSet>
+
+    <!-- Create evento table -->
+    <changeSet id="v1.0-15022025-13" author="caique.lucio">
+        <createTable tableName="evento">
+            <column name="id" type="int"/>
+            <column name="titulo" type="varchar(50)"/>
+            <column name="descricao" type="varchar(500)"/>
+            <column name="dt_evento" type="datetime"/>
+            <column name="dt_publicacao" type="datetime"/>
+            <column name="tipo" type="varchar(20)"/>
+            <column name="id_usuario" type="int"/>
+            <column name="encerrado" type="tinyint"/>
+        </createTable>
+        <addForeignKeyConstraint
+                constraintName="id_usuario_evento"
+                baseTableName="evento"
+                baseColumnNames="id_usuario"
+                referencedTableName="usuario"
+                referencedColumnNames="id"/>
+    </changeSet>
+
+    <!-- Add Primary Key to evento table -->
+    <changeSet id="v1.0-15022025-14" author="caique.lucio">
+        <addPrimaryKey
+                columnNames="id"
+                constraintName="pk_evento"
+                tableName="evento"/>
+    </changeSet>
+
+    <changeSet author="caique.lucio" id="v1.0-15022025-14.1">
+        <addAutoIncrement columnDataType="int"
+                          columnName="id"
+                          defaultOnNull="true"
+                          generationType="ALWAYS"
+                          startWith="1"
+                          tableName="evento"/>
+    </changeSet>
+
+    <!-- Create evento_sala table -->
+    <changeSet id="v1.0-15022025-15" author="caique.lucio">
+        <createTable tableName="evento_sala">
+            <column name="id_sala" type="int"/>
+            <column name="id_evento" type="int"/>
+        </createTable>
+        <addForeignKeyConstraint
+                constraintName="id_sala_evento_sala"
+                baseTableName="evento_sala"
+                baseColumnNames="id_sala"
+                referencedTableName="sala"
+                referencedColumnNames="id"/>
+        <addForeignKeyConstraint
+                constraintName="id_evento_evento_sala"
+                baseTableName="evento_sala"
+                baseColumnNames="id_evento"
+                referencedTableName="evento"
+                referencedColumnNames="id"/>
+    </changeSet>
+
+    <!-- Create restricao table -->
+    <changeSet id="v1.0-15022025-16" author="caique.lucio">
+        <createTable tableName="restricao">
+            <column name="id" type="int"/>
+            <column name="tipo" type="varchar(50)"/>
+            <column name="descricao" type="varchar(200)"/>
+        </createTable>
+    </changeSet>
+
+    <!-- Add Primary Key to restricao table -->
+    <changeSet id="v1.0-15022025-17" author="caique.lucio">
+        <addPrimaryKey
+                columnNames="id"
+                constraintName="pk_restricao"
+                tableName="restricao"/>
+    </changeSet>
+
+    <changeSet author="caique.lucio" id="v1.0-15022025-17.1">
+        <addAutoIncrement columnDataType="int"
+                          columnName="id"
+                          defaultOnNull="true"
+                          generationType="ALWAYS"
+                          startWith="1"
+                          tableName="restricao"/>
+    </changeSet>
+
+    <!-- Create aluno table -->
+    <changeSet id="v1.0-15022025-18" author="caique.lucio">
+        <createTable tableName="aluno">
+            <column name="id" type="int"/>
+            <column name="ra" type="varchar(50)">
+                <constraints unique="true" nullable="false"/>
+            </column>
+            <column name="nome" type="varchar(100)"/>
+            <column name="laudado" type="tinyint"/>
+            <column name="dt_nasc" type="date"/>
+            <column name="observacoes" type="varchar(500)"/>
+            <column name="laudo_url" type="varchar(500)"/>
+            <column name="id_sala" type="int"/>
+        </createTable>
+        <addForeignKeyConstraint
+                constraintName="id_sala_aluno"
+                baseTableName="aluno"
+                baseColumnNames="id_sala"
+                referencedTableName="sala"
+                referencedColumnNames="id"/>
+    </changeSet>
+
+    <!-- Add Primary Key to aluno table -->
+    <changeSet id="v1.0-15022025-19" author="caique.lucio">
+        <addPrimaryKey
+                columnNames="id"
+                constraintName="pk_aluno"
+                tableName="aluno"/>
+    </changeSet>
+
+    <changeSet author="caique.lucio" id="v1.0-15022025-19.1">
+        <addAutoIncrement columnDataType="int"
+                          columnName="id"
+                          defaultOnNull="true"
+                          generationType="ALWAYS"
+                          startWith="1"
+                          tableName="aluno"/>
+    </changeSet>
+
+    <!-- Create restricao_aluno table -->
+    <changeSet id="v1.0-15022025-20" author="caique.lucio">
+        <createTable tableName="restricao_aluno">
+            <column name="restricao_id" type="int"/>
+            <column name="aluno_id" type="int"/>
+        </createTable>
+        <addForeignKeyConstraint
+                constraintName="restricao_id_restricao_aluno"
+                baseTableName="restricao_aluno"
+                baseColumnNames="restricao_id"
+                referencedTableName="restricao"
+                referencedColumnNames="id"/>
+        <addForeignKeyConstraint
+                constraintName="aluno_id_restricao_aluno"
+                baseTableName="restricao_aluno"
+                baseColumnNames="aluno_id"
+                referencedTableName="aluno"
+                referencedColumnNames="id"/>
+    </changeSet>
+
+    <!-- Create filiacao table -->
+    <changeSet id="v1.0-15022025-21" author="caique.lucio">
+        <createTable tableName="filiacao">
+            <column name="id" type="int"/>
+            <column name="aluno_id" type="int"/>
+            <column name="responsavel_id" type="int"/>
+            <column name="parentesco" type="varchar(20)"/>
+        </createTable>
+        <addForeignKeyConstraint
+                constraintName="aluno_id_filiacao"
+                baseTableName="filiacao"
+                baseColumnNames="aluno_id"
+                referencedTableName="aluno"
+                referencedColumnNames="id"/>
+        <addForeignKeyConstraint
+                constraintName="responsavel_id_usuario"
+                baseTableName="filiacao"
+                baseColumnNames="responsavel_id"
+                referencedTableName="usuario"
+                referencedColumnNames="id"/>
+    </changeSet>
+
+    <!-- Add Primary Key to filiacao table -->
+    <changeSet id="v1.0-15022025-22" author="caique.lucio">
+        <addPrimaryKey
+                columnNames="id"
+                constraintName="pk_filiacao"
+                tableName="filiacao"/>
+    </changeSet>
+
+    <changeSet author="caique.lucio" id="v1.0-15022025-22.1">
+        <addAutoIncrement columnDataType="int"
+                          columnName="id"
+                          defaultOnNull="true"
+                          generationType="ALWAYS"
+                          startWith="1"
+                          tableName="filiacao"/>
+    </changeSet>
+
+    <!-- Create recado table -->
+    <changeSet id="v1.0-15022025-23" author="caique.lucio">
+        <createTable tableName="recado">
+            <column name="id" type="int"/>
+            <column name="titulo" type="varchar(50)"/>
+            <column name="conteudo" type="varchar(500)"/>
+            <column name="dt_Criacao" type="datetime"/>
+            <column name="id_aluno" type="int"/>
+            <column name="id_responsavel" type="int"/>
+        </createTable>
+        <addForeignKeyConstraint
+                constraintName="id_aluno_recado"
+                baseTableName="recado"
+                baseColumnNames="id_aluno"
+                referencedTableName="aluno"
+                referencedColumnNames="id"/>
+        <addForeignKeyConstraint
+                constraintName="id_responsavel_recado"
+                baseTableName="recado"
+                baseColumnNames="id_responsavel"
+                referencedTableName="usuario"
+                referencedColumnNames="id"/>
+    </changeSet>
+
+    <!-- Add Primary Key to recado table -->
+    <changeSet id="v1.0-15022025-24" author="caique.lucio">
+        <addPrimaryKey
+                columnNames="id"
+                constraintName="pk_recado"
+                tableName="recado"/>
+    </changeSet>
+
+    <changeSet author="caique.lucio" id="v1.0-15022025-24.1">
+        <addAutoIncrement columnDataType="int"
+                          columnName="id"
+                          defaultOnNull="true"
+                          generationType="ALWAYS"
+                          startWith="1"
+                          tableName="recado"/>
+    </changeSet>
+
+</databaseChangeLog>
