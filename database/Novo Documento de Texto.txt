@@ -1,0 +1,13 @@
+1 - Executar no cmd dentro deste diretório:
+	> docker build -t mysqlfornari .
+	> docker run -d -p 3306:3306 --name mysqlfornari mysqlfornari
+
+2 - Abrir mysql workbanch e se conectar com o container docker
+
+3 - Usar comando "CREATE DATABASE fornari;"
+
+4 - Abrir projeto no intellij
+
+5 - Abrir terminal intellij e digitar ".\mvnw liquibase:update"
+
+6 - Rodar a aplicação e ser feliz !!
