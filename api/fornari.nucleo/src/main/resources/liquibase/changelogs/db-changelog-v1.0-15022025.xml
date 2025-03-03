@@ -124,12 +124,12 @@
             <column name="id_endereco" type="int"/>
             <column name="id_sala" type="int"/>
         </createTable>
-        <addForeignKeyConstraint
-                constraintName="id_endereco_usuario"
-                baseTableName="usuario"
-                baseColumnNames="id_endereco"
-                referencedTableName="endereco"
-                referencedColumnNames="id"/>
+            <addForeignKeyConstraint
+                    constraintName="id_endereco_usuario"
+                    baseTableName="usuario"
+                    baseColumnNames="id_endereco"
+                    referencedTableName="endereco"
+                    referencedColumnNames="id"/>
         <addForeignKeyConstraint
                 constraintName="id_sala_usuario"
                 baseTableName="usuario"

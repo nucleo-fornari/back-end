@@ -22,7 +22,7 @@ public class ChamadoTipo {
     @Max(value = 3, message = ConstMessages.INVALID_CHAMADO_TIPO_PRIORITY)
     private Integer prioridade;
 
-    @OneToMany(mappedBy = "tipo", targetEntity = Chamado.class, cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "tipo", targetEntity = Chamado.class, cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private List<Chamado> chamados;
 
     public ChamadoTipo() {

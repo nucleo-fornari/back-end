@@ -51,4 +51,16 @@ public class ChamadoTipoService {
     public List<ChamadoTipo> listar() {
         return this.repository.findAll();
     }
+
+    public void delete(Integer id) {
+        ChamadoTipo ct = this.findById(id);
+
+        if (!ct.getChamados().stream()
+                .filter(x -> !x.isFinalizado())
+                .findAny().stream().toList()
+                .isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.PRECONDITION_FAILED, ConstMessages.CHAMADO_TIPO_HAVE_CHAMADOS);
+        }
+        this.repository.delete(ct);
+    }
 }

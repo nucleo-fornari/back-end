@@ -57,4 +57,11 @@ public class ChamadoTipoController {
                 list.stream().map(ChamadoTipoMapper::toChamadoTipoDto).toList()
         );
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Integer id
+    ) {
+        this.service.delete(id);
+        return ResponseEntity.noContent().build();
+    }
 }
