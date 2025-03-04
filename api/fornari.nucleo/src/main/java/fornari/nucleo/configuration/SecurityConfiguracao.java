@@ -51,7 +51,8 @@ public class SecurityConfiguracao {
             new AntPathRequestMatcher("/actuator/**"),
             new AntPathRequestMatcher("/**"),
             new AntPathRequestMatcher("/h2-console/**"),
-            new AntPathRequestMatcher("/error/**")
+            new AntPathRequestMatcher("/error/**"),
+            new AntPathRequestMatcher("/ws/**") // url do web socket
     };
 
     @Bean
@@ -59,10 +60,9 @@ public class SecurityConfiguracao {
         http
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(CsrfConfigurer<HttpSecurity>::disable)
-                .authorizeHttpRequests (authorize -> authorize.requestMatchers(URLS_PERMITIDAS)
-                .permitAll()
-                .anyRequest()
-                .authenticated()
+                .authorizeHttpRequests (authorize -> authorize
+                        .requestMatchers(URLS_PERMITIDAS).permitAll()
+                .anyRequest().authenticated()
         )
                 .exceptionHandling(handling -> handling
                         .authenticationEntryPoint(autenticacaoJwtEntryPoint))

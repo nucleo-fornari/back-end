@@ -2,9 +2,11 @@ package fornari.nucleo.service;
 
 import fornari.nucleo.configuration.AutenticacaoFilter;
 import fornari.nucleo.configuration.GerenciadorTokenJwt;
+import fornari.nucleo.configuration.WebSocketHandler;
 import fornari.nucleo.domain.dto.usuario.UsuarioTokenDto;
 import fornari.nucleo.domain.dto.usuario.UsuarioUpdateRequestDto;
 import fornari.nucleo.domain.entity.Endereco;
+import fornari.nucleo.domain.entity.Notificacao;
 import fornari.nucleo.domain.entity.Sala;
 import fornari.nucleo.domain.entity.Usuario;
 import fornari.nucleo.domain.mapper.EnderecoMapper;
@@ -25,6 +27,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.net.http.WebSocket;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -40,6 +43,7 @@ public class UsuarioService {
     private final UsuarioRepository repository;
     private final EnderecoService enderecoService;
     private final SalaService salaService;
+    private final WebSocketHandler webSocketHandler;
 
     @Transactional
     public Usuario createUsuario(Usuario user) {
@@ -50,6 +54,14 @@ public class UsuarioService {
         user.setSenha(passwordEncoder.encode("12345678"));
         user.setEndereco(this.mapEndereco(user.getEndereco()));
         user.setFiliacoes(new ArrayList<>());
+
+        Notificacao notificacao = new Notificacao("NOVO USUARIO", "Usuario novo foi criado");
+        webSocketHandler.enviarOuSalvarNotificacao(
+                repository.findAll().stream().map(usuario -> usuario.getId()).toList(),
+                notificacao
+        );
+
+
         return this.repository.save(user);
     }
 

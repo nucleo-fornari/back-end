@@ -8,6 +8,13 @@
 
 4 - Abrir projeto no intellij
 
-5 - Abrir terminal intellij e digitar ".\mvnw liquibase:update"
+5 - Abrir terminal intellij e digitar ".\mvnw liqmysqluibase:update"
 
 6 - Rodar a aplicação e ser feliz !!
+
+
+
+--------------------------------
+
+2 - redis 
+docker run --name redis-container -d -p 6379:6379 redis

@@ -1,6 +1,7 @@
 package fornari.nucleo.domain.mapper;
 
 import fornari.nucleo.domain.dto.FiliacaoAlunoDto;
+import fornari.nucleo.domain.dto.aluno.AlunoAndSalaIdDto;
 import fornari.nucleo.domain.dto.aluno.AlunoRequestDto;
 import fornari.nucleo.domain.dto.aluno.AlunoResponseDto;
 import fornari.nucleo.domain.dto.usuario.responsavel.ResponsavelAlunoDto;
@@ -82,5 +83,14 @@ public class AlunoMapper {
                     .nome(dto.getNome())
                     .endereco(EnderecoMapper.toEndereco(dto.getEndereco()))
                     .build();
+    }
+
+    public static AlunoAndSalaIdDto toAlunoAndSalaIdDto(Aluno dto) {
+        if (dto == null) return null;
+
+        return AlunoAndSalaIdDto.builder()
+                .nome(dto.getNome())
+                .idSala(dto.getSala().getId())
+                .build();
     }
 }

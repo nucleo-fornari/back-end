@@ -1,15 +1,22 @@
 package fornari.nucleo.controller;
 
+import fornari.nucleo.domain.dto.aluno.AlunoAndSalaIdDto;
 import fornari.nucleo.domain.dto.aluno.AlunoResponseDto;
 import fornari.nucleo.domain.dto.usuario.*;
 import fornari.nucleo.domain.dto.usuario.professor.ProfessorResponseDto;
+import fornari.nucleo.domain.entity.Aluno;
+import fornari.nucleo.domain.entity.Filiacao;
+import fornari.nucleo.domain.entity.Sala;
 import fornari.nucleo.domain.entity.Usuario;
+import fornari.nucleo.domain.mapper.AlunoMapper;
 import fornari.nucleo.domain.mapper.ProfessorMapper;
 import fornari.nucleo.domain.mapper.UsuarioMapper;
+import fornari.nucleo.service.AlunoService;
 import fornari.nucleo.service.UsuarioService;
 import io.swagger.v3.oas.annotations.Parameter;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -141,5 +148,19 @@ public class UsuarioController {
     public ResponseEntity<ProfessorResponseDto> removeTeacherFromClassroom(@PathVariable Integer id) {
         return ResponseEntity.ok(ProfessorMapper.UsuarioToProfessorResponseDto(
                 service.removeTeacherFromClassroom(id)));
+    }
+
+    @GetMapping("/aluno-e-sala/{id}")
+    public ResponseEntity<List<AlunoAndSalaIdDto>> getAlunoAndSalaId(@PathVariable Integer id) {
+        Usuario responsavel = service.buscarPorID(id);
+
+        if (responsavel == null || responsavel.getFiliacoes().isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        }
+
+        List<AlunoAndSalaIdDto> filhosComSala = responsavel.getFiliacoes().stream()
+                .map((Filiacao dto) -> AlunoMapper.toAlunoAndSalaIdDto(dto.getAfiliado())).toList();
+
+        return ResponseEntity.ok(filhosComSala);
     }
 }

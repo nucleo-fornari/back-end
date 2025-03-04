@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+
+    <changeSet id="v1.1-02032025-1" author="carlos.eduardo">
+        <createTable tableName="notificacao">
+            <column name="id" type="int" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false" />
+            </column>
+            <column name="usuario_id" type="int">
+                <constraints nullable="false" />
+            </column>
+            <column name="titulo" type="varchar(255)">
+                <constraints nullable="false" />
+            </column>
+            <column name="mensagem" type="text">
+                <constraints nullable="false" />
+            </column>
+            <column name="data_criacao" type="timestamp">
+                <constraints nullable="false" />
+            </column>
+            <column name="lida" type="boolean">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+
+        <createIndex indexName="idx_usuario_id" tableName="notificacao">
+            <column name="usuario_id" />
+        </createIndex>
+
+        <addForeignKeyConstraint
+                constraintName="fk_notificacao_usuario"
+                baseTableName="notificacao"
+                baseColumnNames="usuario_id"
+                referencedTableName="usuario"
+                referencedColumnNames="id"
+                onDelete="CASCADE"/>
+    </changeSet>
+
+    <changeSet id="v1.1-02032025-2" author="carlos.eduardo">
+        <createTable tableName="agendamento">
+            <column name="id" type="int" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false" />
+            </column>
+            <column name="motivo" type="varchar(255)">
+                <constraints nullable="false" />
+            </column>
+            <column name="descricao" type="text">
+                <constraints nullable="false" />
+            </column>
+            <column name="data" type="timestamp">
+                <constraints nullable="false" />
+            </column>
+            <column name="aceito" type="boolean">
+                <constraints nullable="false" />
+            </column>
+            <column name="responsavel_id" type="int">
+                <constraints nullable="false" />
+            </column>
+            <column name="sala_id" type="int">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+
+        <createIndex indexName="idx_responsavel_id" tableName="agendamento">
+            <column name="responsavel_id" />
+        </createIndex>
+
+        <createIndex indexName="idx_sala_id" tableName="agendamento">
+            <column name="sala_id" />
+        </createIndex>
+
+        <addForeignKeyConstraint
+                constraintName="fk_agendamento_responsavel"
+                baseTableName="agendamento"
+                baseColumnNames="responsavel_id"
+                referencedTableName="usuario"
+                referencedColumnNames="id"
+                onDelete="CASCADE"/>
+
+        <addForeignKeyConstraint
+                constraintName="fk_agendamento_sala"
+                baseTableName="agendamento"
+                baseColumnNames="sala_id"
+                referencedTableName="sala"
+                referencedColumnNames="id"
+                onDelete="CASCADE"/>
+    </changeSet>
+
+</databaseChangeLog>
