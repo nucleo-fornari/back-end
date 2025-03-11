@@ -33,20 +33,4 @@ public class Notificacao {
 
     @ManyToOne
     private Usuario usuario;
-
-    public Notificacao(String titulo, String mensagem, Usuario usuario) {
-        this.titulo = titulo;
-        this.mensagem = mensagem;
-        this.usuario = usuario;
-        this.dataCriacao = LocalDateTime.now();
-        this.lida = false;
-    }
-
-    public Notificacao(String titulo, String mensagem) {
-        this.titulo = titulo;
-        this.mensagem = mensagem;
-        this.usuario = null;
-        this.dataCriacao = LocalDateTime.now();
-        this.lida = false;
-    }
 }

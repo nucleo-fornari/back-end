@@ -6,7 +6,6 @@ import lombok.Data;
 @Data
 @Builder
 public class RecadoRequestDto {
-
     String titulo;
     String conteudo;
     Integer usuarioId;

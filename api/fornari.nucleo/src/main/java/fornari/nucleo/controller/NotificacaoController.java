@@ -1,6 +1,8 @@
 package fornari.nucleo.controller;
 
+import fornari.nucleo.domain.dto.NotificacaoDTO;
 import fornari.nucleo.domain.entity.Notificacao;
+import fornari.nucleo.domain.mapper.NotificacaoMapper;
 import fornari.nucleo.service.NotificacaoService;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
@@ -20,9 +22,10 @@ public class NotificacaoController {
     private final NotificacaoService notificacaoService;
 
     @GetMapping("/{usuarioId}")
-    public ResponseEntity<List<Notificacao>> buscarNotificacoes(@PathVariable Integer usuarioId) {
+    public ResponseEntity<List<NotificacaoDTO>> buscarNotificacoes(@PathVariable Integer usuarioId) {
+        List<Notificacao> notificacoes = notificacaoService.buscarNotificacoesPendentes(usuarioId);
         return ResponseEntity.ok(
-                notificacaoService.buscarNotificacoesPendentes(usuarioId)
+                notificacoes.stream().map(NotificacaoMapper::toDTO).toList()
         );
     }
 }

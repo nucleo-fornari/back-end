@@ -6,7 +6,9 @@ import fornari.nucleo.domain.entity.Agendamento;
 import fornari.nucleo.domain.entity.Sala;
 import fornari.nucleo.domain.entity.Usuario;
 import fornari.nucleo.domain.mapper.AgendamentoMapper;
+import fornari.nucleo.domain.mapper.NotificacaoMapper;
 import fornari.nucleo.service.AgendamentoService;
+import fornari.nucleo.service.NotificacaoService;
 import fornari.nucleo.service.SalaService;
 import fornari.nucleo.service.UsuarioService;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +26,7 @@ public class AgendamentoController {
     private final AgendamentoService agendamentoService;
     private final UsuarioService usuarioService;
     private final SalaService salaService;
+    private final NotificacaoService notificacaoService;
 
     @GetMapping
     public ResponseEntity<List<AgendamentoDTO>> getAll() {
@@ -72,6 +75,10 @@ public class AgendamentoController {
         agendamento.setSala(sala);
 
         AgendamentoRequestDTO agendamentoCriado = AgendamentoMapper.toDTO(agendamentoService.salvar(agendamento));
+
+        notificacaoService.criarNotificacao("REUNIAO", "Uma proposta de reunião foi criado!", sala.getProfessores()
+                .stream().map(professor -> professor.getId()).toList());
+
         return ResponseEntity.status(HttpStatus.CREATED).body(agendamentoCriado);
     }
 
@@ -89,6 +96,11 @@ public class AgendamentoController {
             agendamento.setAceito(true);
             agendamento.setData(agendamentoRequestDTO.getData());
             AgendamentoRequestDTO agendamentoAtualizado = AgendamentoMapper.toDTO(agendamentoService.salvar(agendamento));
+
+            notificacaoService.criarNotificacao(
+                    "REUNIAO", "Sua proposta de reunião foi aceita!", agendamentoAtualizado.getResponsavelId()
+            );
+
             return ResponseEntity.ok(agendamentoAtualizado);
     }
 }

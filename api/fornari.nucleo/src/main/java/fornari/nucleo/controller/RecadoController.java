@@ -4,6 +4,7 @@ import fornari.nucleo.domain.dto.recado.RecadoRequestDto;
 import fornari.nucleo.domain.dto.recado.RecadoResponseDto;
 import fornari.nucleo.domain.entity.Recado;
 import fornari.nucleo.domain.mapper.RecadoMapper;
+import fornari.nucleo.service.NotificacaoService;
 import fornari.nucleo.service.RecadoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -17,13 +18,19 @@ import org.springframework.web.bind.annotation.*;
 public class RecadoController {
 
     private final RecadoService service;
+    private final NotificacaoService notificacaoService;
 
     @PutMapping("/create/aluno/{idAluno}")
     public ResponseEntity<RecadoResponseDto> create(@PathVariable Integer idAluno, @RequestBody RecadoRequestDto data) {
-        return ResponseEntity.status(201).body(RecadoMapper.recadoToRecadoResponseDto(
-                this.service.create(RecadoMapper.recadoRequestDtoToRecado(data), idAluno, data.getUsuarioId())));
-    }
+        Recado recado = service.create(RecadoMapper.recadoRequestDtoToRecado(data), idAluno, data.getUsuarioId());
 
+        notificacaoService.criarNotificacao("RECADO", "Um novo recado foi criado!", recado.
+                getAluno().getFiliacoes().stream().map(filiacao -> filiacao.getResponsavel().getId()).toList());
+
+        return ResponseEntity.status(201).body(
+                RecadoMapper.recadoToRecadoResponseDto(recado)
+        );
+    }
 
     @GetMapping
     public ResponseEntity<List<RecadoResponseDto>> list() {

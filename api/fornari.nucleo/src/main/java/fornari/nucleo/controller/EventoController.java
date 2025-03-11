@@ -7,6 +7,7 @@ import fornari.nucleo.domain.dto.restricao.RestricaoResponseWithoutAlunosDto;
 import fornari.nucleo.domain.entity.Evento;
 import fornari.nucleo.domain.mapper.EventoMapper;
 import fornari.nucleo.service.EventoService;
+import fornari.nucleo.service.NotificacaoService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -28,6 +29,7 @@ import java.util.List;
 public class EventoController {
 
     private final EventoService eventoService;
+    private final NotificacaoService notificacaoService;
 
     @Operation(summary = "Cria um novo Evento", description = "Cria um novo Evento com dados específicos")
     @ApiResponses(value = {
@@ -35,18 +37,28 @@ public class EventoController {
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = ChamadoTipoDto.class))),
             @ApiResponse(responseCode = "400", description = "Dados inválidos")})
-
     @PostMapping
     public ResponseEntity<EventoRespostaDto> criar(
             @Parameter(description = "Dados do evento a serem criados", required = true)
             @RequestBody @Valid EventoCriacaoReqDto eventoCriacaoReqDto
             ) {
-        return ResponseEntity.created(null).body(
-                EventoMapper.toEventoRespostaDto(
-                        eventoService.criar(EventoMapper.toEvento(eventoCriacaoReqDto),
-                                eventoCriacaoReqDto.getUsuarioId(), eventoCriacaoReqDto.getSalas())
-                )
-        );
+        Evento evento =
+                eventoService.criar(EventoMapper.toEvento(eventoCriacaoReqDto),
+                        eventoCriacaoReqDto.getUsuarioId(), eventoCriacaoReqDto.getSalas());
+
+        List<Integer> listaDeId = evento.getSalas().stream()
+                .flatMap(sala -> sala.getAlunos().stream())
+                .flatMap(aluno -> aluno.getFiliacoes().stream())
+                .map(filiacao -> filiacao.getResponsavel().getId())
+                .toList();
+
+        listaDeId.addAll(evento.getSalas().stream()
+                .flatMap(sala -> sala.getProfessores().stream())
+                .map(professor -> professor.getId()).toList());
+
+        notificacaoService.criarNotificacao("EVENTO", "Um evento novo foi criado!", listaDeId);
+
+        return ResponseEntity.created(null).body(EventoMapper.toEventoRespostaDto(evento));
     }
 
     @Operation(summary = "Lista todos os eventos", description = "Retorna uma lista de eventos")

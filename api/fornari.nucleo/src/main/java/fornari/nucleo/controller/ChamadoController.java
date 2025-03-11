@@ -3,6 +3,7 @@ package fornari.nucleo.controller;
 import fornari.nucleo.domain.dto.ChamadoDto;
 import fornari.nucleo.domain.mapper.ChamadoMapper;
 import fornari.nucleo.service.ChamadoService;
+import fornari.nucleo.service.NotificacaoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,6 +25,7 @@ import java.util.List;
 public class ChamadoController {
 
     private final ChamadoService service;
+    private final NotificacaoService notificacaoService;
 
     @Operation(summary = "Lista todos os Chamados em aberto", description = "Retorna uma lista de todos os Chamados em aberto")
     @ApiResponse(responseCode = "200", description = "Lista de Chamados em aberto",
@@ -66,10 +68,11 @@ public class ChamadoController {
     public ResponseEntity<ChamadoDto> create(
             @Parameter(description = "Dados do Chamado a serem atualizados", required = true) @RequestBody ChamadoDto dto,
             @Parameter(description = "ID do aluno a ser atualizado", required = true) @RequestParam Integer idUsuario) {
+        ChamadoDto chamadoDto = ChamadoMapper.ToChamadoDto(service.create(dto, idUsuario));
 
-        return ResponseEntity.status(201).body(
-                ChamadoMapper.ToChamadoDto(service.create(dto, idUsuario))
-        );
+        notificacaoService.criarNotificacaoParaSecretaria("CHAMADO", "Foi feita uma abertura de chamado!");
+
+        return ResponseEntity.status(201).body(chamadoDto);
     }
 
     @Operation(summary = "Finaliza o status de um Chamado pelo ID", description = "Atualiza as informações de um chamado existente")

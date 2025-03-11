@@ -55,13 +55,6 @@ public class UsuarioService {
         user.setEndereco(this.mapEndereco(user.getEndereco()));
         user.setFiliacoes(new ArrayList<>());
 
-        Notificacao notificacao = new Notificacao("NOVO USUARIO", "Usuario novo foi criado");
-        webSocketHandler.enviarOuSalvarNotificacao(
-                repository.findAll().stream().map(usuario -> usuario.getId()).toList(),
-                notificacao
-        );
-
-
         return this.repository.save(user);
     }
 

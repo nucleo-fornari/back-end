@@ -12,6 +12,18 @@ public class NotificacaoMapper {
                 .mensagem(notificacao.getMensagem())
                 .dataCriacao(notificacao.getDataCriacao())
                 .lida(notificacao.isLida())
+                .usuarioId(notificacao.getUsuario().getId())
+                .build();
+    }
+
+    public static Notificacao to(NotificacaoDTO dto) {
+        if (dto == null) return null;
+
+        return Notificacao.builder()
+                .lida(dto.isLida())
+                .dataCriacao(dto.getDataCriacao())
+                .mensagem(dto.getMensagem())
+                .titulo(dto.getTitulo())
                 .build();
     }
 }
