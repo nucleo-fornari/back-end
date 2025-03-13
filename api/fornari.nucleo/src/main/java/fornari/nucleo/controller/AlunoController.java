@@ -3,6 +3,7 @@ package fornari.nucleo.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import fornari.nucleo.domain.dto.FiliacaoAlunoDto;
+import fornari.nucleo.domain.dto.aluno.AlunoPutDto;
 import fornari.nucleo.domain.dto.aluno.AlunoRequestDto;
 import fornari.nucleo.domain.dto.aluno.AlunoResponseDto;
 import fornari.nucleo.domain.entity.Aluno;
@@ -106,7 +107,6 @@ public class AlunoController {
     @ApiResponse(responseCode = "200", description = "Responsável adicionado com sucesso",
             content = @Content(mediaType = "application/json",
                     schema = @Schema(implementation = AlunoResponseDto.class)))
-
     @PutMapping("/{id}/responsavel")
     public ResponseEntity<AlunoResponseDto> addResponsavel(
             @Parameter(description = "ID do aluno", required = true) @PathVariable int id,
@@ -121,13 +121,14 @@ public class AlunoController {
             content = @Content(mediaType = "application/json",
                     schema = @Schema(implementation = AlunoResponseDto.class)))
 
-    @PutMapping("/{id}")
-    public ResponseEntity<AlunoResponseDto> updateAluno(
-            @Parameter(description = "ID do aluno a ser atualizado", required = true) @PathVariable int id,
-            @Parameter(description = "Dados do aluno a serem atualizados", required = true) @RequestBody AlunoRequestDto body
+    @PutMapping
+    public ResponseEntity<AlunoPutDto> updateAluno(
+            @Parameter(description = "Dados do aluno a serem atualizados", required = true) @RequestBody AlunoPutDto body
     ) {
-        return ResponseEntity.ok().body(AlunoMapper.AlunotoDto(this.service.update(
-                AlunoMapper.alunoCreationRequestDtotoAluno(body), body.getRestricoes(), id)));
+        return ResponseEntity.ok(
+                AlunoMapper.toAlunoPutDto(
+                        service.putAluno(body)
+                ));
     }
 
     @Operation(summary = "Exclui um aluno pelo ID", description = "Remove um aluno existente pelo ID especificado")

@@ -23,7 +23,7 @@ public class Filiacao {
     @JoinColumn(name = "responsavel_id", referencedColumnName = "id")
     private Usuario responsavel;
 
-    @Pattern(regexp = "GENITOR|IRMÃO|AVÔ|TIO|PRIMO", message = ConstMessages.INVALID_KINSHIP)
+    @Pattern(regexp = "GENITOR|IRMÃO|AVÔ|TIO|PRIMO|AUTORIZADO", message = ConstMessages.INVALID_KINSHIP)
     private String parentesco;
 
     public Filiacao () {}

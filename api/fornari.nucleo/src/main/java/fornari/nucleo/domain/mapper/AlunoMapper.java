@@ -2,6 +2,7 @@ package fornari.nucleo.domain.mapper;
 
 import fornari.nucleo.domain.dto.FiliacaoAlunoDto;
 import fornari.nucleo.domain.dto.aluno.AlunoAndSalaIdDto;
+import fornari.nucleo.domain.dto.aluno.AlunoPutDto;
 import fornari.nucleo.domain.dto.aluno.AlunoRequestDto;
 import fornari.nucleo.domain.dto.aluno.AlunoResponseDto;
 import fornari.nucleo.domain.dto.usuario.responsavel.ResponsavelAlunoDto;
@@ -91,6 +92,17 @@ public class AlunoMapper {
         return AlunoAndSalaIdDto.builder()
                 .nome(dto.getNome())
                 .idSala(dto.getSala().getId())
+                .build();
+    }
+
+    public static AlunoPutDto toAlunoPutDto(Aluno aluno) {
+        if (aluno == null) return null;
+
+        return AlunoPutDto.builder()
+                .id(aluno.getId())
+                .dtNasc(aluno.getDtNasc())
+                .nome(aluno.getNome())
+                .ra(aluno.getRa())
                 .build();
     }
 }

@@ -1,5 +1,6 @@
 package fornari.nucleo.service;
 
+import fornari.nucleo.domain.dto.aluno.AlunoPutDto;
 import fornari.nucleo.domain.entity.*;
 import fornari.nucleo.domain.mapper.UsuarioMapper;
 import fornari.nucleo.helper.messages.ConstMessages;
@@ -14,10 +15,7 @@ import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class AlunoService {
@@ -186,7 +184,6 @@ public class AlunoService {
     }
 
     public void delete(Integer id, Integer userId) {
-
         Aluno aluno = this.findById(id);
 
         if (aluno.getFiliacoes().size() < 2) {
@@ -194,14 +191,24 @@ public class AlunoService {
                     ConstMessages.ALUNO_NEEDS_AT_LEAST_ONE_RESPONSIBLE);
         }
 
-        for (Filiacao filiacao : aluno.getFiliacoes()) {
-            if(filiacao.getResponsavel().getId().equals(userId)) {
-                aluno.removeFiliacao(filiacao);
+        Iterator<Filiacao> iterator = aluno.getFiliacoes().iterator();
+        boolean removed = false;
+
+        while (iterator.hasNext()) {
+            Filiacao filiacao = iterator.next();
+
+            if (filiacao.getResponsavel().getId().equals(userId)) {
+                iterator.remove();
                 this.repository.save(aluno);
+                usuarioService.delete(usuarioRepository.getById(userId));
+                removed = true;
+                break;
             }
         }
 
-        throw new ResponseStatusException(HttpStatus.NOT_FOUND, ConstMessages.NOT_REGISTERED_RESPONSIBLE);
+        if (!removed) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, ConstMessages.NOT_REGISTERED_RESPONSIBLE);
+        }
     }
 
     public Aluno enrollStudentWithClassroom(Integer id, Integer classroomId) {
@@ -219,5 +226,15 @@ public class AlunoService {
 
     public List<Aluno> getSemSala() {
         return repository.findAllBySalaIsNull();
+    }
+
+    public Aluno putAluno(AlunoPutDto dto) {
+        Aluno aluno = findById(dto.getId());
+
+        aluno.setNome(dto.getNome());
+        aluno.setRa(dto.getRa());
+        aluno.setDtNasc(dto.getDtNasc());
+
+        return repository.save(aluno);
     }
 }

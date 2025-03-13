@@ -14,6 +14,7 @@ import fornari.nucleo.domain.mapper.UsuarioMapper;
 import fornari.nucleo.helper.Generator;
 import fornari.nucleo.helper.messages.ConstMessages;
 import fornari.nucleo.helper.validation.GenericValidations;
+import fornari.nucleo.repository.ChamadoRepository;
 import fornari.nucleo.repository.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.actuate.endpoint.SecurityContext;
@@ -43,7 +44,7 @@ public class UsuarioService {
     private final UsuarioRepository repository;
     private final EnderecoService enderecoService;
     private final SalaService salaService;
-    private final WebSocketHandler webSocketHandler;
+    private final ChamadoRepository chamadoRepository;
 
     @Transactional
     public Usuario createUsuario(Usuario user) {
@@ -72,6 +73,8 @@ public class UsuarioService {
     }
 
     public void delete(Usuario user) {
+        chamadoRepository.deleteAll(user.getChamados());
+
         Endereco endereco = user.getEndereco();
         repository.delete(user);
         if (endereco.getUsuarios().isEmpty()) {
