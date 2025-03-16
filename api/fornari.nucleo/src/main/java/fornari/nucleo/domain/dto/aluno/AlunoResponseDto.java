@@ -1,5 +1,6 @@
 package fornari.nucleo.domain.dto.aluno;
 
+import fornari.nucleo.domain.dto.AlunoAvaliacao.AlunoAvaliacaoDto;
 import fornari.nucleo.domain.dto.FiliacaoAlunoDto;
 import fornari.nucleo.domain.dto.recado.RecadoResponseDto;
 import fornari.nucleo.domain.dto.restricao.RestricaoResponseWithoutAlunosDto;
@@ -35,4 +36,6 @@ public class AlunoResponseDto {
     private SalaResponseDto sala;
 
     private List<RecadoResponseDto> recados;
+
+    private List<AlunoAvaliacaoDto> avaliacoes;
 }

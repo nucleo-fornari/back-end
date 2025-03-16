@@ -6,7 +6,6 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Pattern;
 import lombok.*;
 
-import java.sql.Date;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -59,7 +58,7 @@ public class Usuario {
     @OneToMany(targetEntity = Evento.class, mappedBy = "usuario", cascade = CascadeType.PERSIST)
     private List<Evento> eventos;
 
-    @OneToMany(targetEntity = Chamado.class, mappedBy = "usuario", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    @OneToMany(targetEntity = Chamado.class, mappedBy = "usuario", cascade = CascadeType.PERSIST)
     private List<Chamado> chamados;
 
     @OneToMany(targetEntity = Recado.class, mappedBy = "responsavel", cascade = CascadeType.PERSIST)
@@ -69,10 +68,14 @@ public class Usuario {
     @JoinColumn(referencedColumnName = "id", name = "id_sala")
     private Sala sala;
 
+    @OneToMany(targetEntity = AvaliacaoDimensoes.class, mappedBy = "criador", cascade = CascadeType.REMOVE)
+    private List<AvaliacaoDimensoes> dimensoesCadastradas;
+
     public Usuario () {
         this.chamados = new ArrayList<>();
         this.filiacoes = new ArrayList<>();
         this.recados = new ArrayList<>();
+        this.dimensoesCadastradas = new ArrayList<>();
     }
 
     public Usuario(Integer id, String nome, String cpf, String telefone, String email, String funcao) {
@@ -98,6 +101,12 @@ public class Usuario {
     public void addChamado(Chamado chamado) {
         if (!this.chamados.contains(chamado)) {
             this.chamados.add(chamado);
+        }
+    }
+
+    public void addDimensao(AvaliacaoDimensoes dim) {
+        if (!this.dimensoesCadastradas.contains(dim)) {
+            this.dimensoesCadastradas.add(dim);
         }
     }
 

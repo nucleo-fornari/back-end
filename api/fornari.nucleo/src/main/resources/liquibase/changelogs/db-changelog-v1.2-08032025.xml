@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+
+    <changeSet id="v1.2-08032025-1" author="caique.lucio">
+        <createTable tableName="avaliacao_dimensoes">
+            <column name="id" type="int">
+                <constraints primaryKey="true" nullable="false" unique="true"/>
+            </column>
+            <column name="titulo_preset" type="varchar(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="tipo_dimensao" type="varchar(500)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="texto_dimensao" type="varchar(500)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="usuario_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="v1.2-08032025-2" author="caique.lucio">
+        <addForeignKeyConstraint
+                baseTableName="avaliacao_dimensoes"
+                baseColumnNames="usuario_id"
+                constraintName="fk_avaliacao_dimensoes_usuario"
+                referencedTableName="usuario"
+                referencedColumnNames="id"
+                onDelete="CASCADE" />
+    </changeSet>
+
+    <changeSet id="v1.2-08032025-3" author="caique.lucio">
+        <createTable tableName="aluno_avaliacao">
+            <column name="id" type="int">
+                <constraints primaryKey="true" nullable="false" unique="true"/>
+            </column>
+            <column name="periodo" type="varchar(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="bimestre" type="varchar(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="texto_socio_afetiva_emocional" type="varchar(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="texto_fisico_motora" type="varchar(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="texto_cognitiva" type="varchar(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="dt_criacao" type="date">
+                <constraints nullable="true"/>
+            </column>
+            <column name="aluno_id" type="int">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="v1.2-08032025-4" author="caique.lucio">
+        <addForeignKeyConstraint
+                baseTableName="aluno_avaliacao"
+                baseColumnNames="aluno_id"
+                constraintName="fk_aluno_avaliacao_aluno"
+                referencedTableName="aluno"
+                referencedColumnNames="id"
+                onDelete="CASCADE" />
+    </changeSet>
+
+    <changeSet author="caique.lucio" id="v1.2-08032025-5">
+        <addAutoIncrement columnDataType="int"
+                          columnName="id"
+                          defaultOnNull="true"
+                          generationType="ALWAYS"
+                          startWith="1"
+                          tableName="avaliacao_dimensoes"/>
+    </changeSet>
+
+    <changeSet author="caique.lucio" id="v1.2-08032025-6">
+        <addAutoIncrement columnDataType="int"
+                          columnName="id"
+                          defaultOnNull="true"
+                          generationType="ALWAYS"
+                          startWith="1"
+                          tableName="aluno_avaliacao"/>
+    </changeSet>
+
+    <changeSet id="v1.2-08032025-7" author="caique.lucio">
+        <addColumn tableName="aluno_avaliacao">
+            <column name="ano" type="char(4)" />
+        </addColumn>
+    </changeSet>
+
+</databaseChangeLog>

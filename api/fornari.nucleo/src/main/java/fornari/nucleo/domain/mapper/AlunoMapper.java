@@ -42,13 +42,14 @@ public class AlunoMapper {
                 .ra(aluno.getRa())
                 .laudoNome(aluno.getLaudoNome())
                 .observacoes(aluno.getObservacoes())
+                .avaliacoes(aluno.getAvaliacoes().stream().map(AlunoAvaliacaoMapper::toDto).toList())
                 .restricoes(RestricaoMapper.multipleRestricaoToRestricaoResponseWithoutAlunosDto(aluno.getRestricoes()))
                 .filiacoes(aluno.getFiliacoes().stream().map((x) -> new FiliacaoAlunoDto(
                         UsuarioMapper.usuarioToResponsavelAlunoDto(x.getResponsavel()) , x.getParentesco())).toList())
                 .sala(SalaMapper.toSalaResponseDto(aluno.getSala()))
                 .recados(aluno.getRecados() == null ? new ArrayList<>() :
                         aluno.getRecados().stream().map(RecadoMapper::recadoToRecadoResponseDto).toList())
-                        .build();
+                .build();
     }
 
     public static AlunoResponseDto AlunoToDtoWithoutSala(Aluno aluno) {
@@ -60,6 +61,7 @@ public class AlunoMapper {
                 .ra(aluno.getRa())
                 .laudoNome(aluno.getLaudoNome())
                 .observacoes(aluno.getObservacoes())
+                .avaliacoes(aluno.getAvaliacoes().stream().map(AlunoAvaliacaoMapper::toDto).toList())
                 .restricoes(RestricaoMapper.multipleRestricaoToRestricaoResponseWithoutAlunosDto(aluno.getRestricoes()))
                 .filiacoes(aluno.getFiliacoes().stream().map((x) -> new FiliacaoAlunoDto(
                         UsuarioMapper.usuarioToResponsavelAlunoDto(x.getResponsavel()) , x.getParentesco())).toList())
@@ -75,15 +77,15 @@ public class AlunoMapper {
         }
 
         return Usuario.builder()
-                    .id(dto.getId())
-                    .cpf(dto.getCpf())
-                    .telefone(dto.getTelefone())
-                    .dtNasc(dto.getDtNasc())
-                    .email(dto.getEmail())
-                    .funcao(dto.getFuncao())
-                    .nome(dto.getNome())
-                    .endereco(EnderecoMapper.toEndereco(dto.getEndereco()))
-                    .build();
+                .id(dto.getId())
+                .cpf(dto.getCpf())
+                .telefone(dto.getTelefone())
+                .dtNasc(dto.getDtNasc())
+                .email(dto.getEmail())
+                .funcao(dto.getFuncao())
+                .nome(dto.getNome())
+                .endereco(EnderecoMapper.toEndereco(dto.getEndereco()))
+                .build();
     }
 
     public static AlunoAndSalaIdDto toAlunoAndSalaIdDto(Aluno dto) {

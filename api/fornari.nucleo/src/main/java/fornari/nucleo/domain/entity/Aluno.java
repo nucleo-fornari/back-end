@@ -48,13 +48,17 @@ public class Aluno {
     @JoinColumn(name = "id_sala", referencedColumnName = "id")
     private Sala sala;
 
-    @OneToMany(targetEntity = Recado.class, mappedBy = "aluno", cascade = CascadeType.PERSIST, orphanRemoval = true)
+    @OneToMany(targetEntity = Recado.class, mappedBy = "aluno", cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true)
     private List<Recado> recados;
+
+    @OneToMany(targetEntity = AlunoAvaliacao.class, mappedBy = "aluno", cascade = {CascadeType.REMOVE})
+    private List<AlunoAvaliacao> avaliacoes;
 
     public Aluno() {
         this.restricoes = new ArrayList<>();
         this.filiacoes  = new ArrayList<>();
         this.recados    = new ArrayList<>();
+        this.avaliacoes = new ArrayList<>();
     }
 
     @PreRemove
@@ -80,11 +84,21 @@ public class Aluno {
         }
     }
 
+    public void addAvaliacao(AlunoAvaliacao av) {
+        if (!this.avaliacoes.contains(av)) {
+            this.avaliacoes.add(av);
+        }
+    }
+
     public void removeRestricao(Restricao restricao) {
         this.restricoes.remove(restricao);
     }
 
     public void removeFiliacao(Filiacao filiacao) {
         this.filiacoes.remove(filiacao);
+    }
+
+    public void removeAvaliacao(AlunoAvaliacao a) {
+        this.avaliacoes.remove(a);
     }
 }

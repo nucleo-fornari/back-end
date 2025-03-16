@@ -53,4 +53,6 @@ public class ConstMessages {
 
     public static final String USER_NOT_PROFESSOR = "O usuario deve ser professor.";
     public static final String CHAMADO_TIPO_HAVE_CHAMADOS = "Ainda existem chamados desse tipo. Finalize-os antes de deleta-lo.";
+
+    public static final String REGISTER_NOT_FOUND = "Registro não encontrado";
 }
