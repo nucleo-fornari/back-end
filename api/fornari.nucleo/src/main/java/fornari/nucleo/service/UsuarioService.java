@@ -5,20 +5,19 @@ import fornari.nucleo.configuration.GerenciadorTokenJwt;
 import fornari.nucleo.configuration.WebSocketHandler;
 import fornari.nucleo.domain.dto.usuario.UsuarioTokenDto;
 import fornari.nucleo.domain.dto.usuario.UsuarioUpdateRequestDto;
-import fornari.nucleo.domain.entity.Endereco;
-import fornari.nucleo.domain.entity.Notificacao;
-import fornari.nucleo.domain.entity.Sala;
-import fornari.nucleo.domain.entity.Usuario;
+import fornari.nucleo.domain.entity.*;
 import fornari.nucleo.domain.mapper.EnderecoMapper;
 import fornari.nucleo.domain.mapper.UsuarioMapper;
 import fornari.nucleo.helper.Generator;
 import fornari.nucleo.helper.messages.ConstMessages;
 import fornari.nucleo.helper.validation.GenericValidations;
 import fornari.nucleo.repository.ChamadoRepository;
+import fornari.nucleo.repository.TokenRedefinicaoSenhaRepository;
 import fornari.nucleo.repository.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.actuate.endpoint.SecurityContext;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -28,7 +27,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.print.DocFlavor;
 import java.net.http.WebSocket;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -45,6 +46,8 @@ public class UsuarioService {
     private final EnderecoService enderecoService;
     private final SalaService salaService;
     private final ChamadoRepository chamadoRepository;
+    private final IEmailService emailService;
+    private final TokenRedefinicaoSenhaRepository tokenRepository;
 
     @Transactional
     public Usuario createUsuario(Usuario user) {
@@ -137,5 +140,73 @@ public class UsuarioService {
 
     public List<Usuario> listarProfessoresSemSala() {
         return repository.findAllBySalaIsNullAndFuncao("PROFESSOR");
+    }
+
+    @Transactional
+    public void esqueciSenha(String email) {
+       Usuario usr = repository.findByEmail(email).orElseThrow(
+                () -> new ResponseStatusException(404, "Email do usuario nao cadastrado", null));
+
+       String code = Generator.generatePassword();
+
+       TokenRedefinicaoSenha token = new TokenRedefinicaoSenha();
+       token.setCode(code);
+       token.setValidity(LocalDateTime.now().plusMinutes(15));
+       token.setUsuario(usr);
+       usr.addToken(token);
+
+       this.tokenRepository.save(token);
+       this.repository.save(usr);
+       String[] cc = {};
+
+       this.emailService.sendMail(
+               usr.getEmail(),
+               cc,
+               "[ NÚCLEO-FORNARI ] - Redefinição de senha",
+               " Seu código de redefinição de senha é: " + code
+       );
+    }
+
+    public void tokenRedefinicaoSenha(String token) {
+        List<TokenRedefinicaoSenha> tokens = this.tokenRepository.findByCode(token);
+
+        if (tokens.isEmpty())
+            throw new ResponseStatusException(HttpStatusCode.valueOf(404), "Token inválido");
+        if (tokens.get(0).getValidity().isBefore(LocalDateTime.now()))
+            throw new ResponseStatusException(HttpStatusCode.valueOf(404), "O token enviado expirou. Solicite um novo código.");
+    }
+
+    public Usuario findByEmail(String email) {
+        return repository.findByEmail(email).orElseThrow(
+                () -> new ResponseStatusException(404, "Email do usuario nao cadastrado", null));
+    }
+
+    @Transactional
+    public void redefinirSenha (String senha, String email, String token) {
+        if (senha.length() < 8)
+            throw new ResponseStatusException(HttpStatusCode.valueOf(404), "A senha deve ter no mínimo 8 caracteres");
+
+        if (!senha.matches(".*[^a-zA-Z0-9].*"))
+            throw new ResponseStatusException(HttpStatusCode.valueOf(404), "A senha deve ter no mínimo 1 caracter especial");
+
+        if (!senha.matches("^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9]).*$"))
+            throw new ResponseStatusException(HttpStatusCode.valueOf(404), "A senha deve ter caracteres maiúsculos, minúsculos e números");
+
+        this.tokenRedefinicaoSenha(token);
+
+        Usuario usr = findByEmail(email);
+
+        Optional<TokenRedefinicaoSenha> tokenOptional = usr.getTokens().stream()
+                .filter(x -> x.getCode().equals(token))
+                .findAny();
+
+        if(tokenOptional.isEmpty())
+            throw new ResponseStatusException(HttpStatusCode.valueOf(400), "O token informado não pertence ao usuario do email informado.");
+
+        TokenRedefinicaoSenha tk = tokenOptional.get();
+        usr.removeToken(tk);
+        this.tokenRepository.delete(tk);
+        usr.setSenha(passwordEncoder.encode(senha));
+        this.repository.save(usr);
     }
 }

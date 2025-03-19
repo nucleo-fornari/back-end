@@ -1,17 +1,14 @@
 package fornari.nucleo.controller;
 
 import fornari.nucleo.domain.dto.aluno.AlunoAndSalaIdDto;
-import fornari.nucleo.domain.dto.aluno.AlunoResponseDto;
 import fornari.nucleo.domain.dto.usuario.*;
 import fornari.nucleo.domain.dto.usuario.professor.ProfessorResponseDto;
-import fornari.nucleo.domain.entity.Aluno;
 import fornari.nucleo.domain.entity.Filiacao;
-import fornari.nucleo.domain.entity.Sala;
 import fornari.nucleo.domain.entity.Usuario;
 import fornari.nucleo.domain.mapper.AlunoMapper;
 import fornari.nucleo.domain.mapper.ProfessorMapper;
 import fornari.nucleo.domain.mapper.UsuarioMapper;
-import fornari.nucleo.service.AlunoService;
+import fornari.nucleo.service.IEmailService;
 import fornari.nucleo.service.UsuarioService;
 import io.swagger.v3.oas.annotations.Parameter;
 import jakarta.validation.Valid;
@@ -32,7 +29,6 @@ import java.util.List;
 @RequestMapping("/usuarios")
 @RequiredArgsConstructor
 public class UsuarioController {
-
     private final UsuarioService service;
 
     @Operation(summary = "Obtém um usuário pelo Email e Senha", description = "Retorna um usuário autenticado")
@@ -162,5 +158,26 @@ public class UsuarioController {
                 .map((Filiacao dto) -> AlunoMapper.toAlunoAndSalaIdDto(dto.getAfiliado())).toList();
 
         return ResponseEntity.ok(filhosComSala);
+    }
+
+    @PatchMapping("/esqueci-senha")
+    public ResponseEntity<Void> esqueciSenha(@RequestParam String email) {
+        service.esqueciSenha(email);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PatchMapping("/token-redefinicao-senha")
+    public ResponseEntity<Void> tokenRedefinicaoSenha(@RequestParam String token) {
+        service.tokenRedefinicaoSenha(token);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/redefinir-senha")
+    public ResponseEntity<Void> redefinirSenha(
+            String token,
+            String email,
+            String senha) {
+        this.service.redefinirSenha(senha, email, token);
+        return ResponseEntity.noContent().build();
     }
 }

@@ -71,11 +71,15 @@ public class Usuario {
     @OneToMany(targetEntity = AvaliacaoDimensoes.class, mappedBy = "criador", cascade = CascadeType.REMOVE)
     private List<AvaliacaoDimensoes> dimensoesCadastradas;
 
+    @OneToMany(targetEntity = TokenRedefinicaoSenha.class, mappedBy = "usuario", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    private List<TokenRedefinicaoSenha> tokens;
+
     public Usuario () {
         this.chamados = new ArrayList<>();
         this.filiacoes = new ArrayList<>();
         this.recados = new ArrayList<>();
         this.dimensoesCadastradas = new ArrayList<>();
+        this.tokens = new ArrayList<>();
     }
 
     public Usuario(Integer id, String nome, String cpf, String telefone, String email, String funcao) {
@@ -110,7 +114,17 @@ public class Usuario {
         }
     }
 
+    public void addToken(TokenRedefinicaoSenha tk) {
+        if (!this.tokens.contains(tk)) {
+            this.tokens.add(tk);
+        }
+    }
+
     public void removeEvento(Evento evento) {
         this.eventos.remove(evento);
+    }
+
+    public void removeToken(TokenRedefinicaoSenha tk) {
+        this.tokens.remove(tk);
     }
 }

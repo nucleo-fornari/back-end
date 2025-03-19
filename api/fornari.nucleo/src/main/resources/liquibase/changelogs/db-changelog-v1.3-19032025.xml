@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+        <changeSet id="v1.3-19032025-1" author="caique">
+            <createTable tableName="token_redefinicao_senha">
+                <column name="id" type="INT">
+                    <constraints primaryKey="true" nullable="false" />
+                </column>
+                <column name="code" type="VARCHAR(255)">
+                    <constraints nullable="false" />
+                </column>
+                <column name="validity" type="TIMESTAMP">
+                    <constraints nullable="false" />
+                </column>
+                <column name="id_usuario" type="INT">
+                    <constraints nullable="false"/>
+                </column>
+            </createTable>
+            <addAutoIncrement columnDataType="int"
+                              columnName="id"
+                              defaultOnNull="true"
+                              generationType="ALWAYS"
+                              startWith="1"
+                              tableName="token_redefinicao_senha"/>
+            <addForeignKeyConstraint
+                    baseTableName="token_redefinicao_senha"
+                    baseColumnNames="id_usuario"
+                    constraintName="fk_usuario_token_redefinicao_senha"
+                    referencedTableName="usuario"
+                    referencedColumnNames="id"
+                    onDelete="CASCADE" />
+
+        </changeSet>
+</databaseChangeLog>
