@@ -13,6 +13,6 @@ public class UsuarioLoginDto {
     private String email;
 
     @NotBlank
-    @Size(min = 8, max = 30)
+    @Size(min = 6, max = 30)
     private String senha;
 }

@@ -51,13 +51,22 @@ public class UsuarioService {
 
     @Transactional
     public Usuario createUsuario(Usuario user) {
-        //user.setSenha(passwordEncoder.encode(Generator.generatePassword()));
         if (!GenericValidations.isValidCpf(user.getCpf())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ConstMessages.INVALID_CPF);
         }
-        user.setSenha(passwordEncoder.encode("12345678"));
+        String password = Generator.generatePassword();
+        user.setSenha(passwordEncoder.encode(password));
         user.setEndereco(this.mapEndereco(user.getEndereco()));
         user.setFiliacoes(new ArrayList<>());
+
+        String[] cc = {};
+
+        this.emailService.sendMail(
+                user.getEmail(),
+                cc,
+                "[ NÚCLEO-FORNARI ] - Você foi cadastrado(a) com sucesso na plataforma!",
+                " Sua senha é: " + password + "\n Ela pode ser alterada a qualquer momento através do nosso site ou aplicativo mobile."
+        );
 
         return this.repository.save(user);
     }
