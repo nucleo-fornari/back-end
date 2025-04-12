@@ -10,7 +10,6 @@ import java.util.List;
 
 @Data
 public class UsuarioResponseDto {
-
     private int id;
     private String nome;
     private String cpf;

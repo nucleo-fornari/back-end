@@ -22,6 +22,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/eventos")
@@ -42,19 +43,21 @@ public class EventoController {
             @Parameter(description = "Dados do evento a serem criados", required = true)
             @RequestBody @Valid EventoCriacaoReqDto eventoCriacaoReqDto
             ) {
-        Evento evento =
-                eventoService.criar(EventoMapper.toEvento(eventoCriacaoReqDto),
+        Evento evento = eventoService.criar(EventoMapper.toEvento(eventoCriacaoReqDto),
                         eventoCriacaoReqDto.getUsuarioId(), eventoCriacaoReqDto.getSalas());
 
         List<Integer> listaDeId = evento.getSalas().stream()
                 .flatMap(sala -> sala.getAlunos().stream())
                 .flatMap(aluno -> aluno.getFiliacoes().stream())
                 .map(filiacao -> filiacao.getResponsavel().getId())
-                .toList();
+                .collect(Collectors.toList());
 
-        listaDeId.addAll(evento.getSalas().stream()
+        List<Integer> professoresIds = evento.getSalas().stream()
                 .flatMap(sala -> sala.getProfessores().stream())
-                .map(professor -> professor.getId()).toList());
+                .map(professor -> professor.getId())
+                .collect(Collectors.toList());
+
+        listaDeId.addAll(professoresIds);
 
         notificacaoService.criarNotificacao("EVENTO", "Um evento novo foi criado!", listaDeId);
 

@@ -7,6 +7,7 @@ import fornari.nucleo.domain.dto.usuario.UsuarioUpdateRequestDto;
 import fornari.nucleo.domain.dto.usuario.responsavel.ResponsavelAlunoDto;
 import fornari.nucleo.domain.entity.Endereco;
 import fornari.nucleo.domain.entity.Usuario;
+import org.yaml.snakeyaml.events.Event;
 
 import java.util.stream.Collectors;
 
@@ -89,14 +90,27 @@ public class UsuarioMapper {
     }
 
     public static UsuarioTokenDto toTokenDto(Usuario usuario, String token) {
+        Integer salaId = null;
+
+        if (usuario.getSala() != null) {
+            salaId = usuario.getSala().getId(); // Professor
+        } else if (
+                usuario.getFiliacoes() != null && !usuario.getFiliacoes().isEmpty() &&
+                        usuario.getFiliacoes().get(0).getAfiliado() != null &&
+                        usuario.getFiliacoes().get(0).getAfiliado().getSala() != null
+        ) {
+            salaId = usuario.getFiliacoes().get(0).getAfiliado().getSala().getId(); // Responsável
+        } else {
+            salaId = null; // Diretor ou sem vínculo
+        }
+
         return UsuarioTokenDto.builder()
                 .userId(usuario.getId())
                 .email(usuario.getEmail())
                 .nome(usuario.getNome())
                 .funcao(usuario.getFuncao())
-                .salaId(usuario.getSala() == null ? null : usuario.getSala().getId())
+                .salaId(salaId)
                 .token(token)
                 .build();
     }
-
 }

@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
@@ -20,6 +21,8 @@ public class EventoService {
     private final SalaService salaService;
 
     public Evento criar(Evento entidade, Integer usuarioId, List<Integer> salas) {
+        if (entidade.getTipo().equals("PUBLICACAO") && entidade.getData().isBefore(LocalDateTime.now())) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "A data selecionada não pode ser anterior a data atual!");
+
         Usuario user = usuarioService.buscarPorID(usuarioId);
 
         if (!List.of("PROFESSOR", "SECRETARIO").contains(user.getFuncao()))

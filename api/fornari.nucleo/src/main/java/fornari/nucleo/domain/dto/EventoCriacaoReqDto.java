@@ -21,7 +21,6 @@ public class EventoCriacaoReqDto {
     @NotBlank
     private String descricao;
 
-    @FutureOrPresent
     private LocalDateTime data;
 
     @NotBlank
