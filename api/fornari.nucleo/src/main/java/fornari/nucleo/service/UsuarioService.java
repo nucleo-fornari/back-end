@@ -162,6 +162,11 @@ public class UsuarioService {
        token.setCode(code);
        token.setValidity(LocalDateTime.now().plusMinutes(15));
        token.setUsuario(usr);
+
+       if(!usr.getTokens().isEmpty()) {
+           this.tokenRepository.deleteAll(usr.getTokens());
+           usr.setTokens(new ArrayList<>());
+       }
        usr.addToken(token);
 
        this.tokenRepository.save(token);
