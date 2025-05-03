@@ -26,6 +26,7 @@ public class AlunoMapper {
                 .dtNasc(dto.getDtNasc())
                 .restricoes(new ArrayList<>())
                 .filiacoes(new ArrayList<>())
+                .avaliacoes(new ArrayList<>())
                 .observacoes(dto.getObservacoes())
                 .build();
 
