@@ -31,6 +31,7 @@ public class AgendamentoMapper {
                 .data(agendamento.getData())
                 .responsavelNome(agendamento.getResponsavel().getNome())
                 .responsavelId(agendamento.getResponsavel().getId())
+                .responsavelNome(agendamento.getResponsavel().getNome())
                 .build();
     }
 }
