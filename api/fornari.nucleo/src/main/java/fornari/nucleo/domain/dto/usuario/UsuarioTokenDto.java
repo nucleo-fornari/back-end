@@ -11,6 +11,7 @@ public class UsuarioTokenDto {
     private String nome;
     private String email;
     private String funcao;
+    private String telefone;
     private Integer salaId;
     private String token;
 }
