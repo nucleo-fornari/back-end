@@ -1,12 +1,7 @@
 package fornari.nucleo.service;
 
-import fornari.nucleo.configuration.AutenticacaoFilter;
-import fornari.nucleo.configuration.GerenciadorTokenJwt;
-import fornari.nucleo.configuration.WebSocketHandler;
 import fornari.nucleo.domain.dto.usuario.UsuarioTokenDto;
-import fornari.nucleo.domain.dto.usuario.UsuarioUpdateRequestDto;
 import fornari.nucleo.domain.entity.*;
-import fornari.nucleo.domain.mapper.EnderecoMapper;
 import fornari.nucleo.domain.mapper.UsuarioMapper;
 import fornari.nucleo.helper.Generator;
 import fornari.nucleo.helper.messages.ConstMessages;
@@ -15,20 +10,16 @@ import fornari.nucleo.repository.ChamadoRepository;
 import fornari.nucleo.repository.TokenRedefinicaoSenhaRepository;
 import fornari.nucleo.repository.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.boot.actuate.endpoint.SecurityContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
-import javax.print.DocFlavor;
-import java.net.http.WebSocket;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -36,18 +27,28 @@ import java.util.Objects;
 import java.util.Optional;
 
 @Service
-@RequiredArgsConstructor
 public class UsuarioService {
-
-    private final PasswordEncoder passwordEncoder;
-    private final GerenciadorTokenJwt gerenciadorTokenJwt;
-    private final AuthenticationManager autenticationManager;
     private final UsuarioRepository repository;
     private final EnderecoService enderecoService;
     private final SalaService salaService;
     private final ChamadoRepository chamadoRepository;
     private final IEmailService emailService;
     private final TokenRedefinicaoSenhaRepository tokenRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final JwtService jwtService;
+    private final AuthenticationManager authenticationManager;
+
+    public UsuarioService(UsuarioRepository repository, EnderecoService enderecoService, SalaService salaService, ChamadoRepository chamadoRepository, IEmailService emailService, TokenRedefinicaoSenhaRepository tokenRepository, PasswordEncoder passwordEncoder, JwtService jwtService, AuthenticationManager authenticationManager) {
+        this.repository = repository;
+        this.enderecoService = enderecoService;
+        this.salaService = salaService;
+        this.chamadoRepository = chamadoRepository;
+        this.emailService = emailService;
+        this.tokenRepository = tokenRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.jwtService = jwtService;
+        this.authenticationManager = authenticationManager;
+    }
 
     @Transactional
     public Usuario createUsuario(Usuario user) {
@@ -61,6 +62,8 @@ public class UsuarioService {
 
         String[] cc = {};
 
+        Usuario usuario = this.repository.save(user);
+
         this.emailService.sendMail(
                 user.getEmail(),
                 cc,
@@ -68,7 +71,7 @@ public class UsuarioService {
                 " Sua senha é: " + password + "\n Ela pode ser alterada a qualquer momento através do nosso site ou aplicativo mobile."
         );
 
-        return this.repository.save(user);
+        return usuario;
     }
 
     public Endereco mapEndereco(Endereco endereco) {
@@ -114,18 +117,16 @@ public class UsuarioService {
     }
 
     public UsuarioTokenDto autenticar(String email, String senha) {
-        final UsernamePasswordAuthenticationToken credentials = new UsernamePasswordAuthenticationToken(
-                email, senha
+        authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(email, senha)
         );
-
-        final Authentication authentication = this.autenticationManager.authenticate(credentials);
 
         Usuario usuarioAutenticado =  repository.findByEmail(email).orElseThrow(
                 () -> new ResponseStatusException(404, "Email do usuario nao cadastrado", null)
         );
 
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        final String token = gerenciadorTokenJwt.generateToken(authentication);
+        String token = jwtService.generateToken(usuarioAutenticado);
+
         return UsuarioMapper.toTokenDto(usuarioAutenticado, token);
     }
 

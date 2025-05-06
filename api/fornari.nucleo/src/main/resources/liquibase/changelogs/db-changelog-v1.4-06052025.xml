@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet id="1-insert-endereco" author="caique.lucio">
+    <insert tableName="endereco">
+        <column name="id" valueNumeric="1"/>
+        <column name="cep" value="12345-678"/>
+        <column name="complemento" value="Apto 101"/>
+        <column name="bairro" value="Centro"/>
+        <column name="cidade" value="São Paulo"/>
+        <column name="uf" value="SP"/>
+        <column name="logradouro" value="Rua das Flores"/>
+        <column name="numero" value="100"/>
+    </insert>
+    </changeSet>
+
+    <changeSet id="2-insert-usuario" author="caique.lucio">
+        <insert tableName="usuario">
+            <column name="id" valueNumeric="1"/>
+            <column name="nome" value="USUÁRIO INICIAL"/>
+            <column name="cpf" value="14737538051"/>
+            <column name="email" value="admin@gmail.com"/>
+            <column name="senha" value="${password}"/>
+            <column name="token" valueComputed="NULL"/>
+            <column name="dt_nasc" valueDate="2000-10-17"/>
+            <column name="telefone" value="11983987069"/>
+            <column name="funcao" value="SECRETARIO"/>
+            <column name="id_endereco" valueNumeric="1"/>
+            <column name="id_sala" valueComputed="NULL"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="3-insert-restricoes" author="caique.lucio">
+        <insert tableName="restricao">
+            <column name="tipo" value="Sem Glúten"/>
+            <column name="descricao" value="Alimentos livres de glúten, para celíacos ou intolerantes."/>
+        </insert>
+        <insert tableName="restricao">
+            <column name="tipo" value="Sem Lactose"/>
+            <column name="descricao" value="Alimentos sem lactose, para intolerância ou alergia ao leite."/>
+        </insert>
+        <insert tableName="restricao">
+            <column name="tipo" value="Vegetariano"/>
+            <column name="descricao" value="Sem carne ou produtos de origem animal."/>
+        </insert>
+        <insert tableName="restricao">
+            <column name="tipo" value="Vegano"/>
+            <column name="descricao" value="Sem nenhum ingrediente de origem animal."/>
+        </insert>
+    </changeSet>
+</databaseChangeLog>

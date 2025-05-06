@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 public class AgendamentoDTO {
     private Integer id;
     private Integer responsavelId;
+    private String responsavelNome;
     private Integer salaId;
     private String motivo;
     private boolean aceito;

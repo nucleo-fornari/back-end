@@ -5,17 +5,22 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Pattern;
 import lombok.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 
 @Entity(name = "usuario")
 @Getter
 @Setter
 @Builder
 @AllArgsConstructor
-public class Usuario {
+public class Usuario implements UserDetails {
 
     @Id
     @Column(name = "id")
@@ -91,6 +96,12 @@ public class Usuario {
         this.funcao = funcao;
     }
 
+    public Usuario(String nome, String email, String senha){
+        this.nome = nome;
+        this.email = email;
+        this.senha = senha;
+    }
+
     public void addFiliacao(Filiacao filiacao) {
         if (this.filiacoes == null) {
             this.filiacoes = new ArrayList<>();
@@ -126,5 +137,42 @@ public class Usuario {
 
     public void removeToken(TokenRedefinicaoSenha tk) {
         this.tokens.remove(tk);
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return Objects.equals(this.funcao, "SECRETARIO") ? List.of(new SimpleGrantedAuthority("SECRETARIO")) :
+                Objects.equals(this.funcao, "PROFESSOR") ? List.of(new SimpleGrantedAuthority("PROFESSOR")) :
+                                List.of(new SimpleGrantedAuthority("RESPONSAVEL"));
+    }
+
+    @Override
+    public String getPassword() {
+        return this.senha;
+    }
+
+    @Override
+    public String getUsername() {
+        return this.email;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
     }
 }

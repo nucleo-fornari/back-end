@@ -8,7 +8,6 @@ import fornari.nucleo.domain.entity.Usuario;
 import fornari.nucleo.domain.mapper.AlunoMapper;
 import fornari.nucleo.domain.mapper.ProfessorMapper;
 import fornari.nucleo.domain.mapper.UsuarioMapper;
-import fornari.nucleo.service.IEmailService;
 import fornari.nucleo.service.UsuarioService;
 import io.swagger.v3.oas.annotations.Parameter;
 import jakarta.validation.Valid;
@@ -40,7 +39,7 @@ public class UsuarioController {
     @ApiResponse(responseCode = "403", description = "Acesso foi negado")
 
     @PostMapping("/login")
-    public ResponseEntity<UsuarioTokenDto> login(@RequestBody @Valid UsuarioLoginDto usuarioLoginDto) {
+    public ResponseEntity<?> login(@RequestBody @Valid UsuarioLoginDto usuarioLoginDto) {
         return ResponseEntity.ok(
                 service.autenticar(usuarioLoginDto.getEmail(), usuarioLoginDto.getSenha())
         );

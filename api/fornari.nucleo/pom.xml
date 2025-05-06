@@ -78,8 +78,21 @@
 			<optional>true</optional>
 		</dependency>
 		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-security</artifactId>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt-api</artifactId>
+			<version>0.12.3</version>
+		</dependency>
+		<dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt-impl</artifactId>
+			<version>0.12.3</version>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt-jackson</artifactId>
+			<version>0.12.3</version>
+			<scope>runtime</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.fasterxml.jackson.datatype</groupId>
@@ -87,25 +100,13 @@
 			<version>2.15.0</version>
 		</dependency>
 		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-security</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-test</artifactId>
 			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>io.jsonwebtoken</groupId>
-			<artifactId>jjwt-api</artifactId>
-			<version>0.11.5</version>
-		</dependency>
-		<dependency>
-			<groupId>io.jsonwebtoken</groupId>
-			<artifactId>jjwt-impl</artifactId>
-			<version>0.11.2</version>
-		</dependency>
-		<dependency>
-			<groupId>io.jsonwebtoken</groupId>
-			<artifactId>jjwt-jackson</artifactId>
-			<version>0.11.1</version>
-			<scope>runtime</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -163,18 +164,18 @@
 					</excludes>
 				</configuration>
 			</plugin>
-			<plugin>
-				<groupId>org.liquibase</groupId>
-				<artifactId>liquibase-maven-plugin</artifactId>
-				<version>4.21.0</version>
-				<configuration>
-					<changeLogFile>src/main/resources/liquibase/master.xml</changeLogFile>
-					<url>jdbc:mysql://localhost:3306/fornari</url>
-					<username>root</username>
-					<password>admin</password>
-					<driver>com.mysql.cj.jdbc.Driver</driver>
-				</configuration>
-			</plugin>
+<!--			<plugin>-->
+<!--				<groupId>org.liquibase</groupId>-->
+<!--				<artifactId>liquibase-maven-plugin</artifactId>-->
+<!--				<version>4.21.0</version>-->
+<!--				<configuration>-->
+<!--					<changeLogFile>src/main/resources/liquibase/master.xml</changeLogFile>-->
+<!--					<url>jdbc:mysql://localhost:3306/fornari</url>-->
+<!--					<username>root</username>-->
+<!--					<password>admin</password>-->
+<!--					<driver>com.mysql.cj.jdbc.Driver</driver>-->
+<!--				</configuration>-->
+<!--			</plugin>-->
 		</plugins>
 	</build>
 </project>
