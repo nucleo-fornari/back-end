@@ -9,12 +9,10 @@ import fornari.nucleo.helper.validation.GenericValidations;
 import fornari.nucleo.repository.ChamadoRepository;
 import fornari.nucleo.repository.TokenRedefinicaoSenhaRepository;
 import fornari.nucleo.repository.UsuarioRepository;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -68,7 +66,8 @@ public class UsuarioService {
                 user.getEmail(),
                 cc,
                 "[ NÚCLEO-FORNARI ] - Você foi cadastrado(a) com sucesso na plataforma!",
-                " Sua senha é: " + password + "\n Ela pode ser alterada a qualquer momento através do nosso site ou aplicativo mobile."
+                " Sua senha é: " + password + "\n Ela pode ser alterada a qualquer momento " +
+                        "clicando no texto \"Esqueci minha senha\" da tela de login, no site ou aplicativo mobile."
         );
 
         return usuario;
