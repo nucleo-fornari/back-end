@@ -20,3 +20,4 @@ jobs:
 
       - name: Build with Maven
         run: mvn -B package -DskipTests
+        working-directory: ./api/fornari.nucleo
