@@ -1,4 +1,4 @@
-package com.example.fornari.nucleo;
+package fornari.nucleo;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

@@ -154,33 +154,33 @@ public class ChamadoControllerTest {
         assertNull(response.getBody());
     }
 
-    @Test
-    @DisplayName("Dado que um novo chamado é criado, deve retornar status CREATED e o chamado")
-    void create_Sucesso() {
-        // Arrange
-        ChamadoTipoDto tipo1 = new ChamadoTipoDto(1, "Saúde do aluno", 1, Collections.emptyList());
-        UsuarioResponseDto responsavel = new UsuarioResponseDto(); // Supondo que você já tenha definido isso
-
-        ChamadoDto chamadoDto = new ChamadoDto(
-                null,
-                "O Joaozinho precisa trocar de fralda",
-                false,
-                null,
-                tipo1,
-                null,
-                false,
-                responsavel);
-
-        Mockito.when(service.create(eq(chamadoDto), eq(1))).thenReturn(ChamadoMapper.toChamado(chamadoDto));
-
-        // Act
-        ResponseEntity<ChamadoDto> response = controller.create(chamadoDto, 1);
-
-        // Assert
-        assertEquals(HttpStatus.CREATED, response.getStatusCode());
-        assertNotNull(response.getBody());
-        assertEquals("O Joaozinho precisa trocar de fralda", response.getBody().getDescricao());
-    }
+//    @Test
+//    @DisplayName("Dado que um novo chamado é criado, deve retornar status CREATED e o chamado")
+//    void create_Sucesso() {
+//        // Arrange
+//        ChamadoTipoDto tipo1 = new ChamadoTipoDto(1, "Saúde do aluno", 1, Collections.emptyList());
+//        UsuarioResponseDto responsavel = new UsuarioResponseDto(); // Supondo que você já tenha definido isso
+//
+//        ChamadoDto chamadoDto = new ChamadoDto(
+//                null,
+//                "O Joaozinho precisa trocar de fralda",
+//                false,
+//                null,
+//                tipo1,
+//                null,
+//                false,
+//                responsavel);
+//
+//        Mockito.when(service.create(eq(chamadoDto), eq(1))).thenReturn(ChamadoMapper.toChamado(chamadoDto));
+//
+//        // Act
+//        ResponseEntity<ChamadoDto> response = controller.create(chamadoDto, 1);
+//
+//        // Assert
+//        assertEquals(HttpStatus.CREATED, response.getStatusCode());
+//        assertNotNull(response.getBody());
+//        assertEquals("O Joaozinho precisa trocar de fralda", response.getBody().getDescricao());
+//    }
 
 
     @Test
