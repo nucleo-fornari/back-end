@@ -1,4 +1,4 @@
-name: CI Back-end
+name: CI/CD Back-end
 
 on:
   push:
@@ -71,3 +71,35 @@ jobs:
           file: ./Dockerfile
           push: true
           tags: carlozeduardo/backend:latest
+
+  deploy:
+    runs-on: self-hosted
+    needs:
+    - build
+    - test
+    - docker
+    steps:
+      - name: Pull Docker image
+        run: |
+          docker pull carlozeduardo/backend:latest
+
+      - name: Stop Docker container
+        run: |
+          docker stop backend || true
+
+      - name: Remove Docker container
+        run: |
+          docker rm backend || true
+
+      - name: Run Docker container
+        run: |
+          docker run --name backend -d -p 8080:8080 \
+            --restart unless-stopped \
+            -e MYSQL_HOST=${{ secrets.MYSQL_HOST }} \
+            -e EMAIL_SPRING=${{ secrets.EMAIL_SPRING }} \
+            -e SENHA_EMAIL_SPRING=${{ secrets.SENHA_EMAIL_SPRING }} \
+            -e SENHA_PADRAO=${{ secrets.SENHA_PADRAO }} \
+            -e JWT_SECRET=${{ secrets.JWT_SECRET }} \
+            -e SQL_PASSWORD=${{ secrets.SQL_PASSWORD }} \
+            -e SQL_USER=${{ secrets.SQL_USER }} \
+            carlozeduardo/backend:latest
