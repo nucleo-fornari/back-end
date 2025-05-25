@@ -1,0 +1,44 @@
+name: "CD Back-end"
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+    env:
+      IMAGE_NAME: "carlozeduardo/backend"
+      IMAGE_TAG: "latest"
+      CONTAINER_NAME: "backend"
+      PORT: "8080"
+
+    steps:
+      - name: Pull Docker image
+        run: |
+          docker pull $IMAGE_NAME:$IMAGE_TAG
+
+      - name: Stop Docker container
+        run: |
+          docker stop $CONTAINER_NAME || true
+
+      - name: Remove Docker container
+        run: |
+          docker rm $CONTAINER_NAME || true
+
+      - name: Run Docker container
+        run: |
+          docker run --name $CONTAINER_NAME -d -p $PORT:$PORT \
+            --restart unless-stopped \
+            -e MYSQL_HOST=${{ secrets.MYSQL_HOST }} \
+            -e EMAIL_SPRING=${{ secrets.EMAIL_SPRING }} \
+            -e SENHA_EMAIL_SPRING=${{ secrets.SENHA_EMAIL_SPRING }} \
+            -e SENHA_PADRAO=${{ secrets.SENHA_PADRAO }} \
+            -e JWT_SECRET=${{ secrets.JWT_SECRET }} \
+            -e SQL_PASSWORD=${{ secrets.SQL_PASSWORD }} \
+            -e SQL_USER=${{ secrets.SQL_USER }} \
+            $IMAGE_NAME:$IMAGE_TAG
