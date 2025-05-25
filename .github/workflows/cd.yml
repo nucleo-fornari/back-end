@@ -32,13 +32,13 @@ jobs:
 
       - name: Run Docker container
         run: |
-          docker run --name $CONTAINER_NAME -d -p $PORT:$PORT \
-            --restart unless-stopped \
-            -e MYSQL_HOST=${{ secrets.MYSQL_HOST }} \
-            -e EMAIL_SPRING=${{ secrets.EMAIL_SPRING }} \
-            -e SENHA_EMAIL_SPRING=${{ secrets.SENHA_EMAIL_SPRING }} \
-            -e SENHA_PADRAO=${{ secrets.SENHA_PADRAO }} \
-            -e JWT_SECRET=${{ secrets.JWT_SECRET }} \
-            -e SQL_PASSWORD=${{ secrets.SQL_PASSWORD }} \
-            -e SQL_USER=${{ secrets.SQL_USER }} \
-            $IMAGE_NAME:$IMAGE_TAG
+          docker run --name ${{ env.CONTAINER_NAME }} -d -p ${{ env.PORT }}:${{ env.PORT }} \
+          --restart unless-stopped \
+          -e MYSQL_HOST=${{ secrets.MYSQL_HOST }} \
+          -e EMAIL_SPRING=${{ secrets.EMAIL_SPRING }} \
+          -e SENHA_EMAIL_SPRING=${{ secrets.SENHA_EMAIL_SPRING }} \
+          -e SENHA_PADRAO=${{ secrets.SENHA_PADRAO }} \
+          -e JWT_SECRET=${{ secrets.JWT_SECRET }} \
+          -e SQL_PASSWORD=${{ secrets.SQL_PASSWORD }} \
+          -e SQL_USER=${{ secrets.SQL_USER }} \
+          ${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
