@@ -67,5 +67,7 @@ jobs:
       - name: Build and Push
         uses: docker/build-push-action@v5
         with:
+          context: ./api/fornari.nucleo
+          file: ./api/fornari.nucleo/Dockerfile  
           push: true
           tags: carlozeduardo/backend:latest
