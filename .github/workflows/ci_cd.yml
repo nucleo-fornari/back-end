@@ -90,16 +90,16 @@ jobs:
       - name: Remove Docker container
         run: |
           docker rm backend || true
+      
+      - name: Create .env file
+        run: |
+          echo "MYSQL_HOST=${{ secrets.MYSQL_HOST }}" >> .env
+          echo "EMAIL_SPRING=${{ secrets.EMAIL_SPRING }}" >> .env
+          echo "SENHA_EMAIL_SPRING=${{ secrets.SENHA_EMAIL_SPRING }}" >> .env
+          echo "SENHA_PADRAO=${{ secrets.SENHA_PADRAO }}" >> .env
+          echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> .env
+          echo "SQL_PASSWORD=${{ secrets.SQL_PASSWORD }}" >> .env
+          echo "SQL_USER=${{ secrets.SQL_USER }}" >> .env
 
       - name: Run Docker container
-        run: |
-          docker run --name backend -d -p 8080:8080 \
-            --restart unless-stopped \
-            -e MYSQL_HOST=${{ secrets.MYSQL_HOST }} \
-            -e EMAIL_SPRING=${{ secrets.EMAIL_SPRING }} \
-            -e SENHA_EMAIL_SPRING=${{ secrets.SENHA_EMAIL_SPRING }} \
-            -e SENHA_PADRAO=${{ secrets.SENHA_PADRAO }} \
-            -e JWT_SECRET=${{ secrets.JWT_SECRET }} \
-            -e SQL_PASSWORD=${{ secrets.SQL_PASSWORD }} \
-            -e SQL_USER=${{ secrets.SQL_USER }} \
-            carlozeduardo/backend:latest
+        run: docker run --name backend -d -p 8080:8080 --env-file .env --restart unless-stopped carlozeduardo/backend:latest
