@@ -73,7 +73,7 @@ jobs:
           tags: carlozeduardo/backend:latest
 
   deploy:
-    runs-on: [self-hosted, backend]
+    runs-on: self-hosted
     needs:
     - build
     - test
