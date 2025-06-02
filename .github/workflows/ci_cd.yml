@@ -73,7 +73,7 @@ jobs:
           tags: carlozeduardo/backend:latest
 
   deploy-1:
-    runs-on: [self-hosted, deploy-1]
+    runs-on: [self-hosted]
     needs: [build, test, docker]
     steps:
       - name: Pull Docker image
@@ -99,8 +99,8 @@ jobs:
         run: docker run --name backend -d -p 8080:8080 --env-file .env --restart unless-stopped carlozeduardo/backend:latest
   
   deploy-2:
-    runs-on: [self-hosted, deploy-2]
-    needs: [build, test, docker]
+    runs-on: [self-hosted]
+    needs: [build, test, docker, deploy-1]
     steps:
      - name: Pull Docker image
        run: docker pull carlozeduardo/backend:latest
