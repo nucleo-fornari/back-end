@@ -76,8 +76,7 @@ public class SecurityConfig {
             new AntPathRequestMatcher("/usuarios/esqueci-senha"),
             new AntPathRequestMatcher("/usuarios/token-redefinicao-senha"),
             new AntPathRequestMatcher("/usuarios/redefinir-senha"),
-            new AntPathRequestMatcher("/usuarios/{id}/lgpd"),
-            new AntPathRequestMatcher("/usuarios")
+            new AntPathRequestMatcher("/usuarios/{id}/lgpd")
     };
 
     public SecurityConfig(UserDetailsServiceImp userDetailsServiceImp, JwtAuthenticationFilter authenticationFilter) {
