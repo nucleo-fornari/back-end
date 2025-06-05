@@ -50,8 +50,11 @@ public class Usuario implements UserDetails {
     private LocalDate dtNasc;
 
     @Column
-        @Pattern(regexp = "RESPONSAVEL|SECRETARIO|PROFESSOR|COORDENADOR", message = ConstMessages.INVALID_USER_ROLE)
+    @Pattern(regexp = "RESPONSAVEL|SECRETARIO|PROFESSOR|COORDENADOR", message = ConstMessages.INVALID_USER_ROLE)
     private String funcao;
+
+    @Column
+    private boolean lgpd;
 
     @ManyToOne(targetEntity = Endereco.class, cascade = CascadeType.PERSIST)
     @JoinColumn(referencedColumnName = "id", name = "id_endereco")

@@ -179,4 +179,17 @@ public class UsuarioController {
         this.service.redefinirSenha(senha, email, token);
         return ResponseEntity.noContent().build();
     }
+
+    @PatchMapping("{id}/lgpd")
+    public ResponseEntity<Void> lgpd(@PathVariable Integer id) {
+        Usuario user = service.buscarPorID(id);
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+
+        user.setLgpd(true);
+        service.updateUsuario(user, id);
+
+        return ResponseEntity.noContent().build();
+    }
 }
