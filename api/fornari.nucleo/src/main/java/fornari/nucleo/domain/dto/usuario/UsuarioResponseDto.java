@@ -17,6 +17,7 @@ public class UsuarioResponseDto {
     private String email;
     private LocalDate dtNasc;
     private String funcao;
+    private boolean lgpd;
     private List<AlunoResponseDto> afiliados;
     private EnderecoDto endereco;
 }

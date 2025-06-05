@@ -71,6 +71,14 @@ public class SecurityConfig {
             new AntPathRequestMatcher("/agendamento/proposta", "POST"),
     };
 
+    private final AntPathRequestMatcher[] allowAll = {
+            new AntPathRequestMatcher("/usuarios/login"),
+            new AntPathRequestMatcher("/usuarios/esqueci-senha"),
+            new AntPathRequestMatcher("/usuarios/token-redefinicao-senha"),
+            new AntPathRequestMatcher("/usuarios/redefinir-senha"),
+            new AntPathRequestMatcher("/usuarios/{id}/lgpd")
+    };
+
     public SecurityConfig(UserDetailsServiceImp userDetailsServiceImp, JwtAuthenticationFilter authenticationFilter) {
         this.userDetailsServiceImp = userDetailsServiceImp;
         this.jwtAuthenticationFilter = authenticationFilter;
@@ -82,12 +90,7 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(
-                    req -> req.requestMatchers(
-                            "/usuarios/login",
-                            "/usuarios/esqueci-senha",
-                            "/usuarios/token-redefinicao-senha",
-                            "/usuarios/redefinir-senha"
-                            ).permitAll()
+                    req -> req.requestMatchers(allowAll).permitAll()
                             .requestMatchers(allowSecretario).hasAuthority("SECRETARIO")
                             .requestMatchers(allowProfessor).hasAuthority("PROFESSOR")
                             .requestMatchers(allowResponsavel).hasAuthority("RESPONSAVEL")

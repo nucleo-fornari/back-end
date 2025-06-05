@@ -8,4 +8,5 @@
       <include file="./changelogs/db-changelog-v1.2-08032025.xml" relativeToChangelogFile="true"/>
       <include file="./changelogs/db-changelog-v1.3-19032025.xml" relativeToChangelogFile="true"/>
       <include file="./changelogs/db-changelog-v1.4-06052025.xml" relativeToChangelogFile="true"/>
+      <include file="./changelogs/db-changelog-v1.5-05062025.xml" relativeToChangelogFile="true"/>
 </databaseChangeLog>

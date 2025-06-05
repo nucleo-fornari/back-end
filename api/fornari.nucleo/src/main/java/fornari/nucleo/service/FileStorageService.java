@@ -84,4 +84,8 @@ public class FileStorageService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Arquivo não encontrado " + fileName);
         }
     }
+
+    public Path getFileStorageLocation() {
+        return fileStorageLocation;
+    }
 }

@@ -49,6 +49,7 @@ public class UsuarioMapper {
         dto.setTelefone(user.getTelefone());
         dto.setEmail(user.getEmail());
         dto.setFuncao(user.getFuncao());
+        dto.setLgpd(user.isLgpd());
         dto.setAfiliados(
                 user.getFiliacoes().isEmpty()
                         ? null
