@@ -112,6 +112,7 @@ public class UsuarioMapper {
                 .funcao(usuario.getFuncao())
                 .telefone(usuario.getTelefone())
                 .salaId(salaId)
+                .lgpd(usuario.isLgpd())
                 .token(token)
                 .build();
     }

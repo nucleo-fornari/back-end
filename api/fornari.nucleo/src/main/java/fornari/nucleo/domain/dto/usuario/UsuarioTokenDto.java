@@ -12,6 +12,7 @@ public class UsuarioTokenDto {
     private String email;
     private String funcao;
     private String telefone;
+    private boolean lgpd;
     private Integer salaId;
     private String token;
 }
